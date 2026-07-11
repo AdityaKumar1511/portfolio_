@@ -1,94 +1,175 @@
-'use client';
-import projects from '@/data/projects.json';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+'use client'
+import { useState } from 'react'
+import Link from 'next/link'
+
+const projects = [
+  {
+    slug: 'arbitrage',
+    name: 'Arbitrage',
+    description: 'Live crypto price tracker with real-time email alerts and automated scanning',
+    tech: ['Next.js', 'Supabase', 'Firecrawl', 'Resend', 'Vercel'],
+    impact: 'Tracks 50+ assets in real-time',
+    liveUrl: 'https://arbitrage.vercel.app',
+    repoUrl: 'https://github.com/AdityaKumar1511/arbitrage',
+    featured: true,
+    year: '2025',
+  },
+  {
+    slug: 'nexusforge',
+    name: 'NexusForge',
+    description: 'Decentralized blockchain escrow platform governed by a DAO tribunal',
+    tech: ['Wagmi', 'Chainlink VRF', 'IPFS', 'Firebase'],
+    impact: 'Multi-sig escrow with verifiable randomness',
+    liveUrl: '',
+    repoUrl: 'https://github.com/AdityaKumar1511/nexusforge',
+    featured: false,
+    year: '2024',
+  },
+  {
+    slug: 'skylens',
+    name: 'SkyLens',
+    description: 'Satellite AQI and HCHO detection using Sentinel-5P TROPOMI data for ISRO BAH',
+    tech: ['Next.js', 'FastAPI', 'XGBoost', 'Leaflet', 'MongoDB', 'Docker'],
+    impact: 'ISRO BAH 2026 finalist — Team CodeBlooded',
+    liveUrl: '',
+    repoUrl: 'https://github.com/AdityaKumar1511',
+    featured: true,
+    year: '2026',
+  },
+  {
+    slug: 'cipherkit',
+    name: 'CipherKit',
+    description: 'C++17 static library of classical ciphers distributed via CMake FetchContent',
+    tech: ['C++17', 'CMake', 'GoogleTest', 'GitHub Actions', 'Doxygen'],
+    impact: 'CI matrix across Ubuntu / macOS / Windows',
+    liveUrl: '',
+    repoUrl: 'https://github.com/AdityaKumar1511',
+    featured: false,
+    year: '2025',
+  },
+]
 
 export default function Projects() {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+
   return (
-    <section id="projects" className="py-24 px-6 md:px-12 lg:px-24 border-t border-[var(--border)]">
-      {/* Section label */}
-      <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--text-muted)] mb-12">
+    <section id="projects" style={{
+      padding: 'clamp(4rem,10vw,8rem) 24px',
+      borderTop: '1px solid var(--border)',
+      maxWidth: '1400px',
+      margin: '0 auto',
+      width: '100%',
+    }}>
+      <p style={{
+        fontFamily: 'var(--font-geist-mono), monospace',
+        fontSize: '11px',
+        textTransform: 'uppercase',
+        letterSpacing: '0.15em',
+        color: 'var(--text-muted)',
+        marginBottom: '3rem',
+      }}>
         Selected projects
       </p>
 
-      {/* Numbered list */}
       <div>
         {projects.map((project, i) => (
-          <motion.div
+          <div
             key={project.slug}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ delay: i * 0.06, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="border-t border-[var(--border)] py-6 
-                       grid grid-cols-[60px_1fr_auto] md:grid-cols-[80px_1fr_auto] 
-                       gap-4 md:gap-8 items-start
-                       hover:bg-[var(--surface)] transition-colors duration-200
-                       px-2 -mx-2 rounded-lg group cursor-pointer"
+            onMouseEnter={() => setHoveredIndex(i)}
+            onMouseLeave={() => setHoveredIndex(null)}
+            style={{
+              borderTop: '1px solid var(--border)',
+              padding: '24px 12px',
+              display: 'grid',
+              gridTemplateColumns: '70px 1fr auto',
+              gap: '24px',
+              alignItems: 'start',
+              background: hoveredIndex === i ? 'var(--surface)' : 'transparent',
+              transition: 'background 200ms',
+              borderRadius: '8px',
+              margin: '0 -12px',
+            }}
           >
             {/* Left: number + year */}
-            <div className="pt-1">
-              <p className="font-mono text-[11px] text-[var(--text-muted)]">
+            <div>
+              <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
+                fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px' }}>
                 0{i + 1}
               </p>
-              <p className="font-mono text-[10px] text-[var(--text-muted)] mt-1">
-                {project.year || '2025'}
+              <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
+                fontSize: '10px', color: 'var(--text-muted)' }}>
+                {project.year}
               </p>
               {project.featured && (
-                <p className="font-mono text-[9px] text-[var(--text-muted)] mt-1 uppercase tracking-wider">
+                <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
+                  fontSize: '9px', color: 'var(--text-muted)',
+                  textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: '4px' }}>
                   Featured
                 </p>
               )}
             </div>
 
-            {/* Center: name + desc + pills */}
+            {/* Center: content */}
             <div>
-              <h3 className="text-[15px] font-medium text-[var(--text)] leading-snug">
+              <h3 style={{ fontSize: '15px', fontWeight: 500, color: 'var(--text)',
+                marginBottom: '6px', lineHeight: 1.3 }}>
                 {project.name}
               </h3>
-              <p className="text-[13px] text-[var(--text-secondary)] mt-1 leading-relaxed">
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)',
+                lineHeight: 1.6, marginBottom: '12px' }}>
                 {project.description}
               </p>
-              <div className="flex flex-wrap gap-1.5 mt-3">
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px',
+                marginBottom: '8px' }}>
                 {project.tech.map(t => (
-                  <span key={t} 
-                    className="font-mono text-[10px] text-[var(--text-muted)] 
-                               border border-[var(--border)] px-2 py-0.5 rounded-sm">
+                  <span key={t} style={{
+                    fontFamily: 'var(--font-geist-mono), monospace',
+                    fontSize: '10px',
+                    color: 'var(--text-muted)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '4px',
+                    padding: '2px 8px',
+                  }}>
                     {t}
                   </span>
                 ))}
               </div>
               {project.impact && (
-                <p className="font-mono text-[11px] text-[var(--text-muted)] mt-2">
+                <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
+                  fontSize: '11px', color: 'var(--text-muted)' }}>
                   → {project.impact}
                 </p>
               )}
             </div>
 
             {/* Right: links */}
-            <div className="flex flex-col gap-2 items-end pt-1">
+            <div style={{ display: 'flex', flexDirection: 'column',
+              gap: '8px', alignItems: 'flex-end', paddingTop: '2px' }}>
               {project.liveUrl && (
                 <Link href={project.liveUrl} target="_blank"
-                  className="text-[12px] text-[var(--text-secondary)] hover:text-[var(--text)] 
-                             font-mono transition-colors"
-                  onClick={e => e.stopPropagation()}>
+                  style={{ fontFamily: 'var(--font-geist-mono), monospace',
+                    fontSize: '12px', color: 'var(--text-secondary)',
+                    textDecoration: 'none', transition: 'color 150ms' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-secondary)')}>
                   Live ↗
                 </Link>
               )}
               {project.repoUrl && (
                 <Link href={project.repoUrl} target="_blank"
-                  className="text-[12px] text-[var(--text-muted)] hover:text-[var(--text-secondary)] 
-                             font-mono transition-colors"
-                  onClick={e => e.stopPropagation()}>
+                  style={{ fontFamily: 'var(--font-geist-mono), monospace',
+                    fontSize: '12px', color: 'var(--text-muted)',
+                    textDecoration: 'none', transition: 'color 150ms' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-secondary)')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}>
                   GitHub ↗
                 </Link>
               )}
             </div>
-          </motion.div>
+          </div>
         ))}
-        {/* Closing border */}
-        <div className="border-t border-[var(--border)]" />
+        <div style={{ borderTop: '1px solid var(--border)' }} />
       </div>
     </section>
-  );
+  )
 }

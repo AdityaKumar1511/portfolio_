@@ -1,98 +1,166 @@
-"use client";
-
-import { motion } from "framer-motion";
-
-const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
+'use client'
+import { useEffect, useState } from 'react'
 
 export default function Hero() {
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 100)
+    return () => clearTimeout(t)
+  }, [])
+
+  const scrollTo = (id: string) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+
+  const lines = ['Engineering', 'systems that', 'scale.']
+
   return (
-    <section className="h-[100svh] flex flex-col justify-between px-6 md:px-12 lg:px-24 pt-32 pb-20">
-      {/* Top row */}
-      <div className="flex justify-between items-start">
+    <section
+      id="hero"
+      style={{
+        minHeight: '100svh',
+        padding: '0 24px',
+        paddingTop: '56px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        position: 'relative',
+        maxWidth: '1400px',
+        margin: '0 auto',
+        width: '100%',
+      }}
+    >
+      {/* Top meta row */}
+      <div style={{ display: 'flex', justifyContent: 'space-between',
+        alignItems: 'flex-start', marginBottom: 'clamp(3rem, 8vw, 6rem)',
+        paddingTop: '40px' }}>
         <div>
-          <p className="font-mono text-[11px] text-[var(--text-muted)] uppercase tracking-[0.15em]">
+          <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: '11px', color: 'var(--text-muted)',
+            textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '6px' }}>
             Developer — 01
           </p>
-          <p className="font-mono text-[11px] text-[var(--text-muted)] uppercase tracking-[0.15em] mt-2">
+          <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: '11px', color: 'var(--text-muted)',
+            textTransform: 'uppercase', letterSpacing: '0.15em' }}>
             Full-Stack Engineer
           </p>
         </div>
-        <div className="text-right">
-          <p className="font-mono text-[11px] text-[var(--text-muted)]">
+        <div style={{ textAlign: 'right' }}>
+          <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: '11px', color: 'var(--text-muted)', marginBottom: '6px' }}>
             Open to work — 2026
           </p>
-          <p className="font-mono text-[11px] text-[var(--text-muted)] mt-2">
+          <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: '11px', color: 'var(--text-muted)' }}>
             Scroll ↓
           </p>
         </div>
       </div>
 
-      {/* Hero Heading */}
-      <div className="mt-16 md:mt-24">
-        <h1 className="text-[clamp(3.5rem,9vw,8rem)] font-semibold tracking-[-0.04em] leading-[0.92] text-[var(--text)]">
-          <span className="block overflow-hidden">
-            <motion.span
-              className="block"
-              initial={{ y: 60, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, ease }}
-            >
-              Engineering
-            </motion.span>
+      {/* Hero heading */}
+      <h1 style={{
+        fontSize: 'clamp(3.5rem, 9vw, 8rem)',
+        fontWeight: 600,
+        lineHeight: 0.92,
+        letterSpacing: '-0.04em',
+        color: 'var(--text)',
+        margin: 0,
+      }}>
+        {lines.map((line, i) => (
+          <span
+            key={line}
+            style={{
+              display: 'block',
+              opacity: visible ? 1 : 0,
+              transform: visible ? 'translateY(0)' : 'translateY(50px)',
+              transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${i * 0.12}s, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${i * 0.12}s`,
+            }}
+          >
+            {line}
           </span>
-          <span className="block overflow-hidden">
-            <motion.span
-              className="block"
-              initial={{ y: 60, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.12, duration: 0.8, ease }}
-            >
-              systems that
-            </motion.span>
-          </span>
-          <span className="block overflow-hidden">
-            <motion.span
-              className="block"
-              initial={{ y: 60, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.24, duration: 0.8, ease }}
-            >
-              scale.
-            </motion.span>
-          </span>
-        </h1>
+        ))}
+      </h1>
 
-        {/* Subtext */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          className="mt-8 text-base text-[var(--text-secondary)] max-w-sm"
-        >
-          Fast, resilient systems — from the data layer to the last pixel.
-        </motion.p>
+      {/* Subtext */}
+      <p style={{
+        marginTop: '2rem',
+        fontSize: '16px',
+        color: 'var(--text-secondary)',
+        maxWidth: '400px',
+        lineHeight: 1.6,
+        opacity: visible ? 1 : 0,
+        transition: 'opacity 0.7s ease 0.5s',
+      }}>
+        Fast, resilient systems — from the data layer to the last pixel.
+      </p>
+
+      {/* Anchor pills */}
+      <div style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '10px',
+        marginTop: '2.5rem',
+        opacity: visible ? 1 : 0,
+        transition: 'opacity 0.7s ease 0.65s',
+      }}>
+        {[
+          { label: 'Projects', id: 'projects' },
+          { label: 'About', id: 'about' },
+          { label: 'GitHub', id: 'github' },
+          { label: 'Contact', id: 'contact' },
+        ].map(({ label, id }) => (
+          <button
+            key={id}
+            onClick={() => scrollTo(id)}
+            style={{
+              background: 'none',
+              border: '1px solid var(--border)',
+              borderRadius: '999px',
+              padding: '8px 20px',
+              fontSize: '13px',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              transition: 'all 200ms',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = 'var(--text-secondary)'
+              e.currentTarget.style.color = 'var(--text)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = 'var(--border)'
+              e.currentTarget.style.color = 'var(--text-secondary)'
+            }}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
-      {/* Bottom row */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.7, duration: 0.5 }}
-        className="mt-12 flex items-center gap-6"
-      >
-        <a
-          href="https://github.com/AdityaKumar1511"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm text-[var(--text-secondary)] hover:text-[var(--text)] underline underline-offset-4 decoration-[var(--border)] transition-colors"
-        >
+      {/* Bottom links */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '20px',
+        marginTop: '3rem',
+        opacity: visible ? 1 : 0,
+        transition: 'opacity 0.7s ease 0.75s',
+      }}>
+        <a href="https://github.com/AdityaKumar1511" target="_blank" rel="noreferrer"
+          style={{ fontSize: '13px', color: 'var(--text-secondary)',
+            textDecoration: 'underline', textUnderlineOffset: '4px',
+            textDecorationColor: 'var(--border)', transition: 'color 150ms' }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-secondary)')}>
           View GitHub →
         </a>
-        <span className="w-px h-4 bg-[var(--border)]" />
-        <span className="font-mono text-[11px] text-[var(--text-muted)]">
+        <span style={{ width: '1px', height: '14px', background: 'var(--border)' }} />
+        <span style={{ fontFamily: 'var(--font-geist-mono), monospace',
+          fontSize: '11px', color: 'var(--text-muted)' }}>
           ↓ scroll
         </span>
-      </motion.div>
+      </div>
     </section>
-  );
+  )
 }

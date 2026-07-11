@@ -1,102 +1,117 @@
-"use client";
-
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { useState } from "react";
+'use client'
+import { useState } from 'react'
+import Image from 'next/image'
 
 export default function About() {
-  const [imgError, setImgError] = useState(false);
+  const [imgErr, setImgErr] = useState(false)
 
   return (
-    <section className="py-24 px-6 md:px-12 lg:px-24 border-t border-[var(--border)]">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
-        {/* Left column */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--text-muted)] mb-6">
+    <section id="about" style={{
+      padding: 'clamp(4rem,10vw,8rem) 24px',
+      borderTop: '1px solid var(--border)',
+      maxWidth: '1400px',
+      margin: '0 auto',
+      width: '100%',
+    }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+        gap: '4rem',
+        alignItems: 'start',
+      }}>
+        {/* Left: text */}
+        <div>
+          <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.15em',
+            color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
             About Me
           </p>
-          <h2 className="text-[clamp(1.75rem,4vw,2.5rem)] font-medium tracking-tight mb-6">
+          <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.25rem)', fontWeight: 500,
+            letterSpacing: '-0.02em', color: 'var(--text)', marginBottom: '1.5rem',
+            lineHeight: 1.15 }}>
             Where Code Meets Craft
           </h2>
-          <div className="space-y-4 text-[var(--text-secondary)] text-[15px] leading-relaxed">
-            <p>
-              I&apos;m a second-year CSE student at NIT Patna with a deep focus
-              on building production-grade full-stack applications. From
-              real-time crypto trackers to decentralized escrow systems, I
-              engineer systems that are fast, type-safe, and built to scale.
-            </p>
-            <p>
-              My stack spans TypeScript, React, Next.js, Node, Go, and Solidity
-              on the backend, with PostgreSQL, Redis, and GraphQL powering the
-              data layer. I believe in clean architecture, strong types, and
-              shipping code that works under pressure.
-            </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {[
+              'My interest in CS sparked when I realized programming is the closest thing to magic — the ability to conceive an idea and build a fully functional product with just code. As a Computer Science undergrad at NIT Patna, I\'ve turned that fascination into a daily practice.',
+              'Right now I\'m split between full-stack application development and machine learning systems. Arbitrage (a real-time crypto price tracker with automated email alerts) and NexusForge (a decentralized escrow DAO) are my two flagship builds.',
+              'I\'m looking for software engineering internships and open-source collaborations where I can contribute to production-grade systems. Fast-paced teams working on hard problems — that\'s the environment I want.',
+              'Outside of shipping code, you\'ll find me on Codeforces and LeetCode, grinding algorithms. I have a deep interest in cinematic UI design — the kind of interfaces that feel alive.',
+            ].map((p, i) => (
+              <p key={i} style={{ fontSize: '15px', color: 'var(--text-secondary)',
+                lineHeight: 1.7 }}>
+                {p}
+              </p>
+            ))}
           </div>
-          <a
-            href="https://github.com/AdityaKumar1511"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block mt-6 text-sm text-[var(--text-secondary)] hover:text-[var(--text)] underline underline-offset-4 decoration-[var(--border)] transition-colors"
-          >
-            View GitHub →
-          </a>
-        </motion.div>
 
-        {/* Right column */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col gap-4"
-        >
-          {/* Profile image or placeholder */}
-          <div className="w-[280px] h-[280px] relative overflow-hidden rounded-2xl border border-[var(--border)]">
-            {imgError ? (
-              <div className="w-full h-full flex items-center justify-center bg-[var(--surface)]">
-                <span className="font-mono text-5xl text-[var(--text-muted)]">
-                  AK
-                </span>
-              </div>
-            ) : (
+          {/* Social links */}
+          <div style={{ display: 'flex', gap: '20px', marginTop: '2rem' }}>
+            {[
+              { label: 'GitHub ↗', href: 'https://github.com/AdityaKumar1511' },
+              { label: 'LinkedIn ↗', href: 'https://linkedin.com/in/aditya-kumar-57a988374/' },
+              { label: 'Email ↗', href: 'mailto:aditya.kumar00706@gmail.com' },
+            ].map(({ label, href }) => (
+              <a key={label} href={href} target="_blank" rel="noreferrer"
+                style={{ fontSize: '13px', color: 'var(--text-muted)',
+                  textDecoration: 'none', transition: 'color 150ms' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}>
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Right: photo + badges */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {/* Profile image or initials */}
+          <div style={{ position: 'relative', width: '100%', maxWidth: '280px',
+            aspectRatio: '1', borderRadius: '16px', overflow: 'hidden',
+            border: '1px solid var(--border)', background: 'var(--surface)' }}>
+            {!imgErr ? (
               <Image
                 src="/profile.jpg"
                 alt="Aditya Kumar"
                 fill
-                className="object-cover"
-                onError={() => setImgError(true)}
+                style={{ objectFit: 'cover' }}
+                onError={() => setImgErr(true)}
               />
+            ) : (
+              <div style={{ width: '100%', height: '100%', display: 'flex',
+                alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontFamily: 'var(--font-geist-mono), monospace',
+                  fontSize: '4rem', color: 'var(--text-muted)', fontWeight: 300 }}>
+                  AK
+                </span>
+              </div>
             )}
           </div>
 
           {/* Quality badges */}
-          <div className="flex gap-2 flex-wrap">
-            {["Clean Code", "Fast Systems", "Type Safe"].map((badge) => (
-              <span
-                key={badge}
-                className="border border-[var(--border)] rounded-lg px-3 py-2 text-[12px] font-mono text-[var(--text-secondary)]"
-              >
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {['Clean Code', 'Fast Systems', 'Type Safe'].map(badge => (
+              <span key={badge} style={{
+                fontFamily: 'var(--font-geist-mono), monospace',
+                fontSize: '11px', color: 'var(--text-secondary)',
+                border: '1px solid var(--border)', borderRadius: '6px',
+                padding: '6px 12px',
+              }}>
                 {badge}
               </span>
             ))}
           </div>
 
-          {/* Stars row */}
-          <div className="flex items-center gap-2">
-            <span className="text-[var(--text-secondary)] text-sm">
-              ★★★★★
-            </span>
-            <span className="text-[11px] text-[var(--text-muted)]">
+          {/* Stars */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>★★★★★</span>
+            <span style={{ fontFamily: 'var(--font-geist-mono), monospace',
+              fontSize: '11px', color: 'var(--text-muted)' }}>
               Trusted by teams
             </span>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
-  );
+  )
 }
