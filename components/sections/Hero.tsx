@@ -2,8 +2,7 @@
 
 import { motion } from "framer-motion";
 
-const lines = ["Engineering", "systems that", "scale."];
-const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
+const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
 export default function Hero() {
   return (
@@ -30,22 +29,38 @@ export default function Hero() {
 
       {/* Hero Heading */}
       <div className="mt-16 md:mt-24">
-        {lines.map((line, i) => (
-          <div key={i} className="overflow-hidden">
-            <motion.h1
+        <h1 className="text-[clamp(3.5rem,9vw,8rem)] font-semibold tracking-[-0.04em] leading-[0.92] text-[var(--text)]">
+          <span className="block overflow-hidden">
+            <motion.span
+              className="block"
               initial={{ y: 60, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{
-                delay: i * 0.12,
-                duration: 0.8,
-                ease,
-              }}
-              className="text-[clamp(4rem,10vw,9rem)] font-semibold leading-[0.95] tracking-[-0.04em] text-[var(--text)]"
+              transition={{ duration: 0.8, ease }}
             >
-              {line}
-            </motion.h1>
-          </div>
-        ))}
+              Engineering
+            </motion.span>
+          </span>
+          <span className="block overflow-hidden">
+            <motion.span
+              className="block"
+              initial={{ y: 60, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.12, duration: 0.8, ease }}
+            >
+              systems that
+            </motion.span>
+          </span>
+          <span className="block overflow-hidden">
+            <motion.span
+              className="block"
+              initial={{ y: 60, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.24, duration: 0.8, ease }}
+            >
+              scale.
+            </motion.span>
+          </span>
+        </h1>
 
         {/* Subtext */}
         <motion.p

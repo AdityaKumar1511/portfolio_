@@ -56,22 +56,23 @@ export default function About() {
           className="flex flex-col gap-4"
         >
           {/* Profile image or placeholder */}
-          {!imgError ? (
-            <Image
-              src="/profile.jpg"
-              alt="Aditya Kumar"
-              width={280}
-              height={280}
-              className="rounded-2xl w-full max-w-[280px] aspect-square object-cover border border-[var(--border)]"
-              onError={() => setImgError(true)}
-            />
-          ) : (
-            <div className="w-full max-w-[280px] aspect-square rounded-2xl bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center">
-              <span className="font-mono text-4xl text-[var(--text-muted)]">
-                AK
-              </span>
-            </div>
-          )}
+          <div className="w-[280px] h-[280px] relative overflow-hidden rounded-2xl border border-[var(--border)]">
+            {imgError ? (
+              <div className="w-full h-full flex items-center justify-center bg-[var(--surface)]">
+                <span className="font-mono text-5xl text-[var(--text-muted)]">
+                  AK
+                </span>
+              </div>
+            ) : (
+              <Image
+                src="/profile.jpg"
+                alt="Aditya Kumar"
+                fill
+                className="object-cover"
+                onError={() => setImgError(true)}
+              />
+            )}
+          </div>
 
           {/* Quality badges */}
           <div className="flex gap-2 flex-wrap">

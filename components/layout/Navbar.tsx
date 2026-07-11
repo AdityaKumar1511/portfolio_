@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
 function GithubIcon({ className }: { className?: string }) {
   return (
     <svg

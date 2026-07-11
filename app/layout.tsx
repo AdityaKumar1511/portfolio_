@@ -5,35 +5,21 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://adityakumar.dev"),
-  title: "Aditya Kumar — Full-Stack Engineer",
-  description:
-    "Full-stack engineer building fast, resilient systems — from the data layer to the last pixel.",
-  keywords: [
-    "Aditya Kumar",
-    "NIT Patna",
-    "portfolio",
-    "developer",
-    "full-stack",
-    "engineer",
-    "React",
-    "Next.js",
-    "TypeScript",
-  ],
+  metadataBase: new URL('https://portfolio-vrd7.vercel.app'),
+  title: 'Aditya Kumar — Portfolio',
+  description: 'Full-stack developer and ML builder. CSE undergrad at NIT Patna.',
   openGraph: {
-    title: "Aditya Kumar — Full-Stack Engineer",
-    description:
-      "Full-stack engineer building fast, resilient systems — from the data layer to the last pixel.",
-    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
-    url: "https://adityakumar.dev",
-    type: "website",
+    title: 'Aditya Kumar — Portfolio',
+    description: 'Full-stack developer and ML builder. CSE undergrad at NIT Patna.',
+    url: 'https://portfolio-vrd7.vercel.app',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Aditya Kumar — Full-Stack Engineer",
-    description:
-      "Full-stack engineer building fast, resilient systems — from the data layer to the last pixel.",
-  },
+    card: 'summary_large_image',
+    title: 'Aditya Kumar — Portfolio',
+    description: 'Full-stack developer and ML builder. CSE undergrad at NIT Patna.',
+    images: ['/og-image.png'],
+  }
 };
 
 export default function RootLayout({

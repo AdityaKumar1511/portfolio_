@@ -2,27 +2,53 @@
   {
     "slug": "arbitrage",
     "name": "Arbitrage",
-    "description": "Live crypto price tracker with real-time email alerts and automated price scanning.",
+    "description": "Live crypto price tracker with real-time email alerts",
     "thumbnail": "/projects/arbitrage.webp",
     "tech": ["Next.js", "Supabase", "Firecrawl", "Resend", "Vercel"],
-    "impact": "Tracks 50+ assets in real-time with sub-second latency",
+    "impact": "Tracks 50+ assets in real-time",
     "liveUrl": "https://arbitrage.vercel.app",
     "repoUrl": "https://github.com/AdityaKumar1511/arbitrage",
     "featured": true,
-    "category": "Web",
-    "year": "2025"
+    "year": "2025",
+    "category": "Web"
   },
   {
     "slug": "nexusforge",
     "name": "NexusForge",
-    "description": "Decentralized blockchain escrow platform governed by a lightweight DAO structure.",
+    "description": "Blockchain escrow platform governed by a DAO tribunal",
     "thumbnail": "/projects/nexusforge.webp",
     "tech": ["Wagmi", "Chainlink VRF", "IPFS", "Firebase"],
-    "impact": "Secures transactions through multi-signature escrow and verifiable randomness",
+    "impact": "Multi-sig escrow with verifiable randomness",
     "liveUrl": "https://nexusforge.vercel.app",
     "repoUrl": "https://github.com/AdityaKumar1511/nexusforge",
+    "featured": false,
+    "year": "2024",
+    "category": "Blockchain"
+  },
+  {
+    "slug": "skylens",
+    "name": "SkyLens",
+    "description": "Satellite AQI and HCHO detection using Sentinel-5P TROPOMI data",
+    "thumbnail": "/projects/skylens.webp",
+    "tech": ["Next.js", "FastAPI", "XGBoost", "Leaflet", "MongoDB", "Docker"],
+    "impact": "ISRO BAH 2026 finalist — Team CodeBlooded",
+    "liveUrl": "",
+    "repoUrl": "https://github.com/AdityaKumar1511/skylens",
     "featured": true,
-    "category": "Blockchain",
-    "year": "2025"
+    "year": "2026",
+    "category": "AI/ML"
+  },
+  {
+    "slug": "cipherkit",
+    "name": "CipherKit",
+    "description": "C++17 static library of classical ciphers distributed via CMake FetchContent",
+    "thumbnail": "/projects/cipherkit.webp",
+    "tech": ["C++17", "CMake", "GoogleTest", "GitHub Actions", "Doxygen"],
+    "impact": "CI matrix across Ubuntu / macOS / Windows",
+    "liveUrl": "",
+    "repoUrl": "https://github.com/AdityaKumar1511/cipherkit",
+    "featured": false,
+    "year": "2025",
+    "category": "Systems"
   }
 ]
