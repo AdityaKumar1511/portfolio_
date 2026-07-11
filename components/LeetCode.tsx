@@ -36,13 +36,6 @@ export default function LeetCode() {
       .catch(() => setLoading(false))
   }, [])
 
-  const statItems = [
-    { label: 'Total Solved', value: stats.totalSolved },
-    { label: 'Easy', value: stats.easySolved },
-    { label: 'Medium', value: stats.mediumSolved },
-    { label: 'Hard', value: stats.hardSolved },
-  ]
-
   return (
     <section id="leetcode" style={{
       padding: 'clamp(4rem,10vw,8rem) 24px',
@@ -93,7 +86,7 @@ export default function LeetCode() {
         style={{
           fontFamily: 'var(--font-geist-mono), monospace',
           fontSize: '13px', color: 'var(--text-secondary)',
-          textDecoration: 'none', display: 'block', marginBottom: '3rem',
+          textDecoration: 'none', display: 'block', marginBottom: '2rem',
           transition: 'color 150ms'
         }}
         onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
@@ -101,44 +94,124 @@ export default function LeetCode() {
         @{USERNAME} · LeetCode ↗
       </a>
 
-      {/* Stats grid */}
+      {/* 2-column: Stats card + LeetCard */}
       <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-        gap: '2rem', marginBottom: '3rem'
-      }}>
-        {statItems.map(item => (
-          <div key={item.label}>
-            <p style={{
-              fontFamily: 'var(--font-geist-mono), monospace',
-              fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
-              fontWeight: 600, color: 'var(--text)', lineHeight: 1,
-              opacity: loading ? 0.3 : 1, transition: 'opacity 300ms'
-            }}>
-              {item.value}
-            </p>
-            <p style={{
-              fontFamily: 'var(--font-geist-mono), monospace',
-              fontSize: '11px', color: 'var(--text-muted)',
-              textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: '6px'
-            }}>
-              {item.label}
-            </p>
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '2rem',
+        alignItems: 'start',
+      }} className="lc-grid">
+        {/* Left: Stats card */}
+        <div style={{
+          background: 'var(--surface)',
+          border: '1px solid var(--border)',
+          borderRadius: '12px',
+          padding: '2rem',
+        }}>
+          {/* Big number */}
+          <p style={{
+            fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: 'clamp(3rem, 8vw, 5rem)',
+            fontWeight: 700,
+            color: 'var(--text)',
+            lineHeight: 1,
+            margin: 0,
+            opacity: loading ? 0.3 : 1,
+            transition: 'opacity 300ms',
+          }}>
+            {stats.totalSolved}
+          </p>
+          <p style={{
+            fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: '12px', color: 'var(--text-muted)',
+            textTransform: 'uppercase', letterSpacing: '0.1em',
+            marginTop: '8px',
+          }}>
+            Problems Solved
+          </p>
+
+          {/* Difficulty breakdown */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr 1fr',
+            gap: '1rem',
+            marginTop: '2rem',
+            paddingTop: '1.5rem',
+            borderTop: '1px solid var(--border)',
+          }}>
+            {[
+              { label: 'Easy', value: stats.easySolved, color: '#34d399' },
+              { label: 'Medium', value: stats.mediumSolved, color: '#fbbf24' },
+              { label: 'Hard', value: stats.hardSolved, color: '#f87171' },
+            ].map(item => (
+              <div key={item.label}>
+                <p style={{
+                  fontFamily: 'var(--font-geist-mono), monospace',
+                  fontSize: 'clamp(1.25rem, 3vw, 1.75rem)',
+                  fontWeight: 600,
+                  color: 'var(--text)',
+                  lineHeight: 1,
+                  margin: 0,
+                  opacity: loading ? 0.3 : 1,
+                  transition: 'opacity 300ms',
+                }}>
+                  {item.value}
+                </p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px' }}>
+                  <span style={{
+                    width: '6px', height: '6px', borderRadius: '50%',
+                    background: item.color, display: 'inline-block',
+                  }} />
+                  <span style={{
+                    fontFamily: 'var(--font-geist-mono), monospace',
+                    fontSize: '10px', color: 'var(--text-muted)',
+                    textTransform: 'uppercase', letterSpacing: '0.08em',
+                  }}>
+                    {item.label}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+
+        {/* Right: LeetCard heatmap embed */}
+        <div style={{
+          background: 'var(--surface)',
+          border: '1px solid var(--border)',
+          borderRadius: '12px',
+          padding: '1.5rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+        }}>
+          <p style={{
+            fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.12em',
+            color: 'var(--text-muted)',
+          }}>
+            Activity heatmap
+          </p>
+          <img
+            src={`https://leetcard.jacoblin.cool/${USERNAME}?theme=dark&font=Geist+Mono&ext=heatmap&border=0&radius=12`}
+            alt="LeetCode stats card"
+            style={{
+              width: '100%', opacity: 0.85,
+              display: 'block', borderRadius: '8px',
+            }}
+            onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
+          />
+        </div>
       </div>
 
-      {/* LeetCard embed */}
-      <div style={{ overflow: 'hidden', borderRadius: '12px' }}>
-        <img
-          src={`https://leetcard.jacoblin.cool/${USERNAME}?theme=dark&font=Geist+Mono&ext=heatmap&border=0&radius=12`}
-          alt="LeetCode stats card"
-          style={{
-            maxWidth: '480px', width: '100%', opacity: 0.8,
-            display: 'block', borderRadius: '12px'
-          }}
-          onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
-        />
-      </div>
+      {/* Responsive */}
+      <style>{`
+        @media (max-width: 768px) {
+          .lc-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </section>
   )
 }

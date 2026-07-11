@@ -85,7 +85,8 @@ export default function Projects() {
               gap: '24px',
               alignItems: 'start',
               background: hoveredIndex === i ? 'var(--surface)' : 'transparent',
-              transition: 'background 200ms',
+              borderLeft: hoveredIndex === i ? '2px solid var(--text-muted)' : '2px solid transparent',
+              transition: 'background 200ms, border-left 200ms',
               borderRadius: '8px',
               margin: '0 -12px',
             }}

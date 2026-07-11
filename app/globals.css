@@ -4,12 +4,12 @@
 
 :root {
   --bg: #0a0a0a;
-  --surface: #111111;
+  --surface: #121212;
   --surface-2: #1a1a1a;
-  --border: #1f1f1f;
+  --border: #222222;
   --text: #fafafa;
-  --text-secondary: #888888;
-  --text-muted: #444444;
+  --text-secondary: #a0a0a0;
+  --text-muted: #888888;
 }
 
 * { box-sizing: border-box; }

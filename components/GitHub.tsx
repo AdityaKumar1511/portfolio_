@@ -40,6 +40,14 @@ export default function GitHub() {
     return `Activity · ${repo}`
   }
 
+  const timeAgo = (dateStr: string) => {
+    const diff = Date.now() - new Date(dateStr).getTime()
+    const hrs = Math.floor(diff / 3600000)
+    if (hrs < 1) return 'just now'
+    if (hrs < 24) return `${hrs}h ago`
+    return `${Math.floor(hrs / 24)}d ago`
+  }
+
   return (
     <section id="github" style={{
       padding: 'clamp(4rem,10vw,8rem) 24px',
@@ -48,7 +56,7 @@ export default function GitHub() {
       margin: '0 auto',
       width: '100%',
     }}>
-      {/* Header */}
+      {/* Header row */}
       <div style={{ display: 'flex', justifyContent: 'space-between',
         alignItems: 'flex-start', marginBottom: '3rem' }}>
         <div>
@@ -77,72 +85,106 @@ export default function GitHub() {
       <a href={`https://github.com/${USERNAME}`} target="_blank" rel="noreferrer"
         style={{ fontFamily: 'var(--font-geist-mono), monospace',
           fontSize: '13px', color: 'var(--text-secondary)',
-          textDecoration: 'none', display: 'block', marginBottom: '3rem',
+          textDecoration: 'none', display: 'block', marginBottom: '2rem',
           transition: 'color 150ms' }}
         onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
         onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-secondary)')}>
         @{USERNAME} ↗
       </a>
 
-      {/* Heatmap */}
-      <div style={{ marginBottom: '3rem', overflow: 'hidden', borderRadius: '8px' }}>
-        <img
-          src={`https://ghchart.rshah.org/444444/${USERNAME}`}
-          alt="GitHub contributions"
-          style={{ width: '100%', maxWidth: '600px',
-            filter: 'invert(1) opacity(0.2)', display: 'block' }}
-        />
-      </div>
-
-      {/* Recent activity */}
-      <div>
-        <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
-          fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.15em',
-          color: 'var(--text-muted)', marginBottom: '12px' }}>
-          Recent activity
-        </p>
-        <h3 style={{ fontSize: '18px', fontWeight: 500, color: 'var(--text)',
-          marginBottom: '1.5rem' }}>
-          Latest pushes &amp; pull requests.
-        </h3>
-
-        {loading ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {[...Array(5)].map((_, i) => (
-              <div key={i} style={{ height: '44px', background: 'var(--surface)',
-                borderRadius: '6px', opacity: 0.5 }} />
-            ))}
-          </div>
-        ) : events.length > 0 ? (
-          <div>
-            {events.map((event, i) => (
-              <a key={i}
-                href={`https://github.com/${event.repo.name}`}
-                target="_blank" rel="noreferrer"
-                style={{ display: 'flex', alignItems: 'center', gap: '12px',
-                  borderBottom: '1px solid var(--border)', padding: '12px 8px',
-                  textDecoration: 'none', transition: 'background 150ms',
-                  borderRadius: '4px', margin: '0 -8px' }}
-                onMouseEnter={e => (e.currentTarget.style.background = 'var(--surface)')}
-                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
-                <span style={{ fontFamily: 'var(--font-geist-mono), monospace',
-                  color: 'var(--text-muted)', fontSize: '13px',
-                  width: '16px', flexShrink: 0 }}>
-                  {getIcon(event.type)}
-                </span>
-                <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                  {getLabel(event)}
-                </span>
-              </a>
-            ))}
-          </div>
-        ) : (
+      {/* 2-column grid: heatmap + activity feed */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1.4fr 1fr',
+        gap: '2rem',
+        alignItems: 'start',
+      }} className="github-grid">
+        {/* Left: Heatmap */}
+        <div style={{
+          background: 'var(--surface)',
+          border: '1px solid var(--border)',
+          borderRadius: '12px',
+          padding: '1.5rem',
+        }}>
           <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
-            fontSize: '12px', color: 'var(--text-muted)' }}>
-            No recent activity found.
+            fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.12em',
+            color: 'var(--text-muted)', marginBottom: '1rem' }}>
+            Contribution heatmap
           </p>
-        )}
+          <img
+            src={`https://ghchart.rshah.org/666666/${USERNAME}`}
+            alt="GitHub contributions"
+            style={{ width: '100%', filter: 'invert(1) opacity(0.25)', display: 'block' }}
+          />
+        </div>
+
+        {/* Right: Activity feed */}
+        <div style={{
+          background: 'var(--surface)',
+          border: '1px solid var(--border)',
+          borderRadius: '12px',
+          padding: '1.5rem',
+          maxHeight: '320px',
+          overflowY: 'auto',
+        }}>
+          <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.12em',
+            color: 'var(--text-muted)', marginBottom: '1rem' }}>
+            Recent activity
+          </p>
+          {loading ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {[...Array(4)].map((_, i) => (
+                <div key={i} style={{ height: '38px', background: 'var(--surface-2)',
+                  borderRadius: '6px', opacity: 0.4 }} />
+              ))}
+            </div>
+          ) : events.length > 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {events.map((event, i) => (
+                <a key={i}
+                  href={`https://github.com/${event.repo.name}`}
+                  target="_blank" rel="noreferrer"
+                  style={{ display: 'flex', alignItems: 'center', gap: '10px',
+                    borderBottom: i < events.length - 1 ? '1px solid var(--border)' : 'none',
+                    padding: '10px 6px',
+                    textDecoration: 'none', transition: 'background 150ms',
+                    borderRadius: '4px', margin: '0 -6px' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'var(--surface-2)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                  <span style={{ fontFamily: 'var(--font-geist-mono), monospace',
+                    color: 'var(--text-muted)', fontSize: '13px',
+                    width: '14px', flexShrink: 0, textAlign: 'center' }}>
+                    {getIcon(event.type)}
+                  </span>
+                  <span style={{ fontSize: '13px', color: 'var(--text-secondary)', flex: 1,
+                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {getLabel(event)}
+                  </span>
+                  <span style={{ fontFamily: 'var(--font-geist-mono), monospace',
+                    fontSize: '10px', color: 'var(--text-muted)', flexShrink: 0 }}>
+                    {timeAgo(event.created_at)}
+                  </span>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
+              fontSize: '12px', color: 'var(--text-muted)' }}>
+              No recent activity found.
+            </p>
+          )}
+        </div>
       </div>
+
+      {/* Responsive */}
+      <style>{`
+        @media (max-width: 768px) {
+          .github-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </section>
   )
 }
