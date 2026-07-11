@@ -21,7 +21,7 @@ export default function Hero() {
         </div>
         <div className="work-status-upper">
           <span className="status-dot" />
-          <span className="nav-item">Open to work — 2026</span>
+          <span className="nav-item">Open to work</span>
         </div>
       </div>
 
@@ -77,7 +77,7 @@ export default function Hero() {
         .nav-center-container {
           display: flex;
           align-items: center;
-          gap: 16px;
+          gap: 8px;
         }
 
         .nav-item-line {

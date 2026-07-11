@@ -13,7 +13,7 @@ import Footer from '@/components/Footer'
 export default function Page() {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <main>
         <Hero />
         <About />

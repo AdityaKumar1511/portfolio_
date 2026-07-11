@@ -53,7 +53,7 @@ export default function About() {
             <div className="profile-image-wrapper">
               {!imgErr ? (
                 <Image
-                  src="/profile.jpg"
+                  src="/profile.png"
                   alt="Aditya Kumar"
                   fill
                   sizes="(max-width: 1024px) 100vw, 400px"
@@ -130,6 +130,7 @@ export default function About() {
           padding: clamp(2rem, 5vw, 4.5rem);
           color: #ffffff;
           max-width: 1352px;
+          // max-height: 100vh;
           margin: 0 auto;
           box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
