@@ -1,4 +1,5 @@
 'use client'
+
 export default function Experience() {
   const items = [
     { num: '01', role: 'Open Source Contributor', org: 'GSSoC', period: '2024 — Present' },
@@ -8,62 +9,206 @@ export default function Experience() {
   ]
 
   return (
-    <section id="experience" style={{
-      padding: 'clamp(4rem,10vw,8rem) 24px',
-      borderTop: '1px solid var(--border)',
-      maxWidth: '1400px',
-      margin: '0 auto',
-      width: '100%',
-    }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-        gap: '4rem', alignItems: 'start' }}>
-        <div>
-          <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
-            fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.15em',
-            color: 'var(--text-muted)', marginBottom: '12px' }}>
-            Experience
-          </p>
-          <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.25rem)', fontWeight: 500,
-            letterSpacing: '-0.02em', color: 'var(--text)', lineHeight: 1.15 }}>
-            Where I&apos;ve built.
-          </h2>
+    <section id="experience" className="experience-section">
+      <div className="experience-grid">
+        {/* Left Column (Sticky) */}
+        <div className="experience-left">
+          <div>
+            <div className="experience-label-container">
+              <span className="experience-label-line" />
+              <span className="experience-label-text">Experience</span>
+            </div>
+            <h2 className="experience-heading">
+              Where I&apos;ve built.
+            </h2>
+          </div>
+          {/* Decorative dot at the bottom of the sticky section */}
+          <div className="experience-dot" />
         </div>
 
-        <div>
+        {/* Right Column (List of Experience Rows) */}
+        <div className="experience-list">
           {items.map((item, i) => (
-            <div key={i} style={{
-              borderTop: '1px solid var(--border)',
-              padding: '20px 0',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              gap: '16px',
-            }}>
-              <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
-                <span style={{ fontFamily: 'var(--font-geist-mono), monospace',
-                  fontSize: '11px', color: 'var(--text-muted)', paddingTop: '3px',
-                  flexShrink: 0 }}>
-                  {item.num}
-                </span>
-                <div>
-                  <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text)',
-                    marginBottom: '4px' }}>
-                    {item.role}
-                  </p>
-                  <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                    {item.org}
-                  </p>
-                </div>
-              </div>
-              <span style={{ fontFamily: 'var(--font-geist-mono), monospace',
-                fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>
-                {item.period}
-              </span>
+            <div key={i} className="experience-row">
+              {/* Number */}
+              <span className="experience-num">{item.num}</span>
+              
+              {/* Role Title */}
+              <h3 className="experience-role">{item.role}</h3>
+              
+              {/* Organization */}
+              <span className="experience-org">{item.org}</span>
+              
+              {/* Period */}
+              <span className="experience-period">{item.period}</span>
             </div>
           ))}
-          <div style={{ borderTop: '1px solid var(--border)' }} />
         </div>
       </div>
+
+      {/* Embedded CSS for layout and responsiveness */}
+      <style>{`
+        .experience-section {
+          padding: clamp(4rem, 10vw, 8rem) 24px;
+          border-top: 1px solid var(--border);
+          max-width: 1400px;
+          margin: 0 auto;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .experience-grid {
+          display: grid;
+          grid-template-columns: 320px 1fr;
+          gap: 4rem;
+          align-items: start;
+        }
+
+        .experience-left {
+          position: sticky;
+          top: 120px;
+          height: calc(80vh - 120px);
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .experience-label-container {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 2rem;
+        }
+
+        .experience-label-line {
+          width: 24px;
+          height: 1px;
+          background: var(--text-muted);
+        }
+
+        .experience-label-text {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.15em;
+          color: var(--text-muted);
+        }
+
+        .experience-heading {
+          font-size: clamp(2rem, 4vw, 3.5rem);
+          font-weight: 500;
+          letter-spacing: -0.03em;
+          color: var(--text);
+          line-height: 1.1;
+          margin: 0;
+        }
+
+        .experience-dot {
+          width: 8px;
+          height: 8px;
+          background: var(--text);
+          border-radius: 50%;
+          margin-top: auto;
+          margin-left: 36px;
+        }
+
+        .experience-list {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .experience-row {
+          display: grid;
+          grid-template-columns: 50px 1fr 180px 130px;
+          gap: 24px;
+          align-items: baseline;
+          padding: 48px 0;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .experience-row:first-of-type {
+          border-top: 1px solid var(--border);
+        }
+
+        .experience-num {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 13px;
+          font-weight: 600;
+          color: #ff5f38; /* Accent red/orange color from screenshot */
+        }
+
+        .experience-role {
+          font-size: clamp(1.5rem, 3vw, 2.5rem);
+          font-weight: 500;
+          color: var(--text);
+          margin: 0;
+          line-height: 1.15;
+          letter-spacing: -0.02em;
+        }
+
+        .experience-org {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 12px;
+          text-transform: uppercase;
+          color: var(--text-muted);
+          letter-spacing: 0.08em;
+        }
+
+        .experience-period {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 12px;
+          color: var(--text-muted);
+          text-align: right;
+        }
+
+        @media (max-width: 1024px) {
+          .experience-grid {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+          }
+
+          .experience-left {
+            position: static;
+            height: auto;
+            gap: 1.5rem;
+          }
+
+          .experience-dot {
+            display: none;
+          }
+
+          .experience-row {
+            grid-template-columns: 40px 1fr auto;
+            padding: 32px 0;
+            gap: 16px;
+          }
+
+          .experience-org {
+            grid-column: 2;
+            margin-top: 2px;
+          }
+
+          .experience-period {
+            grid-column: 3;
+            grid-row: 1 / 3;
+            align-self: center;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .experience-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 24px 0;
+          }
+
+          .experience-period {
+            text-align: left;
+            margin-top: 4px;
+          }
+        }
+      `}</style>
     </section>
   )
 }

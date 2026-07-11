@@ -8,8 +8,8 @@
   --surface-2: #1a1a1a;
   --border: #222222;
   --text: #fafafa;
-  --text-secondary: #a0a0a0;
-  --text-muted: #888888;
+  --text-secondary: #d0d0d0;
+  --text-muted: #a0a0a0;
 }
 
 * { box-sizing: border-box; }

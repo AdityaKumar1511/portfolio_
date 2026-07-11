@@ -2,6 +2,7 @@ import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
 import About from '@/components/About'
 import Ticker from '@/components/Ticker'
+import HowIWork from '@/components/HowIWork'
 import Projects from '@/components/Projects'
 import GitHub from '@/components/GitHub'
 import LeetCode from '@/components/LeetCode'
@@ -17,6 +18,7 @@ export default function Page() {
         <Hero />
         <About />
         <Ticker />
+        <HowIWork />
         <Projects />
         <GitHub />
         <LeetCode />

@@ -9,163 +9,223 @@ export default function Hero() {
     return () => clearTimeout(t)
   }, [])
 
-  const scrollTo = (id: string) =>
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
-
-  const lines = ['Engineering', 'systems that', 'scale.']
-
   return (
-    <section
-      id="hero"
-      style={{
-        height: '100svh',
-        padding: '0 24px',
-        paddingTop: '56px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        maxWidth: '1400px',
-        margin: '0 auto',
-        width: '100%',
-        boxSizing: 'border-box',
-      }}
-    >
-      {/* ── Top: meta labels ── */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr auto',
-        gap: '20px',
-        alignItems: 'end',
-        paddingTop: '32px',
-      }}>
-        <div>
-          <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
-            fontSize: '11px', color: 'var(--text-muted)',
-            textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '4px' }}>
-            Developer — 01
-          </p>
-          <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
-            fontSize: '11px', color: 'var(--text-muted)',
-            textTransform: 'uppercase', letterSpacing: '0.15em' }}>
-            Full-Stack Engineer
-          </p>
+    <section id="hero" className="hero-section">
+      {/* Top Navbar details */}
+      <div className="hero-top-nav">
+        <span className="nav-item">Aditya Kumar</span>
+        <div className="nav-center-container">
+          <span className="nav-item-line" />
+          <span className="nav-item">Full-Stack Engineer</span>
+          <span className="nav-item-line" />
         </div>
-        <div style={{ textAlign: 'right' }}>
-          <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
-            fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px' }}>
-            Open to work — 2026
-          </p>
-          <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
-            fontSize: '11px', color: 'var(--text-muted)' }}>
-            Scroll ↓
-          </p>
+        <div className="work-status-upper">
+          <span className="status-dot" />
+          <span className="nav-item">Open to work — 2026</span>
         </div>
       </div>
 
-      {/* ── Center: heading + subtext ── */}
-      <div>
-        <h1 style={{
-          fontSize: 'clamp(3rem, 7.5vw, 6.5rem)',
-          fontWeight: 600,
-          lineHeight: 0.92,
-          letterSpacing: '-0.04em',
-          color: 'var(--text)',
-          margin: 0,
-        }}>
-          {lines.map((line, i) => (
-            <span
-              key={line}
-              style={{
-                display: 'block',
-                opacity: visible ? 1 : 0,
-                transform: visible ? 'translateY(0)' : 'translateY(30px)',
-                transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${i * 0.12}s, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${i * 0.12}s`,
-              }}
-            >
-              {line}
-            </span>
-          ))}
+      {/* Main typography */}
+      <div className="hero-center-content">
+        <h1 className="hero-title">
+          <span className="title-row fade-in-up" style={{ animationDelay: '0.1s' }}>Engineering</span>
+          <span className="title-row fade-in-up" style={{ animationDelay: '0.25s' }}>systems that</span>
+          <span className="title-row fade-in-up title-accent" style={{ animationDelay: '0.4s' }}>
+            scale<span className="title-dot">.</span>
+          </span>
         </h1>
-
-        <p style={{
-          marginTop: '1.5rem',
-          fontSize: '15px',
-          color: 'var(--text-secondary)',
-          maxWidth: '420px',
-          lineHeight: 1.6,
-          opacity: visible ? 1 : 0,
-          transition: 'opacity 0.7s ease 0.5s',
-        }}>
+        
+        <p className="hero-subtitle fade-in" style={{ animationDelay: '0.7s' }}>
           Fast, resilient systems — from the data layer to the last pixel.
         </p>
       </div>
 
-      {/* ── Bottom: pills + links ── */}
-      <div style={{ paddingBottom: '40px' }}>
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '10px',
-          opacity: visible ? 1 : 0,
-          transition: 'opacity 0.7s ease 0.65s',
-          marginBottom: '1.5rem',
-        }}>
-          {[
-            { label: 'Projects', id: 'projects' },
-            { label: 'About', id: 'about' },
-            { label: 'GitHub', id: 'github' },
-            { label: 'Contact', id: 'contact' },
-          ].map(({ label, id }) => (
-            <button
-              key={id}
-              onClick={() => scrollTo(id)}
-              style={{
-                background: 'none',
-                border: '1px solid var(--border)',
-                borderRadius: '999px',
-                padding: '8px 20px',
-                fontSize: '13px',
-                color: 'var(--text-secondary)',
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-                transition: 'all 200ms',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = 'var(--text-secondary)'
-                e.currentTarget.style.color = 'var(--text)'
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = 'var(--border)'
-                e.currentTarget.style.color = 'var(--text-secondary)'
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '20px',
-          opacity: visible ? 1 : 0,
-          transition: 'opacity 0.7s ease 0.75s',
-        }}>
-          <a href="https://github.com/AdityaKumar1511" target="_blank" rel="noreferrer"
-            style={{ fontSize: '13px', color: 'var(--text-secondary)',
-              textDecoration: 'underline', textUnderlineOffset: '4px',
-              textDecorationColor: 'var(--border)', transition: 'color 150ms' }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-secondary)')}>
-            View GitHub →
-          </a>
-          <span style={{ width: '1px', height: '14px', background: 'var(--border)' }} />
-          <span style={{ fontFamily: 'var(--font-geist-mono), monospace',
-            fontSize: '11px', color: 'var(--text-muted)' }}>
-            ↓ scroll
-          </span>
+      {/* Scroll indicator */}
+      <div className="hero-bottom-content fade-in" style={{ animationDelay: '0.9s' }}>
+        <span className="scroll-label">Scroll Down</span>
+        <div className="scroll-line-container">
+          <div className="scroll-line" />
         </div>
       </div>
+
+      {/* CSS Styles */}
+      <style>{`
+        .hero-section {
+          height: 100svh;
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          max-width: 1400px;
+          margin: 0 auto;
+          width: 100%;
+          box-sizing: border-box;
+          background: #0a0a0a;
+          color: #fafafa;
+          position: relative;
+        }
+
+        .hero-top-nav {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          padding-top: 12px;
+          z-index: 10;
+        }
+
+        .nav-center-container {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .nav-item-line {
+          width: 24px;
+          height: 1px;
+          background: var(--text-muted);
+        }
+
+        .nav-item {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.15em;
+          color: var(--text-muted);
+        }
+
+        .hero-center-content {
+          text-align: center;
+          margin: auto 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 2rem;
+        }
+
+        .hero-title {
+          font-size: clamp(3rem, 8.5vw, 7rem);
+          font-weight: 500;
+          line-height: 0.95;
+          letter-spacing: -0.04em;
+          color: var(--text);
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .title-row {
+          display: block;
+        }
+
+        .title-accent {
+          color: #e07a5f; /* Rusty/terracotta orange */
+          position: relative;
+        }
+
+        .title-dot {
+          color: var(--text);
+          margin-left: 2px;
+        }
+
+        .hero-subtitle {
+          font-size: clamp(14px, 2vw, 17px);
+          color: var(--text-secondary);
+          max-width: 480px;
+          line-height: 1.6;
+          margin: 0;
+          font-weight: 400;
+        }
+
+        .hero-bottom-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+          gap: 8px;
+          padding-bottom: 12px;
+          z-index: 10;
+        }
+
+        .scroll-label {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 9px;
+          text-transform: uppercase;
+          letter-spacing: 0.25em;
+          color: var(--text-muted);
+        }
+
+        .scroll-line-container {
+          height: 48px;
+          width: 1px;
+          position: relative;
+          overflow: hidden;
+          margin: 4px 0;
+        }
+
+        .scroll-line {
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(to bottom, transparent, var(--text-muted), transparent);
+          animation: scrollDown 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+        }
+
+        @keyframes scrollDown {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(100%); }
+        }
+
+        .work-status-upper {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .status-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #e07a5f;
+          display: inline-block;
+        }
+
+        /* Animations */
+        .fade-in-up {
+          opacity: 0;
+          transform: translateY(30px);
+          animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .fade-in {
+          opacity: 0;
+          animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeIn {
+          to {
+            opacity: 1;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .hero-top-nav {
+            flex-direction: column;
+            gap: 8px;
+          }
+          .nav-center-container {
+            display: none;
+          }
+        }
+      `}</style>
     </section>
   )
 }
