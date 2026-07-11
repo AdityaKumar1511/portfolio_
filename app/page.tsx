@@ -18,11 +18,11 @@ export default function Page() {
         <Hero />
         <About />
         <Ticker />
-        <HowIWork />
+        <Experience />
         <Projects />
         <GitHub />
         <LeetCode />
-        <Experience />
+        <HowIWork />
         <Contact />
       </main>
       <Footer />

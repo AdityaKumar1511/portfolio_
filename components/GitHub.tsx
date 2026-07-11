@@ -223,71 +223,77 @@ export default function GitHub() {
         Building in public.
       </h2>
 
-      {/* Stats counters grid */}
-      <div className="stats-row">
-        <div className="stat-col">
-          <span className="stat-val">{stats.contributions}</span>
-          <span className="stat-lbl">Contributions · 1y</span>
-        </div>
-        <div className="stat-col">
-          <span className="stat-val accent-val">{stats.currentStreak}</span>
-          <span className="stat-lbl">Current Streak</span>
-        </div>
-        <div className="stat-col">
-          <span className="stat-val">{stats.longestStreak}</span>
-          <span className="stat-lbl">Longest Streak</span>
-        </div>
-        <div className="stat-col">
-          <span className="stat-val">{stats.commits}</span>
-          <span className="stat-lbl">Commits · 1y</span>
-        </div>
-      </div>
-
-      {/* Grid label */}
-      <div className="grid-summary-label">
-        {stats.contributions.toLocaleString()} Contributions · Last Year
-      </div>
-
-      {/* Heatmap Area */}
-      <div className="heatmap-container">
-        <div className="heatmap-y-axis">
-          <span>Mon</span>
-          <span>Wed</span>
-          <span>Fri</span>
+      {/* Content grid containing stats on left and heatmap on right */}
+      <div className="github-content-grid">
+        <div className="stats-side">
+          <div className="stats-grid-2x2">
+            <div className="stat-col">
+              <span className="stat-val">{stats.contributions}</span>
+              <span className="stat-lbl">Contributions · 1y</span>
+            </div>
+            <div className="stat-col">
+              <span className="stat-val accent-val">{stats.currentStreak}</span>
+              <span className="stat-lbl">Current Streak</span>
+            </div>
+            <div className="stat-col">
+              <span className="stat-val">{stats.longestStreak}</span>
+              <span className="stat-lbl">Longest Streak</span>
+            </div>
+            <div className="stat-col">
+              <span className="stat-val">{stats.commits}</span>
+              <span className="stat-lbl">Commits · 1y</span>
+            </div>
+          </div>
         </div>
 
-        <div className="heatmap-scroller">
-          <div className="heatmap-inner">
-            {/* Month labels */}
-            <div className="heatmap-months">
-              {['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'].map((m, idx) => (
-                <span key={idx}>{m}</span>
-              ))}
+        <div className="heatmap-side">
+          {/* Grid label */}
+          <div className="grid-summary-label">
+            {stats.contributions.toLocaleString()} Contributions · Last Year
+          </div>
+
+          {/* Heatmap Area */}
+          <div className="heatmap-container">
+            <div className="heatmap-y-axis">
+              <span>Mon</span>
+              <span>Wed</span>
+              <span>Fri</span>
             </div>
 
-            {/* Grid grid-auto-flow: column */}
-            <div className="heatmap-grid">
-              {calendarData.map((day, idx) => (
-                <div
-                  key={idx}
-                  className="heatmap-cell"
-                  title={`${day.date}: ${day.count} contributions`}
-                  style={{
-                    background: getCellColor(day.level),
-                  }}
-                />
-              ))}
-            </div>
+            <div className="heatmap-scroller">
+              <div className="heatmap-inner">
+                {/* Month labels */}
+                <div className="heatmap-months">
+                  {['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'].map((m, idx) => (
+                    <span key={idx}>{m}</span>
+                  ))}
+                </div>
 
-            {/* Legend */}
-            <div className="heatmap-legend">
-              <span>Less</span>
-              <span className="legend-cell" style={{ background: '#161616' }} />
-              <span className="legend-cell" style={{ background: '#3d231d' }} />
-              <span className="legend-cell" style={{ background: '#6b372a' }} />
-              <span className="legend-cell" style={{ background: '#a8503b' }} />
-              <span className="legend-cell" style={{ background: '#e05d43' }} />
-              <span>More</span>
+                {/* Grid grid-auto-flow: column */}
+                <div className="heatmap-grid">
+                  {calendarData.map((day, idx) => (
+                    <div
+                      key={idx}
+                      className="heatmap-cell"
+                      title={`${day.date}: ${day.count} contributions`}
+                      style={{
+                        background: getCellColor(day.level),
+                      }}
+                    />
+                  ))}
+                </div>
+
+                {/* Legend */}
+                <div className="heatmap-legend">
+                  <span>Less</span>
+                  <span className="legend-cell" style={{ background: '#161616' }} />
+                  <span className="legend-cell" style={{ background: '#3d231d' }} />
+                  <span className="legend-cell" style={{ background: '#6b372a' }} />
+                  <span className="legend-cell" style={{ background: '#a8503b' }} />
+                  <span className="legend-cell" style={{ background: '#e05d43' }} />
+                  <span>More</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -376,11 +382,18 @@ export default function GitHub() {
           margin: 0 0 4rem 0;
         }
 
-        .stats-row {
+        .github-content-grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: 320px 1fr;
+          gap: 10rem;
+          align-items: flex-start;
+          margin-bottom: 2rem;
+        }
+
+        .stats-grid-2x2 {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
           gap: 2rem;
-          margin-bottom: 4rem;
         }
 
         .stat-col {
@@ -497,10 +510,17 @@ export default function GitHub() {
           border-radius: 2px;
         }
 
-        @media (max-width: 768px) {
-          .stats-row {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
+        @media (max-width: 1024px) {
+          .github-content-grid {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .stats-grid-2x2 {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
           }
         }
       `}</style>

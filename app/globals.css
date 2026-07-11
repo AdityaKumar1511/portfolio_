@@ -52,3 +52,31 @@ body {
 .pulse-dot {
   animation: pulse-dot 2s ease-in-out infinite;
 }
+
+/* Custom Cursor Styles */
+body.has-custom-cursor,
+body.has-custom-cursor * {
+  cursor: none !important;
+}
+
+.custom-cursor {
+  width: 12px;
+  height: 12px;
+  background: #ffffff !important;
+  border-radius: 50%;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 999999;
+  mix-blend-mode: difference;
+  transition: width 0.15s ease, height 0.15s ease, background-color 0.15s ease;
+}
+
+
+.custom-cursor.cursor-hovered {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.3) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.8) !important;
+  mix-blend-mode: difference;
+}

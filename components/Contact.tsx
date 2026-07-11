@@ -1,71 +1,148 @@
 'use client'
 export default function Contact() {
   return (
-    <section id="contact" style={{
-      padding: 'clamp(5rem,12vw,10rem) 24px',
-      borderTop: '1px solid var(--border)',
-      maxWidth: '1400px',
-      margin: '0 auto',
-      width: '100%',
-      textAlign: 'center',
-    }}>
-      <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
-        fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.15em',
-        color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-        Let&apos;s build something
-      </p>
+    <section id="contact" className="contact-section">
+      {/* Ambient glow orbs */}
+      <div className="contact-glow contact-glow-1" />
+      <div className="contact-glow contact-glow-2" />
 
-      <h2 style={{
-        fontSize: 'clamp(2.5rem, 8vw, 6rem)',
-        fontWeight: 600,
-        letterSpacing: '-0.04em',
-        lineHeight: 0.92,
-        color: 'var(--text)',
-        marginBottom: '2.5rem',
-      }}>
+      <p className="contact-label">Let&apos;s build something</p>
+
+      <h2 className="contact-heading">
         Have a hard<br />problem?
       </h2>
 
       <a
         href="mailto:aditya.kumar00706@gmail.com"
-        style={{
-          fontSize: 'clamp(0.9rem, 2vw, 1.15rem)',
-          color: 'var(--text-secondary)',
-          textDecoration: 'underline',
-          textUnderlineOffset: '6px',
-          textDecorationColor: 'var(--border)',
-          transition: 'all 200ms',
-          display: 'inline-block',
-          marginBottom: '3rem',
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.color = 'var(--text)'
-          e.currentTarget.style.textDecorationColor = 'var(--text)'
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.color = 'var(--text-secondary)'
-          e.currentTarget.style.textDecorationColor = 'var(--border)'
-        }}
+        className="contact-email"
       >
         aditya.kumar00706@gmail.com ↗
       </a>
 
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem',
-        flexWrap: 'wrap' }}>
+      <div className="contact-links">
         {[
           { label: 'GitHub', href: 'https://github.com/AdityaKumar1511' },
           { label: 'LinkedIn', href: 'https://linkedin.com/in/aditya-kumar-57a988374/' },
           { label: 'Email', href: 'mailto:aditya.kumar00706@gmail.com' },
         ].map(({ label, href }) => (
-          <a key={label} href={href} target="_blank" rel="noreferrer"
-            style={{ fontSize: '13px', color: 'var(--text-muted)',
-              textDecoration: 'none', transition: 'color 150ms' }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}>
+          <a key={label} href={href} target="_blank" rel="noreferrer" className="contact-link">
             {label}
           </a>
         ))}
       </div>
+
+      <style>{`
+        .contact-section {
+          padding: clamp(5rem, 12vw, 10rem) 24px;
+          border-top: 1px solid var(--border);
+          max-width: 1400px;
+          margin: 0 auto;
+          width: 100%;
+          text-align: center;
+          box-sizing: border-box;
+          position: relative;
+          overflow: hidden;
+        }
+
+        /* Ambient glow orbs */
+        .contact-glow {
+          position: absolute;
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .contact-glow-1 {
+          width: 550px;
+          height: 550px;
+          top: -100px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: radial-gradient(circle, rgba(224, 122, 95, 0.12) 0%, transparent 70%);
+          filter: blur(80px);
+          animation: contactGlow1 8s ease-in-out infinite alternate;
+        }
+
+        .contact-glow-2 {
+          width: 400px;
+          height: 400px;
+          bottom: -80px;
+          right: -60px;
+          background: radial-gradient(circle, rgba(174, 216, 230, 0.08) 0%, transparent 70%);
+          filter: blur(70px);
+          animation: contactGlow2 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes contactGlow1 {
+          0% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+          100% { opacity: 1; transform: translateX(-50%) scale(1.15); }
+        }
+
+        @keyframes contactGlow2 {
+          0% { opacity: 0.4; transform: scale(1); }
+          100% { opacity: 0.8; transform: scale(1.12); }
+        }
+
+        .contact-label {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.15em;
+          color: var(--text-muted);
+          margin-bottom: 1.5rem;
+          position: relative;
+          z-index: 1;
+        }
+
+        .contact-heading {
+          font-size: clamp(2.5rem, 8vw, 6rem);
+          font-weight: 600;
+          letter-spacing: -0.04em;
+          line-height: 0.92;
+          color: var(--text);
+          margin-bottom: 2.5rem;
+          position: relative;
+          z-index: 1;
+        }
+
+        .contact-email {
+          font-size: clamp(0.9rem, 2vw, 1.15rem);
+          color: var(--text-secondary);
+          text-decoration: underline;
+          text-underline-offset: 6px;
+          text-decoration-color: var(--border);
+          transition: all 200ms;
+          display: inline-block;
+          margin-bottom: 3rem;
+          position: relative;
+          z-index: 1;
+        }
+
+        .contact-email:hover {
+          color: var(--text);
+          text-decoration-color: var(--text);
+        }
+
+        .contact-links {
+          display: flex;
+          justify-content: center;
+          gap: 2rem;
+          flex-wrap: wrap;
+          position: relative;
+          z-index: 1;
+        }
+
+        .contact-link {
+          font-size: 13px;
+          color: var(--text-muted);
+          text-decoration: none;
+          transition: color 150ms;
+        }
+
+        .contact-link:hover {
+          color: var(--text);
+        }
+      `}</style>
     </section>
   )
 }

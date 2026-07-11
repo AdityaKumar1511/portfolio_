@@ -11,6 +11,11 @@ export default function Hero() {
 
   return (
     <section id="hero" className="hero-section">
+      {/* Ambient glow orbs */}
+      <div className="hero-glow hero-glow-1" />
+      <div className="hero-glow hero-glow-2" />
+      <div className="hero-glow hero-glow-3" />
+
       {/* Top Navbar details */}
       <div className="hero-top-nav">
         <span className="nav-item">Aditya Kumar</span>
@@ -63,6 +68,61 @@ export default function Hero() {
           background: #0a0a0a;
           color: #fafafa;
           position: relative;
+          overflow: hidden;
+        }
+
+        /* Ambient glow orbs */
+        .hero-glow {
+          position: absolute;
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .hero-glow-1 {
+          width: 600px;
+          height: 600px;
+          top: -120px;
+          right: -100px;
+          background: radial-gradient(circle, rgba(224, 122, 95, 0.15) 0%, transparent 70%);
+          filter: blur(80px);
+          animation: glowPulse1 8s ease-in-out infinite alternate;
+        }
+
+        .hero-glow-2 {
+          width: 500px;
+          height: 500px;
+          bottom: -60px;
+          left: -80px;
+          background: radial-gradient(circle, rgba(174, 216, 230, 0.1) 0%, transparent 70%);
+          filter: blur(90px);
+          animation: glowPulse2 10s ease-in-out infinite alternate;
+        }
+
+        .hero-glow-3 {
+          width: 350px;
+          height: 350px;
+          top: 40%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: radial-gradient(circle, rgba(224, 122, 95, 0.08) 0%, transparent 70%);
+          filter: blur(60px);
+          animation: glowPulse3 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes glowPulse1 {
+          0% { opacity: 0.6; transform: scale(1); }
+          100% { opacity: 1; transform: scale(1.15); }
+        }
+
+        @keyframes glowPulse2 {
+          0% { opacity: 0.5; transform: scale(1); }
+          100% { opacity: 0.9; transform: scale(1.1); }
+        }
+
+        @keyframes glowPulse3 {
+          0% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+          100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
         }
 
         .hero-top-nav {
@@ -102,6 +162,8 @@ export default function Hero() {
           align-items: center;
           justify-content: center;
           gap: 2rem;
+          position: relative;
+          z-index: 1;
         }
 
         .hero-title {

@@ -1,5 +1,4 @@
 'use client'
-import { useState } from 'react'
 import Link from 'next/link'
 
 const projects = [
@@ -50,127 +49,206 @@ const projects = [
 ]
 
 export default function Projects() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-
   return (
-    <section id="projects" style={{
-      padding: 'clamp(4rem,10vw,8rem) 24px',
-      borderTop: '1px solid var(--border)',
-      maxWidth: '1400px',
-      margin: '0 auto',
-      width: '100%',
-    }}>
-      <p style={{
-        fontFamily: 'var(--font-geist-mono), monospace',
-        fontSize: '11px',
-        textTransform: 'uppercase',
-        letterSpacing: '0.15em',
-        color: 'var(--text-muted)',
-        marginBottom: '3rem',
-      }}>
+    <section id="projects" className="projects-section">
+      <p className="projects-header-label">
         Selected projects
       </p>
 
-      <div>
+      <div className="projects-stack-container">
         {projects.map((project, i) => (
           <div
             key={project.slug}
-            onMouseEnter={() => setHoveredIndex(i)}
-            onMouseLeave={() => setHoveredIndex(null)}
+            className="project-sticky-card"
             style={{
-              borderTop: '1px solid var(--border)',
-              padding: '24px 12px',
-              display: 'grid',
-              gridTemplateColumns: '70px 1fr auto',
-              gap: '24px',
-              alignItems: 'start',
-              background: hoveredIndex === i ? 'var(--surface)' : 'transparent',
-              borderLeft: hoveredIndex === i ? '2px solid var(--text-muted)' : '2px solid transparent',
-              transition: 'background 200ms, border-left 200ms',
-              borderRadius: '8px',
-              margin: '0 -12px',
+              top: `${100 + i * 24}px`,
+              zIndex: i + 1,
             }}
           >
-            {/* Left: number + year */}
-            <div>
-              <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
-                fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px' }}>
-                0{i + 1}
-              </p>
-              <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
-                fontSize: '10px', color: 'var(--text-muted)' }}>
-                {project.year}
-              </p>
-              {project.featured && (
-                <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
-                  fontSize: '9px', color: 'var(--text-muted)',
-                  textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: '4px' }}>
-                  Featured
-                </p>
-              )}
+            <span className="project-number">
+              0{i + 1} &mdash; 0{projects.length}
+            </span>
+            <h3 className="project-title">{project.name}</h3>
+            <p className="project-desc">{project.description}</p>
+            
+            <div className="project-tech-tags">
+              {project.tech.map(t => (
+                <span key={t} className="tech-tag">
+                  {t}
+                </span>
+              ))}
             </div>
 
-            {/* Center: content */}
-            <div>
-              <h3 style={{ fontSize: '15px', fontWeight: 500, color: 'var(--text)',
-                marginBottom: '6px', lineHeight: 1.3 }}>
-                {project.name}
-              </h3>
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)',
-                lineHeight: 1.6, marginBottom: '12px' }}>
-                {project.description}
-              </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px',
-                marginBottom: '8px' }}>
-                {project.tech.map(t => (
-                  <span key={t} style={{
-                    fontFamily: 'var(--font-geist-mono), monospace',
-                    fontSize: '10px',
-                    color: 'var(--text-muted)',
-                    border: '1px solid var(--border)',
-                    borderRadius: '4px',
-                    padding: '2px 8px',
-                  }}>
-                    {t}
-                  </span>
-                ))}
-              </div>
-              {project.impact && (
-                <p style={{ fontFamily: 'var(--font-geist-mono), monospace',
-                  fontSize: '11px', color: 'var(--text-muted)' }}>
-                  → {project.impact}
-                </p>
-              )}
-            </div>
+            {project.impact && (
+              <span className="project-impact">
+                &rarr; {project.impact}
+              </span>
+            )}
 
-            {/* Right: links */}
-            <div style={{ display: 'flex', flexDirection: 'column',
-              gap: '8px', alignItems: 'flex-end', paddingTop: '2px' }}>
+            <div className="project-actions">
               {project.liveUrl && (
-                <Link href={project.liveUrl} target="_blank"
-                  style={{ fontFamily: 'var(--font-geist-mono), monospace',
-                    fontSize: '12px', color: 'var(--text-secondary)',
-                    textDecoration: 'none', transition: 'color 150ms' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-secondary)')}>
-                  Live ↗
+                <Link href={project.liveUrl} target="_blank" className="project-btn primary-btn">
+                  Live Preview ↗
                 </Link>
               )}
               {project.repoUrl && (
-                <Link href={project.repoUrl} target="_blank"
-                  style={{ fontFamily: 'var(--font-geist-mono), monospace',
-                    fontSize: '12px', color: 'var(--text-muted)',
-                    textDecoration: 'none', transition: 'color 150ms' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-secondary)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}>
-                  GitHub ↗
+                <Link href={project.repoUrl} target="_blank" className="project-btn secondary-btn">
+                  GitHub Repository ↗
                 </Link>
               )}
             </div>
           </div>
         ))}
-        <div style={{ borderTop: '1px solid var(--border)' }} />
       </div>
+
+      <style>{`
+        .projects-section {
+          padding: clamp(4rem, 10vw, 8rem) 24px;
+          border-top: 1px solid var(--border);
+          max-width: 1100px;
+          margin: 0 auto;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .projects-header-label {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.15em;
+          color: var(--text-muted);
+          margin-bottom: 3rem;
+        }
+
+        .projects-stack-container {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          position: relative;
+        }
+
+        .project-sticky-card {
+          position: sticky;
+          background: #121212;
+          border: 1px solid var(--border);
+          border-radius: 32px;
+          padding: clamp(2.5rem, 6vw, 4.5rem) 24px;
+          min-height: 440px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.6);
+          margin-bottom: clamp(60px, 10vh, 100px);
+          box-sizing: border-box;
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+        }
+
+        .project-sticky-card:hover {
+          border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .project-number {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          color: var(--text-muted);
+          margin-bottom: 1.25rem;
+          letter-spacing: 0.1em;
+        }
+
+        .project-title {
+          font-size: clamp(2rem, 4vw, 3rem);
+          font-weight: 500;
+          color: var(--text);
+          margin: 0 0 1.25rem 0;
+          letter-spacing: -0.03em;
+        }
+
+        .project-desc {
+          font-size: clamp(14px, 1.8vw, 15px);
+          color: var(--text-secondary);
+          max-width: 580px;
+          line-height: 1.6;
+          margin: 0 0 2rem 0;
+        }
+
+        .project-tech-tags {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 8px;
+          margin-bottom: 2rem;
+          max-width: 550px;
+        }
+
+        .tech-tag {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 10px;
+          color: var(--text-secondary);
+          border: 1px solid var(--border);
+          border-radius: 99px;
+          padding: 4px 12px;
+          background: rgba(255, 255, 255, 0.02);
+        }
+
+        .project-impact {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          color: #aed8e6;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          margin-bottom: 2.5rem;
+          display: block;
+        }
+
+        .project-actions {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .project-btn {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 12px;
+          text-decoration: none;
+          padding: 12px 24px;
+          border-radius: 999px;
+          transition: all 200ms ease;
+          border: 1px solid transparent;
+        }
+
+        .primary-btn {
+          background: #ffffff;
+          color: #0a0a0a;
+          font-weight: 500;
+        }
+
+        .primary-btn:hover {
+          background: transparent;
+          border-color: #ffffff;
+          color: #ffffff;
+        }
+
+        .secondary-btn {
+          background: transparent;
+          border-color: var(--border);
+          color: var(--text-secondary);
+        }
+
+        .secondary-btn:hover {
+          border-color: #ffffff;
+          color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+          .project-sticky-card {
+            margin-bottom: 40px;
+            min-height: auto;
+          }
+        }
+      `}</style>
     </section>
   )
 }
