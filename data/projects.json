@@ -9,7 +9,8 @@
     "liveUrl": "https://arbitrage.vercel.app",
     "repoUrl": "https://github.com/AdityaKumar1511/arbitrage",
     "featured": true,
-    "category": "Web"
+    "category": "Web",
+    "year": "2025"
   },
   {
     "slug": "nexusforge",
@@ -21,6 +22,7 @@
     "liveUrl": "https://nexusforge.vercel.app",
     "repoUrl": "https://github.com/AdityaKumar1511/nexusforge",
     "featured": true,
-    "category": "Blockchain"
+    "category": "Blockchain",
+    "year": "2025"
   }
 ]

@@ -1,32 +1,31 @@
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import Hero from "@/components/sections/Hero";
-import Projects from "@/components/sections/Projects";
-import Skills from "@/components/sections/Skills";
-import About from "@/components/sections/About";
-import Achievements from "@/components/sections/Achievements";
-import Blog from "@/components/sections/Blog";
-import Contact from "@/components/sections/Contact";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import About from "@/components/About";
+import Ticker from "@/components/Ticker";
+import Projects from "@/components/Projects";
+import Pipeline from "@/components/Pipeline";
+import GitHub from "@/components/GitHub";
+import LeetCode from "@/components/LeetCode";
+import Experience from "@/components/Experience";
+import Contact from "@/components/Contact";
+import Footer from "@/components/Footer";
 
-export default function Home() {
+export default function Page() {
   return (
     <>
       <Navbar />
-      
-      {/* Scrollable sections */}
-      <main className="flex-1 w-full flex flex-col">
+      <main>
         <Hero />
-        <Projects />
-        <Skills />
         <About />
-        <Achievements />
-        <Blog />
+        <Ticker />
+        <Projects />
+        <Pipeline />
+        <GitHub />
+        <LeetCode />
+        <Experience />
         <Contact />
       </main>
-
-
       <Footer />
     </>
   );
 }
-
