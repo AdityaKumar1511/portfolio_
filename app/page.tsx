@@ -1,13 +1,13 @@
-import Navbar from '@/components/layout/Navbar'
-import Hero from '@/components/sections/Hero'
-import About from '@/components/sections/About'
-import Ticker from '@/components/sections/Ticker'
-import Projects from '@/components/sections/Projects'
-import GitHub from '@/components/sections/GitHub'
-import LeetCode from '@/components/sections/LeetCode'
-import Experience from '@/components/sections/Experience'
-import Contact from '@/components/sections/Contact'
-import Footer from '@/components/layout/Footer'
+import Navbar from '@/components/Navbar'
+import Hero from '@/components/Hero'
+import About from '@/components/About'
+import Ticker from '@/components/Ticker'
+import Projects from '@/components/Projects'
+import GitHub from '@/components/GitHub'
+import LeetCode from '@/components/LeetCode'
+import Experience from '@/components/Experience'
+import Contact from '@/components/Contact'
+import Footer from '@/components/Footer'
 
 export default function Page() {
   return (

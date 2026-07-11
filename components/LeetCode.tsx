@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
 
-// ⚠️ REPLACE THIS with your actual LeetCode username
 const USERNAME = 'Adi_2007'
 
 interface LCStats {
