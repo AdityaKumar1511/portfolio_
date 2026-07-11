@@ -1,0 +1,43 @@
+{
+  "hackathons": [
+    {
+      "title": "ISRO BAH 2026",
+      "description": "Developed SkyLens with Team CodeBlooded. Solved satellite imaging projection challenges and real-time mapping visualization.",
+      "date": "2026",
+      "link": "https://github.com/AdityaKumar1511",
+      "badge": "Finalist"
+    },
+    {
+      "title": "HackArena 2.0",
+      "description": "Designed and deployed automated trigger monitors and cross-chain tracking dashboards.",
+      "date": "2025",
+      "link": "https://github.com/AdityaKumar1511",
+      "badge": "Winner"
+    }
+  ],
+  "competitive": [
+    {
+      "title": "LeetCode Practice",
+      "description": "Solved 282+ algorithmic problems across trees, dynamic programming, graphs, and system design.",
+      "date": "Ongoing",
+      "link": "https://leetcode.com",
+      "badge": "282+ Solved"
+    },
+    {
+      "title": "Codeforces Participation",
+      "description": "Participated in global online algorithmic contests, maintaining a rating of ~614.",
+      "date": "Ongoing",
+      "link": "https://codeforces.com",
+      "badge": "~614 Rating"
+    }
+  ],
+  "openSource": [
+    {
+      "title": "GSSoC Contributor",
+      "description": "Contributed to multiple repositories during Girlscript Summer of Code (GSSoC), developing features and resolving styling issues.",
+      "date": "2025",
+      "link": "https://github.com/AdityaKumar1511",
+      "badge": "Contributor"
+    }
+  ]
+}

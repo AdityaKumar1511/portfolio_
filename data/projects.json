@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "arbitrage",
+    "name": "Arbitrage",
+    "description": "Live crypto price tracker with real-time email alerts and automated price scanning.",
+    "thumbnail": "/projects/arbitrage.webp",
+    "tech": ["Next.js", "Supabase", "Firecrawl", "Resend", "Vercel"],
+    "impact": "Tracks 50+ assets in real-time with sub-second latency",
+    "liveUrl": "https://arbitrage.vercel.app",
+    "repoUrl": "https://github.com/AdityaKumar1511/arbitrage",
+    "featured": true,
+    "category": "Web"
+  },
+  {
+    "slug": "nexusforge",
+    "name": "NexusForge",
+    "description": "Decentralized blockchain escrow platform governed by a lightweight DAO structure.",
+    "thumbnail": "/projects/nexusforge.webp",
+    "tech": ["Wagmi", "Chainlink VRF", "IPFS", "Firebase"],
+    "impact": "Secures transactions through multi-signature escrow and verifiable randomness",
+    "liveUrl": "https://nexusforge.vercel.app",
+    "repoUrl": "https://github.com/AdityaKumar1511/nexusforge",
+    "featured": true,
+    "category": "Blockchain"
+  }
+]

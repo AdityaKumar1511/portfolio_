@@ -1,0 +1,52 @@
+[
+  {
+    "command": "whoami",
+    "description": "Reveal the identity of the developer",
+    "output": "Aditya Kumar — 2nd Year CSE undergrad at NIT Patna. Building full-stack products and ML systems."
+  },
+  {
+    "command": "ls projects",
+    "description": "List all projects",
+    "output": "- arbitrage\n- nexusforge"
+  },
+  {
+    "command": "cat arbitrage",
+    "description": "Display details about the Arbitrage project",
+    "output": "Project: Arbitrage\nDescription: Live crypto price tracker with real-time email alerts and automated price scanning.\nTech: Next.js, Supabase, Firecrawl, Resend, Vercel\nImpact: Tracks 50+ assets in real-time with sub-second latency"
+  },
+  {
+    "command": "cat nexusforge",
+    "description": "Display details about the NexusForge project",
+    "output": "Project: NexusForge\nDescription: Decentralized blockchain escrow platform governed by a lightweight DAO structure.\nTech: Wagmi, Chainlink VRF, IPFS, Firebase\nImpact: Secures transactions through multi-signature escrow and verifiable randomness"
+  },
+  {
+    "command": "cat skills",
+    "description": "Display categorized skill sets",
+    "output": "Frontend: React, Next.js, TypeScript, Tailwind CSS\nBackend: Node.js, FastAPI, MongoDB\nAI/ML: Python, XGBoost\nBlockchain: Solidity, Wagmi\nTools: Git, Docker"
+  },
+  {
+    "command": "open github",
+    "description": "Open GitHub profile in a new tab",
+    "output": "Opening GitHub profile..."
+  },
+  {
+    "command": "open linkedin",
+    "description": "Open LinkedIn profile in a new tab",
+    "output": "Opening LinkedIn profile..."
+  },
+  {
+    "command": "resume",
+    "description": "Download the PDF resume",
+    "output": "Downloading resume.pdf..."
+  },
+  {
+    "command": "help",
+    "description": "List all available commands",
+    "output": "Available commands:\n  whoami         Reveal the identity of the developer\n  ls projects    List all projects\n  cat <project>  Display details about a project (e.g. cat arbitrage)\n  cat skills     Display categorized skill sets\n  open github    Open GitHub profile in a new tab\n  open linkedin  Open LinkedIn profile in a new tab\n  resume         Download the PDF resume\n  clear          Clear the screen\n  exit           Close the terminal\n  matrix         Enter the matrix (Easter Egg)"
+  },
+  {
+    "command": "matrix",
+    "description": "Enter the matrix",
+    "output": "Wake up, Neo...\nThe Matrix has you...\nFollow the white rabbit. 🐇"
+  }
+]
