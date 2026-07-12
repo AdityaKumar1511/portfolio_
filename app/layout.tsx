@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Aditya Kumar — Portfolio',
     description: 'Full-stack developer and ML builder. CSE undergrad at NIT Patna.',
-    url: 'https://portfolio-vrd7.vercel.app',
+    url: 'https://adityakumar15.vercel.app',
   },
 }
 
