@@ -244,7 +244,7 @@ export default function Projects() {
 
         .project-card {
           --sticky-top: 100px;
-          --sticky-gap: 28px;
+          --sticky-gap: 0px;
           position: sticky;
           top: calc(var(--sticky-top) + var(--card-index) * var(--sticky-gap));
           display: grid;
