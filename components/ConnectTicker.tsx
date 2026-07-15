@@ -1,27 +1,24 @@
 'use client'
-import meta from '@/data/meta.json'
 
-export default function Ticker() {
-  const items = meta.tickerSkills || []
-
-  // Duplicate items array multiple times to guarantee an unbroken marquee scroller
-  const marqueeItems = [...items, ...items, ...items, ...items]
+export default function ConnectTicker() {
+  const text = "LET'S CONNECT"
+  const items = Array.from({ length: 16 }, (_, i) => i)
 
   return (
-    <div className="ticker-wrapper">
-      <div className="ticker-container">
-        <div className="animate-marquee ticker-track">
-          {marqueeItems.map((item, idx) => (
-            <div key={idx} className="ticker-item">
-              <span className="ticker-text">{item}</span>
-              <span className="ticker-slash">/</span>
+    <div className="connect-ticker-wrapper">
+      <div className="connect-ticker-container">
+        <div className="animate-marquee connect-ticker-track">
+          {items.map((_, idx) => (
+            <div key={idx} className="connect-ticker-item">
+              <span className="connect-ticker-text">{text}</span>
+              <span className="connect-ticker-slash">/</span>
             </div>
           ))}
         </div>
       </div>
 
       <style>{`
-        .ticker-wrapper {
+        .connect-ticker-wrapper {
           border-top: 1px solid var(--border);
           border-bottom: 1px solid var(--border);
           background: #0a0a0a;
@@ -30,26 +27,28 @@ export default function Ticker() {
           width: 100%;
         }
 
-        .ticker-container {
+        .connect-ticker-container {
           display: flex;
           width: 100%;
           overflow: hidden;
         }
 
-        .ticker-track {
+        .connect-ticker-track {
           display: flex;
           align-items: center;
           gap: 40px;
           width: max-content;
         }
 
-        .ticker-item {
+        .connect-ticker-item {
           display: flex;
           align-items: center;
           gap: 40px;
+          flex-shrink: 0;
+          white-space: nowrap;
         }
 
-        .ticker-text {
+        .connect-ticker-text {
           font-family: var(--font-geist-mono), monospace;
           font-size: clamp(14px, 2.5vw, 18px);
           font-weight: 500;
@@ -58,11 +57,11 @@ export default function Ticker() {
           text-transform: uppercase;
         }
 
-        .ticker-slash {
+        .connect-ticker-slash {
           font-family: var(--font-geist-mono), monospace;
           font-size: clamp(14px, 2.5vw, 18px);
           font-weight: 600;
-          color: #e07a5f; /* Rust/terracotta orange */
+          color: #e07a5f;
         }
       `}</style>
     </div>

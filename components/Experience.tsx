@@ -1,13 +1,7 @@
 'use client'
+import items from '@/data/experience.json'
 
 export default function Experience() {
-  const items = [
-    { num: '01', role: 'Open Source Contributor', org: 'GSSoC', period: '2024 — Present' },
-    { num: '02', role: 'Hackathon Lead (CodeBlooded)', org: 'ISRO BAH 2026', period: '2026' },
-    { num: '03', role: 'Competitive Programmer', org: 'Codeforces + LeetCode', period: '2023 — Present' },
-    { num: '04', role: 'Project Lead', org: 'NIT Patna', period: '2025 — Present' },
-  ]
-
   return (
     <section id="experience" className="experience-section">
       <div className="experience-grid">
@@ -83,7 +77,7 @@ export default function Experience() {
         .experience-label-line {
           width: 24px;
           height: 1px;
-          background: var(--text-muted);
+          background: #ff5f38;
         }
 
         .experience-label-text {
@@ -91,7 +85,8 @@ export default function Experience() {
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.15em;
-          color: var(--text-muted);
+          color: #ff5f38;
+          font-weight: 700;
         }
 
         .experience-heading {

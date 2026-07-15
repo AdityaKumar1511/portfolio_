@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import disciplinesData from '@/data/howIWork.json'
 
 type NodeStep = {
   num: number
@@ -468,128 +469,7 @@ function getIconSvg(symbol: string) {
 }
 
 export default function HowIWork() {
-  const disciplines: DisciplineData[] = [
-    {
-      id: 'frontend',
-      name: 'Frontend',
-      icon: '🖥️',
-      tech: ['React', 'TypeScript', 'Tailwind', 'Next.js', 'Notion', 'Figma'],
-      nodes: [
-        { num: 1, title: 'Wireframing', icon: '🖋️' },
-        { num: 2, title: 'Reference', icon: '🖼️' },
-        { num: 3, title: 'UI Design', icon: '📐' },
-        { num: 4, title: 'Research', icon: '🔍' },
-        { num: 5, title: 'Assets', icon: '📦' },
-        { num: 6, title: 'Prototype', icon: '▶️' },
-        { num: 7, title: 'Components', icon: '🧱' },
-        { num: 8, title: 'State', icon: '🔄' },
-        { num: 9, title: 'Routing', icon: '🔀' },
-        { num: 10, title: 'API Layer', icon: '🌐' },
-        { num: 11, title: 'Accessibility', icon: '👁️' },
-        { num: 12, title: 'Ship', icon: '🚀' },
-      ],
-    },
-    {
-      id: 'backend',
-      name: 'Backend',
-      icon: '⚙️',
-      tech: ['Node.js', 'Go', 'PostgreSQL', 'Redis', 'Docker', 'AWS'],
-      nodes: [
-        { num: 1, title: 'DB Schema', icon: '🗄️' },
-        { num: 2, title: 'Auth Security', icon: '🔐' },
-        { num: 3, title: 'API Design', icon: '🔌' },
-        { num: 4, title: 'Validation', icon: '🛡️' },
-        { num: 5, title: 'Middleware', icon: '🌉' },
-        { num: 6, title: 'Caching', icon: '⚡' },
-        { num: 7, title: 'Async Workers', icon: '🛠️' },
-        { num: 8, title: 'Message Queue', icon: '📬' },
-        { num: 9, title: 'Error Logging', icon: '📝' },
-        { num: 10, title: 'Rate Limiting', icon: '🚦' },
-        { num: 11, title: 'Unit Tests', icon: '✅' },
-        { num: 12, title: 'Deploy', icon: '🚀' },
-      ],
-    },
-    {
-      id: 'fullstack',
-      name: 'Full Stack',
-      icon: '🥞',
-      tech: ['Next.js', 'PostgreSQL', 'Prisma', 'Supabase', 'Vercel', 'Git'],
-      nodes: [
-        { num: 1, title: 'Architecture', icon: '🗺️' },
-        { num: 2, title: 'API Routes', icon: '🛣️' },
-        { num: 3, title: 'Prisma Setup', icon: '💎' },
-        { num: 4, title: 'Auth Setup', icon: '🔑' },
-        { num: 5, title: 'Shared Types', icon: '🏷️' },
-        { num: 6, title: 'UI Scaffold', icon: '🏗️' },
-        { num: 7, title: 'State Link', icon: '🔗' },
-        { num: 8, title: 'CRUD Actions', icon: '💾' },
-        { num: 9, title: 'Form Handling', icon: '📥' },
-        { num: 10, title: 'File Storage', icon: '☁️' },
-        { num: 11, title: 'Optimistic UI', icon: '✨' },
-        { num: 12, title: 'Launch', icon: '🚀' },
-      ],
-    },
-    {
-      id: 'agentic_ai',
-      name: 'Agentic AI',
-      icon: '🧠',
-      tech: ['Python', 'OpenAI', 'LangChain', 'Pinecone', 'FastAPI', 'Docker'],
-      nodes: [
-        { num: 1, title: 'System Prompt', icon: '💬' },
-        { num: 2, title: 'Tool Schema', icon: '🛠️' },
-        { num: 3, title: 'Agent Loop', icon: '🔄' },
-        { num: 4, title: 'Vector Store', icon: '📐' },
-        { num: 5, title: 'Short Memory', icon: '💭' },
-        { num: 6, title: 'Long Memory', icon: '🧠' },
-        { num: 7, title: 'Cost Tracker', icon: '💳' },
-        { num: 8, title: 'Output Parser', icon: '📊' },
-        { num: 9, title: 'Guardrails', icon: '🚧' },
-        { num: 10, title: 'LLM Routing', icon: '🔀' },
-        { num: 11, title: 'Eval Suite', icon: '🧪' },
-        { num: 12, title: 'API Host', icon: '🚀' },
-      ],
-    },
-    {
-      id: 'generative_ai',
-      name: 'Generative AI',
-      icon: '🎨',
-      tech: ['Python', 'PyTorch', 'HuggingFace', 'Pinecone', 'Streamlit'],
-      nodes: [
-        { num: 1, title: 'Model Selection', icon: '🤖' },
-        { num: 2, title: 'Prompt Eng', icon: '✍️' },
-        { num: 3, title: 'Embeddings', icon: '🔢' },
-        { num: 4, title: 'Vector DB', icon: '📦' },
-        { num: 5, title: 'Chunking Config', icon: '✂️' },
-        { num: 6, title: 'Retrieval RAG', icon: '📖' },
-        { num: 7, title: 'Context Aug', icon: '➕' },
-        { num: 8, title: 'Synthesize', icon: '🎭' },
-        { num: 9, title: 'RLHF Alignment', icon: '⚖️' },
-        { num: 10, title: 'API Wrapper', icon: '🌐' },
-        { num: 11, title: 'Streaming Resp', icon: '🌊' },
-        { num: 12, title: 'Ship', icon: '🚀' },
-      ],
-    },
-    {
-      id: 'blockchain',
-      name: 'Blockchain',
-      icon: '🔗',
-      tech: ['Solidity', 'Hardhat', 'Wagmi', 'Ethers', 'Chainlink'],
-      nodes: [
-        { num: 1, title: 'Protocol Spec', icon: '📄' },
-        { num: 2, title: 'Contract Code', icon: '✍️' },
-        { num: 3, title: 'Local Mocking', icon: '🧪' },
-        { num: 4, title: 'Unit Tests', icon: '✅' },
-        { num: 5, title: 'Gas Analysis', icon: '⛽' },
-        { num: 6, title: 'Auditing', icon: '🕵️' },
-        { num: 7, title: 'Testnet Deploy', icon: '🌐' },
-        { num: 8, title: 'DApp Web3 Sync', icon: '🔌' },
-        { num: 9, title: 'Wallet Links', icon: '💳' },
-        { num: 10, title: 'Event Watcher', icon: '👀' },
-        { num: 11, title: 'Optimistic UI', icon: '✨' },
-        { num: 12, title: 'Mainnet Deploy', icon: '🚀' },
-      ],
-    },
-  ]
+  const disciplines: DisciplineData[] = disciplinesData as DisciplineData[]
 
   const [activeDisc, setActiveDisc] = useState<DisciplineData>(disciplines[0])
 
@@ -727,7 +607,7 @@ export default function HowIWork() {
         .hiw-label-line {
           width: 24px;
           height: 1px;
-          background: var(--text-muted);
+          background: #ff5f38;
         }
 
         .hiw-label-text {
@@ -735,7 +615,8 @@ export default function HowIWork() {
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.15em;
-          color: var(--text-muted);
+          color: #ff5f38;
+          font-weight: 700;
         }
 
         .hiw-heading {
@@ -1017,10 +898,41 @@ export default function HowIWork() {
             border-right: none;
             border-bottom: 1px solid var(--border);
             width: 100%;
+            padding: 1.5rem;
+          }
+
+          .discipline-buttons {
+            flex-direction: row;
+            overflow-x: auto;
+            width: 100%;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+          }
+
+          .discipline-buttons::-webkit-scrollbar {
+            display: none;
+          }
+
+          .disc-btn {
+            flex-shrink: 0;
+            width: auto;
+            white-space: nowrap;
           }
 
           .tech-stack-grid {
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+          }
+        }
+
+        @media (max-width: 768px) {
+          .hiw-header {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+          }
+
+          .hiw-right-header {
+            padding-top: 0;
           }
         }
       `}</style>

@@ -1,8 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react'
 
-const LEETCODE_USERNAME = 'Adi_2007'
-const CODEFORCES_USERNAME = 'aditya.kumar00706'
+import meta from '@/data/meta.json'
+
+const LEETCODE_USERNAME = meta.leetcodeUsername
+const CODEFORCES_USERNAME = meta.codeforcesUsername
 
 interface LeetCodeStats {
   totalSolved: number
@@ -156,13 +158,13 @@ export default function LeetCode() {
   // Helper for Codeforces Rank Colors
   const getCfRankColor = (rankName: string) => {
     const r = rankName.toLowerCase()
-    if (r.includes('newbie')) return '#9e9e9e' // gray
-    if (r.includes('pupil')) return '#4caf50' // green
-    if (r.includes('specialist')) return '#00bcd4' // cyan
-    if (r.includes('expert')) return '#2196f3' // blue
-    if (r.includes('candidate master')) return '#aa00aa' // violet
-    if (r.includes('master')) return '#ff9800' // orange
-    if (r.includes('grandmaster')) return '#f44336' // red
+    if (r.includes('newbie')) return '#e0e0e0' // soft white/gray
+    if (r.includes('pupil')) return '#c2ebd4' // soft green
+    if (r.includes('specialist')) return '#aed8e6' // soft cyan
+    if (r.includes('expert')) return '#adcaff' // soft blue
+    if (r.includes('candidate master')) return '#e8b4e8' // soft purple
+    if (r.includes('master')) return '#ffd2a1' // soft orange
+    if (r.includes('grandmaster')) return '#f9b6c3' // soft red
     return '#ffffff'
   }
 
@@ -196,7 +198,7 @@ export default function LeetCode() {
         <div className="cp-card leetcode-card">
           <div className="card-top">
             <div className="brand-info">
-              <span className="brand-logo lc-logo">LC</span>
+              <span className="brand-logo lc-logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.424 5.424 0 0 0 .349.987 5.317 5.317 0 0 0 1.163 1.612 6.174 6.174 0 0 0 1.484 1.016 5.602 5.602 0 0 0 1.466.506l.205.046a5.294 5.294 0 0 0 2.106-.054l.188-.044a3.93 3.93 0 0 0 1.113-.454l2.836-1.676a1.368 1.368 0 0 0-.213-2.406 1.363 1.363 0 0 0-.964-.048l-2.836 1.676a1.24 1.24 0 0 1-.358.133 2.458 2.458 0 0 1-1.14-.044l-.185-.042a2.874 2.874 0 0 1-.756-.264 3.335 3.335 0 0 1-.795-.544 2.6 2.6 0 0 1-.564-.782 2.698 2.698 0 0 1-.174-.494 2.755 2.755 0 0 1-.03-1.179 2.6 2.6 0 0 1 .59-1.04l3.854-4.126 5.406-5.788a.26.26 0 0 1 .38.012l2.72 2.913a.26.26 0 0 1-.013.38l-5.406 5.789a1.368 1.368 0 0 0 .998 2.314 1.363 1.363 0 0 0 1.003-.43l5.406-5.789a2.987 2.987 0 0 0 .089-4.182l-2.72-2.913A2.987 2.987 0 0 0 13.483 0z"/><path d="M3.483 14.196a1.368 1.368 0 0 0-.194 1.926l2.72 3.462a2.987 2.987 0 0 0 4.183.361l6.676-5.25a1.374 1.374 0 1 0-1.7-2.158l-6.676 5.25a.26.26 0 0 1-.362-.031l-2.72-3.462a1.368 1.368 0 0 0-1.927-.098z"/></svg></span>
               <div className="brand-details">
                 <h3 className="brand-name">LeetCode</h3>
                 <a href={`https://leetcode.com/u/${LEETCODE_USERNAME}/`} target="_blank" rel="noreferrer" className="profile-link">
@@ -267,7 +269,7 @@ export default function LeetCode() {
         <div className="cp-card codeforces-card">
           <div className="card-top">
             <div className="brand-info">
-              <span className="brand-logo cf-logo">CF</span>
+              <span className="brand-logo cf-logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M4.5 7.5A2.25 2.25 0 0 0 2.25 9.75v9a2.25 2.25 0 0 0 4.5 0v-9A2.25 2.25 0 0 0 4.5 7.5zm7.5-5.25A2.25 2.25 0 0 0 9.75 4.5v14.25a2.25 2.25 0 0 0 4.5 0V4.5A2.25 2.25 0 0 0 12 2.25zm7.5 10.5a2.25 2.25 0 0 0-2.25 2.25v3.75a2.25 2.25 0 0 0 4.5 0V15a2.25 2.25 0 0 0-2.25-2.25z"/></svg></span>
               <div className="brand-details">
                 <h3 className="brand-name">Codeforces</h3>
                 <a href={`https://codeforces.com/profile/${CODEFORCES_USERNAME}`} target="_blank" rel="noreferrer" className="profile-link">
@@ -367,7 +369,7 @@ export default function LeetCode() {
         .section-label-line {
           width: 24px;
           height: 1px;
-          background: var(--text-muted);
+          background: #ff5f38;
         }
 
         .section-label-text {
@@ -375,7 +377,8 @@ export default function LeetCode() {
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.15em;
-          color: var(--text-muted);
+          color: #ff5f38;
+          font-weight: 700;
         }
 
         .header-meta {
@@ -419,29 +422,27 @@ export default function LeetCode() {
         }
 
         .cp-card {
-          background: #111111;
-          border: 1px solid var(--border);
           border-radius: 28px;
           padding: clamp(1.5rem, 4vw, 2.5rem);
           display: flex;
           flex-direction: column;
           gap: 2rem;
-          transition: all 400ms cubic-bezier(0.16, 1, 0.3, 1);
-          box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+          color: #ffffff;
         }
 
-        .cp-card:hover {
-          transform: translateY(-4px);
+        .leetcode-card {
+          background: #d69730;
+          border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
-        .leetcode-card:hover {
-          border-color: rgba(255, 161, 22, 0.3);
-          box-shadow: 0 20px 45px rgba(255, 161, 22, 0.04);
+        .codeforces-card {
+          background: #4a729f;
+          border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
+        .leetcode-card:hover,
         .codeforces-card:hover {
-          border-color: rgba(59, 130, 246, 0.3);
-          box-shadow: 0 20px 45px rgba(59, 130, 246, 0.04);
+          border-color: rgba(255, 255, 255, 0.4);
         }
 
         .card-top {
@@ -471,15 +472,15 @@ export default function LeetCode() {
         }
 
         .lc-logo {
-          background: rgba(255, 161, 22, 0.08);
-          color: #ffa116;
-          border: 1px solid rgba(255, 161, 22, 0.15);
+          background: #ffffff;
+          color: #d69730;
+          border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .cf-logo {
-          background: rgba(59, 130, 246, 0.08);
-          color: #3b82f6;
-          border: 1px solid rgba(59, 130, 246, 0.15);
+          background: #ffffff;
+          color: #4a729f;
+          border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .brand-details {
@@ -491,28 +492,28 @@ export default function LeetCode() {
         .brand-name {
           font-size: 18px;
           font-weight: 600;
-          color: var(--text);
+          color: #ffffff;
           margin: 0;
         }
 
         .profile-link {
           font-family: var(--font-geist-mono), monospace;
           font-size: 11px;
-          color: var(--text-muted);
+          color: rgba(255, 255, 255, 0.8);
           text-decoration: none;
           transition: color 150ms;
         }
 
         .profile-link:hover {
-          color: var(--text);
+          color: #ffffff;
         }
 
         .global-rank-badge {
           font-family: var(--font-geist-mono), monospace;
           font-size: 11px;
-          color: var(--text-muted);
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          color: #ffffff;
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
           padding: 6px 14px;
           border-radius: 99px;
         }
@@ -521,7 +522,7 @@ export default function LeetCode() {
           display: flex;
           flex-direction: column;
           gap: 6px;
-          border-bottom: 1px solid var(--border);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.15);
           padding-bottom: 1.5rem;
         }
 
@@ -530,14 +531,14 @@ export default function LeetCode() {
           font-size: 10px;
           text-transform: uppercase;
           letter-spacing: 0.1em;
-          color: var(--text-muted);
+          color: rgba(255, 255, 255, 0.7);
         }
 
         .rating-value {
           font-family: var(--font-geist-mono), monospace;
           font-size: clamp(2.25rem, 4vw, 2.75rem);
           font-weight: 700;
-          color: var(--text);
+          color: #ffffff;
           line-height: 1;
         }
 
@@ -557,19 +558,11 @@ export default function LeetCode() {
           font-size: 10px;
           text-transform: uppercase;
           letter-spacing: 0.12em;
-          color: var(--text-muted);
+          color: #ffffff;
           margin: 0;
-          border-left: 2px solid;
+          border-left: 2px solid #ffffff;
           padding-left: 8px;
           line-height: 1;
-        }
-
-        .leetcode-card .block-title {
-          border-color: #ffa116;
-        }
-
-        .codeforces-card .block-title {
-          border-color: #3b82f6;
         }
 
         .stats-2x2 {
@@ -588,7 +581,7 @@ export default function LeetCode() {
           font-family: var(--font-geist-mono), monospace;
           font-size: 18px;
           font-weight: 600;
-          color: var(--text);
+          color: #ffffff;
           line-height: 1.2;
         }
 
@@ -596,20 +589,20 @@ export default function LeetCode() {
           font-family: var(--font-geist-mono), monospace;
           font-size: 9px;
           text-transform: uppercase;
-          color: var(--text-muted);
+          color: rgba(255, 255, 255, 0.7);
           letter-spacing: 0.05em;
         }
 
         .lc-easy {
-          color: #00b8a3;
+          color: #c2ebd4;
         }
 
         .lc-medium {
-          color: #ffc01e;
+          color: #fce69a;
         }
 
         .lc-hard {
-          color: #ff2d55;
+          color: #f9b6c3;
         }
 
         @media (max-width: 1024px) {
@@ -621,6 +614,10 @@ export default function LeetCode() {
 
         @media (max-width: 580px) {
           .stats-sections {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+          }
+        }
             grid-template-columns: 1fr;
             gap: 2rem;
           }

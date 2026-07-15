@@ -1,18 +1,23 @@
 'use client'
 import { useState } from 'react'
 import Image from 'next/image'
+import meta from '@/data/meta.json'
+import aboutData from '@/data/about.json'
 
 export default function About() {
   const [imgErr, setImgErr] = useState(false)
+
+  const { name, github, resumeUrl } = meta
+  const { serial, heading, bio, fallbackInitials } = aboutData
 
   return (
     <section id="about" className="about-section-outer">
       <div className="about-card-container">
         {/* Header inside rust card */}
         <div className="about-card-header">
-          <span className="card-brand">Aditya Kumar</span>
+          <span className="card-brand">{name}</span>
           <span className="card-label">About Me</span>
-          <span className="card-serial">Developer — 01</span>
+          <span className="card-serial">{serial}</span>
         </div>
 
         {/* 2-column layout */}
@@ -20,18 +25,16 @@ export default function About() {
           
           {/* Left Column: Heading + Bio + Buttons */}
           <div className="about-col-left">
-            <h2 className="about-card-heading">
-              Where Code<br />Meets Craft
+            <h2 className="about-card-heading" style={{ whiteSpace: 'pre-line' }}>
+              {heading}
             </h2>
-            <p className="about-card-bio">
-              I am a <span className="highlight">full-stack engineer</span> shipping fast, resilient systems — from the data layer to the last pixel. I specialize in designing and building <span className="highlight">scalable architectures</span>, type-safe APIs, and <span className="highlight">highly performant web frontends</span>. With a focus on code correctness, performance, and long-term maintainability, I build digital experiences that solve complex problems with <span className="highlight">elegant, clean solutions</span>.
-            </p>
+            <p className="about-card-bio" dangerouslySetInnerHTML={{ __html: bio }} />
             
             <div className="about-buttons-row">
-              <a href="https://github.com/AdityaKumar1511" target="_blank" rel="noreferrer" className="github-pill-btn">
+              <a href={github} target="_blank" rel="noreferrer" className="github-pill-btn">
                 View GitHub →
               </a>
-              <a href="/resume.pdf" target="_blank" rel="noreferrer" className="github-pill-btn">
+              <a href={resumeUrl} target="_blank" rel="noreferrer" className="github-pill-btn">
                 View Resume →
               </a>
             </div>
@@ -43,7 +46,7 @@ export default function About() {
               {!imgErr ? (
                 <Image
                   src="/profile.png"
-                  alt="Aditya Kumar"
+                  alt={name}
                   fill
                   sizes="(max-width: 1024px) 100vw, 500px"
                   style={{ objectFit: 'cover' }}
@@ -52,7 +55,7 @@ export default function About() {
                 />
               ) : (
                 <div className="profile-fallback">
-                  <span className="fallback-initials">AK</span>
+                  <span className="fallback-initials">{fallbackInitials}</span>
                 </div>
               )}
             </div>

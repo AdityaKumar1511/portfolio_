@@ -7,6 +7,7 @@ import Projects from '@/components/Projects'
 import GitHub from '@/components/GitHub'
 import LeetCode from '@/components/LeetCode'
 import Experience from '@/components/Experience'
+import ConnectTicker from '@/components/ConnectTicker'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 
@@ -23,6 +24,7 @@ export default function Page() {
         <GitHub />
         <LeetCode />
         <HowIWork />
+        <ConnectTicker />
         <Contact />
       </main>
       <Footer />

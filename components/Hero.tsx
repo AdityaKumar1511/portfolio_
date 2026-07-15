@@ -1,5 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
+import meta from '@/data/meta.json'
+import heroData from '@/data/hero.json'
 
 export default function Hero() {
   const [visible, setVisible] = useState(false)
@@ -8,6 +10,9 @@ export default function Hero() {
     const t = setTimeout(() => setVisible(true), 100)
     return () => clearTimeout(t)
   }, [])
+
+  const { name, role, openToWork } = meta
+  const { title, subtitle } = heroData
 
   return (
     <section id="hero" className="hero-section">
@@ -18,30 +23,32 @@ export default function Hero() {
 
       {/* Top Navbar details */}
       <div className="hero-top-nav">
-        <span className="nav-item">Aditya Kumar</span>
+        <span className="nav-item text-nowrap">{name}</span>
         <div className="nav-center-container">
           <span className="nav-item-line" />
-          <span className="nav-item">Full-Stack Engineer</span>
+          <span className="nav-item">{role}</span>
           <span className="nav-item-line" />
         </div>
-        <div className="work-status-upper">
-          <span className="status-dot" />
-          <span className="nav-item">Open to work</span>
-        </div>
+        {openToWork && (
+          <div className="work-status-upper text-nowrap">
+            <span className="status-dot" />
+            <span className="nav-item">Open to work</span>
+          </div>
+        )}
       </div>
 
       {/* Main typography */}
       <div className="hero-center-content">
         <h1 className="hero-title">
-          <span className="title-row fade-in-up" style={{ animationDelay: '0.1s' }}>Engineering</span>
-          <span className="title-row fade-in-up" style={{ animationDelay: '0.25s' }}>systems that</span>
+          <span className="title-row fade-in-up" style={{ animationDelay: '0.1s' }}>{title.line1}</span>
+          <span className="title-row fade-in-up" style={{ animationDelay: '0.25s' }}>{title.line2}</span>
           <span className="title-row fade-in-up title-accent" style={{ animationDelay: '0.4s' }}>
-            scale<span className="title-dot">.</span>
+            {title.line3}<span className="title-dot">.</span>
           </span>
         </h1>
         
         <p className="hero-subtitle fade-in" style={{ animationDelay: '0.7s' }}>
-          Fast, resilient systems — from the data layer to the last pixel.
+          {subtitle}
         </p>
       </div>
 
@@ -152,6 +159,10 @@ export default function Hero() {
           text-transform: uppercase;
           letter-spacing: 0.15em;
           color: var(--text-muted);
+        }
+
+        .text-nowrap {
+          white-space: nowrap;
         }
 
         .hero-center-content {
@@ -280,8 +291,9 @@ export default function Hero() {
 
         @media (max-width: 768px) {
           .hero-top-nav {
-            flex-direction: column;
-            gap: 8px;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
           }
           .nav-center-container {
             display: none;

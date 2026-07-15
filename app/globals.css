@@ -69,14 +69,24 @@ body.has-custom-cursor * {
   pointer-events: none;
   z-index: 999999;
   mix-blend-mode: difference;
-  transition: width 0.15s ease, height 0.15s ease, background-color 0.15s ease;
+  transition: width 0.15s ease, height 0.15s ease, background-color 0.15s ease, opacity 0.2s ease;
 }
 
 
 .custom-cursor.cursor-hovered {
   width: 48px;
   height: 48px;
-  background: rgba(255, 255, 255, 0.3) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.8) !important;
+  background: #ffffff !important;
   mix-blend-mode: difference;
+}
+
+/* Section height — every section fills at least 100vh except How I Work */
+.hero-section,
+.about-section-outer,
+.experience-section,
+.projects-section,
+.github-redesign-section,
+.leetcode-redesign-section,
+.contact-section {
+  min-height: 100vh;
 }

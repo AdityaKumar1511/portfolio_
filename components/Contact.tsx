@@ -1,30 +1,33 @@
 'use client'
+import meta from '@/data/meta.json'
+import links from '@/data/socials.json'
+
 export default function Contact() {
+  const { email } = meta
+
   return (
     <section id="contact" className="contact-section">
       {/* Ambient glow orbs */}
       <div className="contact-glow contact-glow-1" />
       <div className="contact-glow contact-glow-2" />
 
-      <p className="contact-label">Let&apos;s build something</p>
+      <div className="contact-label-container">
+        <span className="contact-label-text">Let&apos;s build something</span>
+      </div>
 
       <h2 className="contact-heading">
         Have a hard<br />problem?
       </h2>
 
       <a
-        href="mailto:aditya.kumar00706@gmail.com"
+        href={`mailto:${email}`}
         className="contact-email"
       >
-        aditya.kumar00706@gmail.com ↗
+        {email} ↗
       </a>
 
       <div className="contact-links">
-        {[
-          { label: 'GitHub', href: 'https://github.com/AdityaKumar1511' },
-          { label: 'LinkedIn', href: 'https://linkedin.com/in/aditya-kumar-57a988374/' },
-          { label: 'Email', href: 'mailto:aditya.kumar00706@gmail.com' },
-        ].map(({ label, href }) => (
+        {links.map(({ label, href }) => (
           <a key={label} href={href} target="_blank" rel="noreferrer" className="contact-link">
             {label}
           </a>
@@ -83,15 +86,22 @@ export default function Contact() {
           100% { opacity: 0.8; transform: scale(1.12); }
         }
 
-        .contact-label {
+        .contact-label-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 2rem;
+          position: relative;
+          z-index: 1;
+        }
+
+        .contact-label-text {
           font-family: var(--font-geist-mono), monospace;
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.15em;
-          color: var(--text-muted);
-          margin-bottom: 1.5rem;
-          position: relative;
-          z-index: 1;
+          color: #ff5f38;
+          font-weight: 700;
         }
 
         .contact-heading {

@@ -1,7 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
+import meta from '@/data/meta.json'
 
-const USERNAME = 'AdityaKumar1511'
+const USERNAME = meta.githubUsername
 
 interface GitHubStats {
   contributions: number
@@ -283,15 +284,18 @@ export default function GitHub() {
                   ))}
                 </div>
 
-                {/* Legend */}
-                <div className="heatmap-legend">
-                  <span>Less</span>
-                  <span className="legend-cell" style={{ background: '#161616' }} />
-                  <span className="legend-cell" style={{ background: '#3d231d' }} />
-                  <span className="legend-cell" style={{ background: '#6b372a' }} />
-                  <span className="legend-cell" style={{ background: '#a8503b' }} />
-                  <span className="legend-cell" style={{ background: '#e05d43' }} />
-                  <span>More</span>
+                {/* Heatmap Footer: Scroll Indicator + Legend */}
+                <div className="heatmap-footer">
+                  <span className="heatmap-scroll-tip">Swipe/Scroll to view &rarr;</span>
+                  <div className="heatmap-legend">
+                    <span>Less</span>
+                    <span className="legend-cell" style={{ background: '#161616' }} />
+                    <span className="legend-cell" style={{ background: '#3d231d' }} />
+                    <span className="legend-cell" style={{ background: '#6b372a' }} />
+                    <span className="legend-cell" style={{ background: '#a8503b' }} />
+                    <span className="legend-cell" style={{ background: '#e05d43' }} />
+                    <span>More</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -304,7 +308,7 @@ export default function GitHub() {
         .github-redesign-section {
           padding: clamp(4rem, 10vw, 8rem) 24px;
           border-top: 1px solid var(--border);
-          maxWidth: 1400px;
+          max-width: 1400px;
           margin: 0 auto;
           width: 100%;
           box-sizing: border-box;
@@ -326,7 +330,7 @@ export default function GitHub() {
         .section-label-line {
           width: 24px;
           height: 1px;
-          background: var(--text-muted);
+          background: #ff5f38;
         }
 
         .section-label-text {
@@ -334,7 +338,8 @@ export default function GitHub() {
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.15em;
-          color: var(--text-muted);
+          color: #ff5f38;
+          font-weight: 700;
         }
 
         .header-meta {
@@ -385,7 +390,7 @@ export default function GitHub() {
         .github-content-grid {
           display: grid;
           grid-template-columns: 320px 1fr;
-          gap: 10rem;
+          gap: clamp(2rem, 8vw, 10rem);
           align-items: flex-start;
           margin-bottom: 2rem;
         }
@@ -494,6 +499,21 @@ export default function GitHub() {
           transform: scale(1.2);
         }
 
+        .heatmap-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          margin-top: 8px;
+        }
+
+        .heatmap-scroll-tip {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 9px;
+          color: var(--text-muted);
+          display: none;
+        }
+
         .heatmap-legend {
           display: flex;
           align-items: center;
@@ -514,6 +534,12 @@ export default function GitHub() {
           .github-content-grid {
             grid-template-columns: 1fr;
             gap: 3rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .heatmap-scroll-tip {
+            display: inline;
           }
         }
 
