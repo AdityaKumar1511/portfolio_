@@ -30,7 +30,7 @@ interface CodeforcesStats {
   avatar: string
 }
 
-export default function LeetCode() {
+export default function CP() {
   const [lcStats, setLcStats] = useState<LeetCodeStats>({
     totalSolved: 282,
     easySolved: 120,
