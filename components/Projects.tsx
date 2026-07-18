@@ -1,5 +1,5 @@
 'use client'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -10,24 +10,11 @@ gsap.registerPlugin(ScrollTrigger)
 
 export default function Projects() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [activePanelIndex, setActivePanelIndex] = useState<number | null>(null)
 
   useGSAP(() => {
     const panels = gsap.utils.toArray<HTMLElement>('.panel')
-    const tabs = document.querySelectorAll<HTMLElement>('.nav-tab')
-    const strip = document.querySelector<HTMLElement>('.proj-tab-strip')
     const totalPanels = panels.length
-
-    const sectionEl = document.getElementById('projects')!
-    const sectionObs = new IntersectionObserver(
-      ([entry]) => {
-        if (strip) {
-          strip.style.opacity = entry.isIntersecting ? '1' : '0'
-          strip.style.pointerEvents = entry.isIntersecting ? 'auto' : 'none'
-        }
-      },
-      { threshold: 0 }
-    )
-    sectionObs.observe(sectionEl)
 
     panels.forEach((panel, i) => {
       const isLast = i === totalPanels - 1
@@ -39,15 +26,10 @@ export default function Projects() {
         pin: !isLast,
         pinSpacing: false,
         onEnter: () => {
-          if (tabs[i]) {
-            tabs[i].style.visibility = 'visible'
-          }
-          tabs.forEach(t => t.classList.remove('is-active'))
-          if (tabs[i]) tabs[i].classList.add('is-active')
+          setActivePanelIndex(i)
         },
         onEnterBack: () => {
-          tabs.forEach(t => t.classList.remove('is-active'))
-          if (tabs[i]) tabs[i].classList.add('is-active')
+          setActivePanelIndex(i)
         },
       })
     })
@@ -56,7 +38,6 @@ export default function Projects() {
     window.addEventListener('resize', onResize)
     return () => {
       window.removeEventListener('resize', onResize)
-      sectionObs.disconnect()
     }
   }, { scope: containerRef })
 
@@ -140,7 +121,9 @@ export default function Projects() {
                       style={{ display: project.thumbnail ? 'none' : 'flex' }}
                     >
                       <div className="proj-circle-mask">
-                        <span className="proj-circle-label">TERMINAL</span>
+                        <span className="proj-circle-label">
+                          {activePanelIndex === i ? 'TERMINAL' : `FEATURED WORK 0${String(i + 1).padStart(2, '0')}`}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -168,19 +151,10 @@ export default function Projects() {
         ))}
       </div>
 
-      {/* Fixed tab strip — outside containerRef, accessed via document.querySelector */}
-      <div className="proj-tab-strip">
-        {projects.map((_, i) => (
-          <div key={i} className="nav-tab">
-            FEATURED WORK {String(i + 1).padStart(2, '0')}
-          </div>
-        ))}
-      </div>
-
       <style>{`
         /* ── Section wrapper ── */
         #projects {
-          background: #121212;
+          background: var(--bg);
         }
 
         .proj-section-label {
@@ -198,10 +172,10 @@ export default function Projects() {
         }
 
         .proj-label-text {
-          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
-          font-size: 14px;
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
           text-transform: uppercase;
-          letter-spacing: 0.2em;
+          letter-spacing: 0.15em;
           color: #ff5f38;
           font-weight: 700;
         }
@@ -222,60 +196,16 @@ export default function Projects() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: #121212;
+          background: var(--bg);
           box-sizing: border-box;
         }
 
         .panel-inner {
           width: 100%;
-          max-width: 1200px;
+          max-width: 1800px;
           margin: 0 auto;
-          padding: 0 24px;
+          padding: 0 48px;
           box-sizing: border-box;
-        }
-
-        /* ── Fixed tab strip ── */
-        .proj-tab-strip {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          z-index: 999;
-          display: flex;
-          gap: 4px;
-          padding: 10px 24px;
-          background: rgba(18, 18, 18, 0.95);
-          backdrop-filter: blur(4px);
-          border-bottom: 1px solid rgba(255, 95, 56, 0.12);
-          opacity: 0;
-          pointer-events: none;
-        }
-
-        .nav-tab {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 10px;
-          text-transform: uppercase;
-          letter-spacing: 0.15em;
-          padding: 8px 20px;
-          clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 100%, 14px 100%);
-          white-space: nowrap;
-          cursor: default;
-          transition: opacity 0.3s ease;
-          visibility: hidden;
-        }
-
-        .nav-tab.is-active {
-          background: #1a1a1a;
-          color: #ff5f38;
-          border: 1px solid rgba(255, 95, 56, 0.3);
-          opacity: 1;
-        }
-
-        .nav-tab:not(.is-active) {
-          background: transparent;
-          color: rgba(255, 255, 255, 0.25);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          opacity: 0.6;
         }
 
         /* ── Hero Row ── */
@@ -552,28 +482,11 @@ export default function Projects() {
           .proj-preview-main {
             min-height: 200px;
           }
-
-          .proj-tab-strip {
-            flex-wrap: wrap;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-          }
-
-          .proj-tab-strip::-webkit-scrollbar {
-            display: none;
-          }
         }
 
         @media (max-width: 480px) {
           .proj-grid-right {
             flex-direction: column;
-          }
-
-          .nav-tab {
-            font-size: 8px;
-            padding: 6px 14px;
-            letter-spacing: 0.1em;
           }
         }
       `}</style>
