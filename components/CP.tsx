@@ -79,7 +79,7 @@ export default function CP() {
           }))
         }
       })
-      .catch(() => {})
+      .catch(() => { })
 
     // LeetCode Contest
     fetch(`https://alfa-leetcode-api.onrender.com/${LEETCODE_USERNAME}/contest`)
@@ -95,7 +95,7 @@ export default function CP() {
           }))
         }
       })
-      .catch(() => {})
+      .catch(() => { })
 
     // Codeforces Info
     fetch(`https://codeforces.com/api/user.info?handles=${CODEFORCES_USERNAME}`)
@@ -115,7 +115,7 @@ export default function CP() {
           }))
         }
       })
-      .catch(() => {})
+      .catch(() => { })
 
     // Codeforces Rating / Contests
     fetch(`https://codeforces.com/api/user.rating?handle=${CODEFORCES_USERNAME}`)
@@ -128,7 +128,7 @@ export default function CP() {
           }))
         }
       })
-      .catch(() => {})
+      .catch(() => { })
 
     // Codeforces Status / Solved
     fetch(`https://codeforces.com/api/user.status?handle=${CODEFORCES_USERNAME}`)
@@ -176,7 +176,7 @@ export default function CP() {
           <span className="section-label-line" />
           <span className="section-label-text">Competitive Programming</span>
         </div>
-        
+
         {/* Right-aligned meta details */}
         <div className="header-meta">
           <div className="meta-sync">
@@ -193,12 +193,12 @@ export default function CP() {
 
       {/* Content grid containing side-by-side cards */}
       <div className="cp-content-grid">
-        
+
         {/* LeetCode Card */}
         <div className="cp-card leetcode-card">
           <div className="card-top">
             <div className="brand-info">
-              <span className="brand-logo lc-logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.424 5.424 0 0 0 .349.987 5.317 5.317 0 0 0 1.163 1.612 6.174 6.174 0 0 0 1.484 1.016 5.602 5.602 0 0 0 1.466.506l.205.046a5.294 5.294 0 0 0 2.106-.054l.188-.044a3.93 3.93 0 0 0 1.113-.454l2.836-1.676a1.368 1.368 0 0 0-.213-2.406 1.363 1.363 0 0 0-.964-.048l-2.836 1.676a1.24 1.24 0 0 1-.358.133 2.458 2.458 0 0 1-1.14-.044l-.185-.042a2.874 2.874 0 0 1-.756-.264 3.335 3.335 0 0 1-.795-.544 2.6 2.6 0 0 1-.564-.782 2.698 2.698 0 0 1-.174-.494 2.755 2.755 0 0 1-.03-1.179 2.6 2.6 0 0 1 .59-1.04l3.854-4.126 5.406-5.788a.26.26 0 0 1 .38.012l2.72 2.913a.26.26 0 0 1-.013.38l-5.406 5.789a1.368 1.368 0 0 0 .998 2.314 1.363 1.363 0 0 0 1.003-.43l5.406-5.789a2.987 2.987 0 0 0 .089-4.182l-2.72-2.913A2.987 2.987 0 0 0 13.483 0z"/><path d="M3.483 14.196a1.368 1.368 0 0 0-.194 1.926l2.72 3.462a2.987 2.987 0 0 0 4.183.361l6.676-5.25a1.374 1.374 0 1 0-1.7-2.158l-6.676 5.25a.26.26 0 0 1-.362-.031l-2.72-3.462a1.368 1.368 0 0 0-1.927-.098z"/></svg></span>
+              <span className="brand-logo lc-logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.424 5.424 0 0 0 .349.987 5.317 5.317 0 0 0 1.163 1.612 6.174 6.174 0 0 0 1.484 1.016 5.602 5.602 0 0 0 1.466.506l.205.046a5.294 5.294 0 0 0 2.106-.054l.188-.044a3.93 3.93 0 0 0 1.113-.454l2.836-1.676a1.368 1.368 0 0 0-.213-2.406 1.363 1.363 0 0 0-.964-.048l-2.836 1.676a1.24 1.24 0 0 1-.358.133 2.458 2.458 0 0 1-1.14-.044l-.185-.042a2.874 2.874 0 0 1-.756-.264 3.335 3.335 0 0 1-.795-.544 2.6 2.6 0 0 1-.564-.782 2.698 2.698 0 0 1-.174-.494 2.755 2.755 0 0 1-.03-1.179 2.6 2.6 0 0 1 .59-1.04l3.854-4.126 5.406-5.788a.26.26 0 0 1 .38.012l2.72 2.913a.26.26 0 0 1-.013.38l-5.406 5.789a1.368 1.368 0 0 0 .998 2.314 1.363 1.363 0 0 0 1.003-.43l5.406-5.789a2.987 2.987 0 0 0 .089-4.182l-2.72-2.913A2.987 2.987 0 0 0 13.483 0z" /><path d="M3.483 14.196a1.368 1.368 0 0 0-.194 1.926l2.72 3.462a2.987 2.987 0 0 0 4.183.361l6.676-5.25a1.374 1.374 0 1 0-1.7-2.158l-6.676 5.25a.26.26 0 0 1-.362-.031l-2.72-3.462a1.368 1.368 0 0 0-1.927-.098z" /></svg></span>
               <div className="brand-details">
                 <h3 className="brand-name">LeetCode</h3>
                 <a href={`https://leetcode.com/u/${LEETCODE_USERNAME}/`} target="_blank" rel="noreferrer" className="profile-link">
@@ -269,7 +269,7 @@ export default function CP() {
         <div className="cp-card codeforces-card">
           <div className="card-top">
             <div className="brand-info">
-              <span className="brand-logo cf-logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M4.5 7.5A2.25 2.25 0 0 0 2.25 9.75v9a2.25 2.25 0 0 0 4.5 0v-9A2.25 2.25 0 0 0 4.5 7.5zm7.5-5.25A2.25 2.25 0 0 0 9.75 4.5v14.25a2.25 2.25 0 0 0 4.5 0V4.5A2.25 2.25 0 0 0 12 2.25zm7.5 10.5a2.25 2.25 0 0 0-2.25 2.25v3.75a2.25 2.25 0 0 0 4.5 0V15a2.25 2.25 0 0 0-2.25-2.25z"/></svg></span>
+              <span className="brand-logo cf-logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M4.5 7.5A2.25 2.25 0 0 0 2.25 9.75v9a2.25 2.25 0 0 0 4.5 0v-9A2.25 2.25 0 0 0 4.5 7.5zm7.5-5.25A2.25 2.25 0 0 0 9.75 4.5v14.25a2.25 2.25 0 0 0 4.5 0V4.5A2.25 2.25 0 0 0 12 2.25zm7.5 10.5a2.25 2.25 0 0 0-2.25 2.25v3.75a2.25 2.25 0 0 0 4.5 0V15a2.25 2.25 0 0 0-2.25-2.25z" /></svg></span>
               <div className="brand-details">
                 <h3 className="brand-name">Codeforces</h3>
                 <a href={`https://codeforces.com/profile/${CODEFORCES_USERNAME}`} target="_blank" rel="noreferrer" className="profile-link">
@@ -431,12 +431,12 @@ export default function CP() {
         }
 
         .leetcode-card {
-          background: #d69730;
+          background: #FF9800;
           border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .codeforces-card {
-          background: #4a729f;
+          background: #009BB4;
           border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
@@ -492,7 +492,7 @@ export default function CP() {
         .brand-name {
           font-size: 18px;
           font-weight: 600;
-          color: #ffffff;
+          color: #000000;
           margin: 0;
         }
 
@@ -505,13 +505,13 @@ export default function CP() {
         }
 
         .profile-link:hover {
-          color: #ffffff;
+          color: #000000;
         }
 
         .global-rank-badge {
           font-family: var(--font-geist-mono), monospace;
           font-size: 11px;
-          color: #ffffff;
+          color: #000000;
           background: rgba(255, 255, 255, 0.1);
           border: 1px solid rgba(255, 255, 255, 0.2);
           padding: 6px 14px;
@@ -538,7 +538,7 @@ export default function CP() {
           font-family: var(--font-geist-mono), monospace;
           font-size: clamp(2.25rem, 4vw, 2.75rem);
           font-weight: 700;
-          color: #ffffff;
+          color: #000000;
           line-height: 1;
         }
 
@@ -558,9 +558,9 @@ export default function CP() {
           font-size: 10px;
           text-transform: uppercase;
           letter-spacing: 0.12em;
-          color: #ffffff;
+          color: #000000;
           margin: 0;
-          border-left: 2px solid #ffffff;
+          border-left: 2px solid #000000;
           padding-left: 8px;
           line-height: 1;
         }
@@ -581,7 +581,7 @@ export default function CP() {
           font-family: var(--font-geist-mono), monospace;
           font-size: 18px;
           font-weight: 600;
-          color: #ffffff;
+          color: #000000;
           line-height: 1.2;
         }
 

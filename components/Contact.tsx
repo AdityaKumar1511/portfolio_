@@ -8,7 +8,6 @@ export default function Contact() {
   return (
     <section id="contact" className="contact-section">
       {/* Ambient glow orbs */}
-      <div className="contact-glow contact-glow-1" />
       <div className="contact-glow contact-glow-2" />
 
       <div className="contact-label-container">
@@ -55,17 +54,6 @@ export default function Contact() {
           z-index: 0;
         }
 
-        .contact-glow-1 {
-          width: 550px;
-          height: 550px;
-          top: -100px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: radial-gradient(circle, rgba(224, 122, 95, 0.12) 0%, transparent 70%);
-          filter: blur(80px);
-          animation: contactGlow1 8s ease-in-out infinite alternate;
-        }
-
         .contact-glow-2 {
           width: 400px;
           height: 400px;
@@ -74,11 +62,6 @@ export default function Contact() {
           background: radial-gradient(circle, rgba(174, 216, 230, 0.08) 0%, transparent 70%);
           filter: blur(70px);
           animation: contactGlow2 10s ease-in-out infinite alternate;
-        }
-
-        @keyframes contactGlow1 {
-          0% { opacity: 0.5; transform: translateX(-50%) scale(1); }
-          100% { opacity: 1; transform: translateX(-50%) scale(1.15); }
         }
 
         @keyframes contactGlow2 {

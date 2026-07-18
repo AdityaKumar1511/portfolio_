@@ -206,8 +206,8 @@ export default function ProgressRail() {
         }
 
         .rail-dot-btn.active .rail-dot-core {
-          width: 10px;
-          height: 10px;
+          width: 14px;
+          height: 14px;
           background: #e07a5f;
           box-shadow: 0 0 14px rgba(224, 122, 95, 0.6);
         }
@@ -215,7 +215,7 @@ export default function ProgressRail() {
         /* Outer ring pulse for active dot */
         .rail-dot-ring {
           position: absolute;
-          inset: -2px;
+          inset: -4px;
           border-radius: 50%;
           border: 1.5px solid rgba(224, 122, 95, 0.4);
           animation: railRingPulse 2.2s ease-in-out infinite;

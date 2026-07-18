@@ -6,35 +6,19 @@ function getProjectStyles(slug: string) {
   switch (slug) {
     case 'arbitrage':
       return {
-        bg: '#ba5c43', // Terracotta Orange
+        bg: '#ba5c43', 
         border: 'rgba(255, 255, 255, 0.15)',
         glow: 'rgba(186, 92, 67, 0.3)',
-        accent: '#aed8e6', // light cyan
+        accent: '#aed8e6', 
         btnText: '#ba5c43',
       }
     case 'nexusforge':
       return {
-        bg: '#4f6d5a', // Sage Green
+        bg: '#4f6d5a', 
         border: 'rgba(255, 255, 255, 0.15)',
         glow: 'rgba(79, 109, 90, 0.3)',
-        accent: '#c2ebd4', // light sage
+        accent: '#c2ebd4', 
         btnText: '#4f6d5a',
-      }
-    case 'skylens':
-      return {
-        bg: '#d0845c', // Ochre/Warm Clay
-        border: 'rgba(255, 255, 255, 0.15)',
-        glow: 'rgba(208, 132, 92, 0.3)',
-        accent: '#f7d8c6', // light clay
-        btnText: '#d0845c',
-      }
-    case 'cipherkit':
-      return {
-        bg: '#a34851', // Crimson/Muted Red
-        border: 'rgba(255, 255, 255, 0.15)',
-        glow: 'rgba(163, 72, 81, 0.3)',
-        accent: '#f5d5d8', // light crimson
-        btnText: '#a34851',
       }
     default:
       return {
@@ -72,23 +56,6 @@ function getProjectIcon(slug: string) {
         <svg {...strokeProps}>
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
           <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-        </svg>
-      )
-    case 'skylens':
-      return (
-        <svg {...strokeProps}>
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-          <path d="M2 12h20" />
-        </svg>
-      )
-    case 'cipherkit':
-      return (
-        <svg {...strokeProps}>
-          <rect x="2" y="4" width="20" height="16" rx="2" />
-          <path d="M10 4v16" />
-          <path d="M2 10h8" />
-          <path d="M10 14h12" />
         </svg>
       )
     default:
@@ -132,7 +99,7 @@ export default function Projects() {
                 </span>
                 <h3 className="project-title">{project.name}</h3>
                 <p className="project-desc">{project.description}</p>
-                
+
                 <div className="project-tech-tags">
                   {project.tech.map(t => (
                     <span key={t} className="tech-tag">
@@ -248,9 +215,11 @@ export default function Projects() {
           position: sticky;
           top: calc(var(--sticky-top) + var(--card-index) * var(--sticky-gap));
           display: grid;
-          grid-template-columns: 1.25fr 1fr;
+          grid-template-columns: 1.1fr 1.4fr;
           border-radius: 32px;
           min-height: 400px;
+          max-width: 1100px;
+          margin: 0 auto clamp(100px, 15vh, 150px);
           box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.4);
           overflow: hidden;
           transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
@@ -258,7 +227,7 @@ export default function Projects() {
           border: 1px solid var(--project-border);
           background: var(--project-bg);
           color: #ffffff;
-          margin-bottom: clamp(100px, 15vh, 150px);
+          width: 100%;
         }
 
         .project-card:hover {
@@ -434,7 +403,7 @@ export default function Projects() {
         @media (max-width: 768px) {
           .project-card {
             --sticky-top: 60px;
-            --sticky-gap: 16px;
+            --sticky-gap: 0px;
             grid-template-columns: 1fr;
             min-height: auto;
             margin-bottom: clamp(60px, 10vh, 100px);
