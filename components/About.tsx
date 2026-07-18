@@ -70,28 +70,46 @@ export default function About() {
           background: #0a0a0a;
           width: 100%;
           box-sizing: border-box;
-          height: 100vh;
-          max-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
+        }
+
+        @media (min-width: 1025px) {
+          .about-section-outer {
+            height: 100vh;
+            max-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+          }
+
+          .about-card-container {
+            height: calc(100% - 48px);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+            padding: clamp(1.5rem, 3.5vh, 4.5rem) clamp(2rem, 5vw, 4.5rem) !important;
+          }
+
+          .about-card-header {
+            margin-bottom: clamp(1rem, 2.5vh, 2.5rem) !important;
+          }
+
+          .about-card-grid {
+            flex: 1;
+            align-items: stretch !important;
+          }
         }
 
         .about-card-container {
           background: #ba5c43; /* Terracotta/Rust red-orange */
           border-radius: 40px;
+          padding: clamp(2rem, 5vw, 4.5rem);
           color: #ffffff;
           max-width: 1352px;
           margin: 0 auto;
           box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-          height: calc(100% - 48px);
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          box-sizing: border-box;
-          padding: clamp(1.5rem, 3.5vh, 4.5rem) clamp(2rem, 5vw, 4.5rem) !important;
         }
 
         .about-card-header {
@@ -105,7 +123,7 @@ export default function About() {
           color: rgba(255, 255, 255, 0.7);
           border-bottom: 1px solid rgba(255, 255, 255, 0.15);
           padding-bottom: 1.5rem;
-          margin-bottom: clamp(1rem, 2.5vh, 2.5rem) !important;
+          margin-bottom: 3rem;
         }
 
         .card-brand {
@@ -120,8 +138,7 @@ export default function About() {
           display: grid;
           grid-template-columns: 1.3fr 1fr;
           gap: clamp(2rem, 5vw, 4.5rem);
-          align-items: stretch !important;
-          flex: 1;
+          align-items: stretch;
         }
 
         /* Left Column */
@@ -213,6 +230,23 @@ export default function About() {
           font-size: 4rem;
           color: #ffffff;
           font-weight: 300;
+        }
+
+        @media (max-width: 1024px) {
+          .about-card-grid {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            align-items: start;
+          }
+          
+          .about-col-right {
+            order: -1; /* Place picture at the top for tablets/mobiles */
+            height: auto;
+          }
+
+          .profile-image-wrapper {
+            aspect-ratio: 0.85;
+          }
         }
       `}</style>
     </section>

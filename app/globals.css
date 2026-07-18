@@ -95,31 +95,3 @@ body.has-custom-cursor * {
 .contact-section {
   min-height: 100vh;
 }
-
-@media (max-width: 768px) and (orientation: landscape) {
-  .mobile-landscape-wrapper {
-    display: flex;
-    flex-direction: row;
-    width: max-content;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    height: 100vh;
-  }
-  .mobile-landscape-wrapper main {
-    display: flex;
-    flex-direction: row;
-    width: max-content;
-    height: 100vh;
-    scroll-snap-type: x mandatory;
-  }
-  .mobile-landscape-wrapper main > section,
-  .mobile-landscape-wrapper main > div,
-  .mobile-landscape-panel {
-    width: 100vw;
-    height: 100vh;
-    flex-shrink: 0;
-    scroll-snap-align: start;
-    overflow: hidden;
-  }
-}

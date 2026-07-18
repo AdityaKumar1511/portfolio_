@@ -529,6 +529,26 @@ export default function GitHub() {
           height: 10px;
           border-radius: 2px;
         }
+
+        @media (max-width: 1024px) {
+          .github-content-grid {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .heatmap-scroll-tip {
+            display: inline;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .stats-grid-2x2 {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+          }
+        }
       `}</style>
     </section>
   )

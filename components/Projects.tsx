@@ -430,6 +430,31 @@ export default function Projects() {
           border-color: #ffffff;
           color: #ffffff;
         }
+
+        @media (max-width: 768px) {
+          .project-card {
+            --sticky-top: 60px;
+            --sticky-gap: 16px;
+            grid-template-columns: 1fr;
+            min-height: auto;
+            margin-bottom: clamp(60px, 10vh, 100px);
+          }
+
+          .project-card-right {
+            order: -1;
+            height: 220px;
+            border-left: none;
+            border-bottom: 1px solid var(--project-border);
+          }
+
+          .project-image-container {
+            min-height: 100%;
+          }
+
+          .project-card-left {
+            padding: 2rem 1.5rem;
+          }
+        }
       `}</style>
     </section>
   )

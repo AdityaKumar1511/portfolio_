@@ -887,6 +887,54 @@ export default function HowIWork() {
           padding: 0 4px;
           white-space: nowrap;
         }
+
+
+        @media (max-width: 1024px) {
+          .hiw-board {
+            grid-template-columns: 1fr;
+          }
+
+          .hiw-sidebar {
+            border-right: none;
+            border-bottom: 1px solid var(--border);
+            width: 100%;
+            padding: 1.5rem;
+          }
+
+          .discipline-buttons {
+            flex-direction: row;
+            overflow-x: auto;
+            width: 100%;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+          }
+
+          .discipline-buttons::-webkit-scrollbar {
+            display: none;
+          }
+
+          .disc-btn {
+            flex-shrink: 0;
+            width: auto;
+            white-space: nowrap;
+          }
+
+          .tech-stack-grid {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+          }
+        }
+
+        @media (max-width: 768px) {
+          .hiw-header {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+          }
+
+          .hiw-right-header {
+            padding-top: 0;
+          }
+        }
       `}</style>
     </section>
   )

@@ -288,6 +288,17 @@ export default function Hero() {
             opacity: 1;
           }
         }
+
+        @media (max-width: 768px) {
+          .hero-top-nav {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+          }
+          .nav-center-container {
+            display: none;
+          }
+        }
       `}</style>
     </section>
   )

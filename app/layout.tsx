@@ -3,7 +3,6 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import CustomCursor from '@/components/CustomCursor'
 import ProgressRail from '@/components/ProgressRail'
-import MobileExperience from '@/components/MobileExperience'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -22,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body style={{ fontFamily: 'var(--font-geist-sans), system-ui, sans-serif' }}>
         <CustomCursor />
         <ProgressRail />
-        <MobileExperience>{children}</MobileExperience>
+        {children}
       </body>
     </html>
   )

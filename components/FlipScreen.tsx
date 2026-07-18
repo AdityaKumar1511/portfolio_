@@ -6,9 +6,9 @@ export default function FlipScreen() {
   const [fadeOut, setFadeOut] = useState(false)
 
   useEffect(() => {
-    // Start fade-out after 1.0s, then unmount at 1.4s
-    const fadeTimer = setTimeout(() => setFadeOut(true), 1000)
-    const hideTimer = setTimeout(() => setShow(false), 1400)
+    // Start fade-out after 1.2s, then unmount at 1.5s
+    const fadeTimer = setTimeout(() => setFadeOut(true), 1200)
+    const hideTimer = setTimeout(() => setShow(false), 1600)
     return () => {
       clearTimeout(fadeTimer)
       clearTimeout(hideTimer)
@@ -104,8 +104,8 @@ export default function FlipScreen() {
           pointer-events: none;
         }
 
-        /* Only show on mobile */
-        @media (max-width: 1024px) {
+        /* Only show on mobile portrait */
+        @media (max-width: 1024px) and (orientation: portrait) {
           .flip-overlay {
             display: flex;
           }
