@@ -604,24 +604,6 @@ export default function CP() {
         .lc-hard {
           color: #f9b6c3;
         }
-
-        @media (max-width: 1024px) {
-          .cp-content-grid {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-          }
-        }
-
-        @media (max-width: 580px) {
-          .stats-sections {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-          }
-        }
-            grid-template-columns: 1fr;
-            gap: 2rem;
-          }
-        }
       `}</style>
     </section>
   )

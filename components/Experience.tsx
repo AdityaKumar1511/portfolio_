@@ -155,54 +155,6 @@ export default function Experience() {
           color: var(--text-muted);
           text-align: right;
         }
-
-        @media (max-width: 1024px) {
-          .experience-grid {
-            grid-template-columns: 1fr;
-            gap: 3rem;
-          }
-
-          .experience-left {
-            position: static;
-            height: auto;
-            gap: 1.5rem;
-          }
-
-          .experience-dot {
-            display: none;
-          }
-
-          .experience-row {
-            grid-template-columns: 40px 1fr auto;
-            padding: 32px 0;
-            gap: 16px;
-          }
-
-          .experience-org {
-            grid-column: 2;
-            margin-top: 2px;
-          }
-
-          .experience-period {
-            grid-column: 3;
-            grid-row: 1 / 3;
-            align-self: center;
-          }
-        }
-
-        @media (max-width: 640px) {
-          .experience-row {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            padding: 24px 0;
-          }
-
-          .experience-period {
-            text-align: left;
-            margin-top: 4px;
-          }
-        }
       `}</style>
     </section>
   )

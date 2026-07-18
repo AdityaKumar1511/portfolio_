@@ -246,13 +246,6 @@ export default function ProgressRail() {
         .rail-dot-btn.active .rail-label {
           color: #e07a5f;
         }
-
-        /* Hide on mobile + small tablets */
-        @media (max-width: 1024px) {
-          .progress-rail {
-            display: none;
-          }
-        }
       `}</style>
     </>
   )
