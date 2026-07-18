@@ -1,427 +1,579 @@
 'use client'
+import { useRef } from 'react'
 import Link from 'next/link'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useGSAP } from '@gsap/react'
 import projects from '@/data/projects.json'
 
-function getProjectStyles(slug: string) {
-  switch (slug) {
-    case 'arbitrage':
-      return {
-        bg: '#ba5c43', 
-        border: 'rgba(255, 255, 255, 0.15)',
-        glow: 'rgba(186, 92, 67, 0.3)',
-        accent: '#aed8e6', 
-        btnText: '#ba5c43',
-      }
-    case 'nexusforge':
-      return {
-        bg: '#4f6d5a', 
-        border: 'rgba(255, 255, 255, 0.15)',
-        glow: 'rgba(79, 109, 90, 0.3)',
-        accent: '#c2ebd4', 
-        btnText: '#4f6d5a',
-      }
-    default:
-      return {
-        bg: '#ba5c43',
-        border: 'rgba(255, 255, 255, 0.15)',
-        glow: 'rgba(186, 92, 67, 0.3)',
-        accent: '#aed8e6',
-        btnText: '#ba5c43',
-      }
-  }
-}
-
-function getProjectIcon(slug: string) {
-  const strokeProps = {
-    viewBox: '0 0 24 24',
-    width: '40',
-    height: '40',
-    stroke: 'currentColor',
-    strokeWidth: '1.5',
-    fill: 'none',
-    strokeLinecap: 'round' as const,
-    strokeLinejoin: 'round' as const,
-  }
-
-  switch (slug) {
-    case 'arbitrage':
-      return (
-        <svg {...strokeProps}>
-          <line x1="12" y1="1" x2="12" y2="23" />
-          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-        </svg>
-      )
-    case 'nexusforge':
-      return (
-        <svg {...strokeProps}>
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-        </svg>
-      )
-    default:
-      return (
-        <svg {...strokeProps}>
-          <polyline points="16 18 22 12 16 6" />
-          <polyline points="8 6 2 12 8 18" />
-        </svg>
-      )
-  }
-}
+gsap.registerPlugin(ScrollTrigger)
 
 export default function Projects() {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useGSAP(() => {
+    const panels = gsap.utils.toArray<HTMLElement>('.panel')
+    const tabs = document.querySelectorAll<HTMLElement>('.nav-tab')
+    const strip = document.querySelector<HTMLElement>('.proj-tab-strip')
+    const totalPanels = panels.length
+
+    const sectionEl = document.getElementById('projects')!
+    const sectionObs = new IntersectionObserver(
+      ([entry]) => {
+        if (strip) {
+          strip.style.opacity = entry.isIntersecting ? '1' : '0'
+          strip.style.pointerEvents = entry.isIntersecting ? 'auto' : 'none'
+        }
+      },
+      { threshold: 0 }
+    )
+    sectionObs.observe(sectionEl)
+
+    panels.forEach((panel, i) => {
+      const isLast = i === totalPanels - 1
+
+      ScrollTrigger.create({
+        trigger: panel,
+        start: 'top top',
+        end: 'bottom top',
+        pin: !isLast,
+        pinSpacing: false,
+        onEnter: () => {
+          if (tabs[i]) {
+            tabs[i].style.visibility = 'visible'
+          }
+          tabs.forEach(t => t.classList.remove('is-active'))
+          if (tabs[i]) tabs[i].classList.add('is-active')
+        },
+        onEnterBack: () => {
+          tabs.forEach(t => t.classList.remove('is-active'))
+          if (tabs[i]) tabs[i].classList.add('is-active')
+        },
+      })
+    })
+
+    const onResize = () => ScrollTrigger.refresh()
+    window.addEventListener('resize', onResize)
+    return () => {
+      window.removeEventListener('resize', onResize)
+      sectionObs.disconnect()
+    }
+  }, { scope: containerRef })
+
   return (
-    <section id="projects" className="projects-section">
-      <div className="projects-label-container">
-        <span className="projects-label-line" />
-        <span className="projects-label-text">Selected projects</span>
+    <section id="projects">
+      <div className="proj-section-label">
+        <span className="proj-label-accent" />
+        <span className="proj-label-text">Featured Work</span>
       </div>
 
-      <div className="projects-stack-container">
-        {projects.map((project, i) => {
-          const styleConfig = getProjectStyles(project.slug)
-
-          return (
-            <div
-              key={project.slug}
-              className="project-card"
-              style={{
-                '--project-bg': styleConfig.bg,
-                '--project-border': styleConfig.border,
-                '--project-glow': styleConfig.glow,
-                '--project-accent': styleConfig.accent,
-                '--card-index': i,
-              } as React.CSSProperties}
-            >
-              {/* Left Column: Details */}
-              <div className="project-card-left">
-                <span className="project-number">
-                  0{i + 1} &mdash; 0{projects.length}
-                </span>
-                <h3 className="project-title">{project.name}</h3>
-                <p className="project-desc">{project.description}</p>
-
-                <div className="project-tech-tags">
-                  {project.tech.map(t => (
-                    <span key={t} className="tech-tag">
-                      {t}
-                    </span>
-                  ))}
+      <div className="proj-stack" ref={containerRef}>
+        {projects.map((project, i) => (
+          <section
+            key={project.slug}
+            className="panel"
+            data-index={i}
+            style={{ zIndex: i + 1 }}
+          >
+            <div className="panel-inner">
+              <div className="proj-hero">
+                <div className="proj-hero-left">
+                  <h3 className="proj-hero-title">{project.name}</h3>
                 </div>
-
-                {project.impact && (
-                  <span className="project-impact">
-                    &rarr; {project.impact}
-                  </span>
-                )}
-
-                <div className="project-actions">
-                  {project.liveUrl && (
-                    <Link
-                      href={project.liveUrl}
-                      target="_blank"
-                      className="project-btn primary-btn"
-                      style={{
-                        color: styleConfig.btnText,
-                      }}
-                    >
-                      Live Preview ↗
-                    </Link>
-                  )}
-                  {project.repoUrl && (
-                    <Link href={project.repoUrl} target="_blank" className="project-btn secondary-btn">
-                      GitHub Repository ↗
-                    </Link>
-                  )}
-                </div>
-              </div>
-
-              {/* Right Column: Visual Preview */}
-              <div className="project-card-right">
-                <div className="project-image-container">
-                  {project.thumbnail ? (
-                    <img
-                      src={project.thumbnail}
-                      alt={project.name}
-                      className="project-image"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none'
-                        const parent = e.currentTarget.parentElement
-                        if (parent) {
-                          const fallback = parent.querySelector('.project-image-fallback')
-                          if (fallback) fallback.setAttribute('style', 'display: flex;')
-                        }
-                      }}
-                    />
-                  ) : null}
-                  <div
-                    className="project-image-fallback"
-                    style={{ display: project.thumbnail ? 'none' : 'flex' }}
-                  >
-                    <div className="fallback-art">
-                      <span className="fallback-icon">{getProjectIcon(project.slug)}</span>
-                      <span className="fallback-text">{project.name.toUpperCase()}</span>
-                    </div>
+                <div className="proj-hero-right">
+                  <span className="proj-hero-year">{project.year}</span>
+                  <span className="proj-hero-category">{project.category}</span>
+                  <div className="proj-hero-tags">
+                    {project.tech.map(t => (
+                      <span key={t} className="proj-pill">{t}</span>
+                    ))}
                   </div>
                 </div>
               </div>
 
+              <div className="proj-dashed" />
+
+              <div className="proj-grid">
+                <div className="proj-grid-left">
+                  <p className="proj-desc">{project.description}</p>
+                  {project.impact && (
+                    <span className="proj-impact">{project.impact}</span>
+                  )}
+                  <div className="proj-actions">
+                    {project.liveUrl && (
+                      <Link
+                        href={project.liveUrl}
+                        target="_blank"
+                        className="proj-btn proj-btn-primary"
+                      >
+                        LIVE ↗
+                      </Link>
+                    )}
+                    {project.repoUrl && (
+                      <Link
+                        href={project.repoUrl}
+                        target="_blank"
+                        className="proj-btn proj-btn-secondary"
+                      >
+                        REPO ↗
+                      </Link>
+                    )}
+                  </div>
+                </div>
+
+                <div className="proj-grid-center">
+                  <div className="proj-preview-card proj-preview-main">
+                    {project.thumbnail ? (
+                      <img
+                        src={project.thumbnail}
+                        alt={project.name}
+                        className="proj-preview-img"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none'
+                          const fallback = e.currentTarget.parentElement?.querySelector('.proj-preview-placeholder')
+                          if (fallback) (fallback as HTMLElement).style.display = 'flex'
+                        }}
+                      />
+                    ) : null}
+                    <div
+                      className="proj-preview-placeholder"
+                      style={{ display: project.thumbnail ? 'none' : 'flex' }}
+                    >
+                      <div className="proj-circle-mask">
+                        <span className="proj-circle-label">TERMINAL</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="proj-grid-right">
+                  <div className="proj-preview-card proj-preview-sub">
+                    <div className="proj-preview-placeholder">
+                      <div className="proj-circle-mask small">
+                        <span className="proj-circle-label">CLI VIEW</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="proj-preview-card proj-preview-sub">
+                    <div className="proj-preview-placeholder">
+                      <div className="proj-circle-mask small">
+                        <span className="proj-circle-label">METRICS</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          )
-        })}
+          </section>
+        ))}
+      </div>
+
+      {/* Fixed tab strip — outside containerRef, accessed via document.querySelector */}
+      <div className="proj-tab-strip">
+        {projects.map((_, i) => (
+          <div key={i} className="nav-tab">
+            FEATURED WORK {String(i + 1).padStart(2, '0')}
+          </div>
+        ))}
       </div>
 
       <style>{`
-        .projects-section {
-          padding: clamp(4rem, 10vw, 8rem) 24px;
-          border-top: 1px solid var(--border);
-          max-width: 1400px;
-          margin: 0 auto;
-          width: 100%;
-          box-sizing: border-box;
+        /* ── Section wrapper ── */
+        #projects {
+          background: #121212;
         }
 
-        .projects-label-container {
+        .proj-section-label {
           display: flex;
           align-items: center;
-          gap: 12px;
-          margin-bottom: 3rem;
+          gap: 14px;
+          padding: clamp(4rem, 10vw, 8rem) 24px 0;
         }
 
-        .projects-label-line {
-          width: 24px;
-          height: 1px;
+        .proj-label-accent {
+          width: 28px;
+          height: 3px;
           background: #ff5f38;
+          display: block;
         }
 
-        .projects-label-text {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 11px;
+        .proj-label-text {
+          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
+          font-size: 14px;
           text-transform: uppercase;
-          letter-spacing: 0.15em;
+          letter-spacing: 0.2em;
           color: #ff5f38;
           font-weight: 700;
         }
 
-        .projects-stack-container {
-          display: flex;
-          flex-direction: column;
-          gap: 0;
+        /* ── Panel stack ── */
+        .proj-stack {
           position: relative;
         }
 
-        .project-card {
-          --sticky-top: 100px;
-          --sticky-gap: 0px;
-          position: sticky;
-          top: calc(var(--sticky-top) + var(--card-index) * var(--sticky-gap));
-          display: grid;
-          grid-template-columns: 1.1fr 1.4fr;
-          border-radius: 32px;
-          min-height: 400px;
-          max-width: 1100px;
-          margin: 0 auto clamp(100px, 15vh, 150px);
-          box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.4);
-          overflow: hidden;
-          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
-          box-sizing: border-box;
-          border: 1px solid var(--project-border);
-          background: var(--project-bg);
-          color: #ffffff;
-          width: 100%;
-        }
-
-        .project-card:hover {
-          border-color: rgba(255, 255, 255, 0.4);
-        }
-
-        .project-card-left {
-          padding: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 3vw, 2.5rem);
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: flex-start;
-          text-align: left;
-        }
-
-        .project-card-right {
+        /* ── Each panel — the core stacking mechanic ── */
+        .panel {
           position: relative;
-          background: rgba(0, 0, 0, 0.15);
+          height: 100vh;
+          width: 100vw;
+          margin-left: calc(-50vw + 50%);
           overflow: hidden;
+          will-change: transform;
           display: flex;
           align-items: center;
           justify-content: center;
-          border-left: 1px solid var(--project-border);
+          background: #121212;
+          box-sizing: border-box;
         }
 
-        .project-image-container {
+        .panel-inner {
           width: 100%;
-          height: 100%;
-          position: relative;
-          min-height: 250px;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 24px;
+          box-sizing: border-box;
         }
 
-        .project-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.5s ease;
-        }
-
-        .project-card:hover .project-image {
-          transform: scale(1.04);
-        }
-
-        .project-image-fallback {
-          position: absolute;
+        /* ── Fixed tab strip ── */
+        .proj-tab-strip {
+          position: fixed;
           top: 0;
           left: 0;
-          width: 100%;
-          height: 100%;
+          right: 0;
+          z-index: 999;
           display: flex;
-          align-items: center;
-          justify-content: center;
-          background: radial-gradient(circle at center, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+          gap: 4px;
+          padding: 10px 24px;
+          background: rgba(18, 18, 18, 0.95);
+          backdrop-filter: blur(4px);
+          border-bottom: 1px solid rgba(255, 95, 56, 0.12);
+          opacity: 0;
+          pointer-events: none;
         }
 
-        .fallback-art {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .fallback-icon {
-          color: var(--project-accent);
-          opacity: 0.8;
-          transition: transform 0.3s ease;
-        }
-        
-        .project-card:hover .fallback-icon {
-          transform: scale(1.1);
-        }
-
-        .fallback-text {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 11px;
-          letter-spacing: 0.2em;
-          color: rgba(255, 255, 255, 0.7);
-        }
-
-        .project-number {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 11px;
-          color: rgba(255, 255, 255, 0.7);
-          margin-bottom: 1.25rem;
-          letter-spacing: 0.1em;
-        }
-
-        .project-title {
-          font-size: clamp(1.8rem, 3.5vw, 2.5rem);
-          font-weight: 500;
-          color: #ffffff;
-          margin: 0 0 1.25rem 0;
-          letter-spacing: -0.03em;
-        }
-
-        .project-desc {
-          font-size: clamp(13px, 1.6vw, 14px);
-          color: rgba(255, 255, 255, 0.9);
-          max-width: 580px;
-          line-height: 1.6;
-          margin: 0 0 2rem 0;
-        }
-
-        .project-tech-tags {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: flex-start;
-          gap: 8px;
-          margin-bottom: 2rem;
-          max-width: 550px;
-        }
-
-        .tech-tag {
+        .nav-tab {
           font-family: var(--font-geist-mono), monospace;
           font-size: 10px;
-          color: #ffffff;
-          border: 1px solid rgba(255, 255, 255, 0.25);
-          border-radius: 99px;
-          padding: 4px 12px;
-          background: rgba(255, 255, 255, 0.08);
+          text-transform: uppercase;
+          letter-spacing: 0.15em;
+          padding: 8px 20px;
+          clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 100%, 14px 100%);
+          white-space: nowrap;
+          cursor: default;
+          transition: opacity 0.3s ease;
+          visibility: hidden;
         }
 
-        .project-impact {
+        .nav-tab.is-active {
+          background: #1a1a1a;
+          color: #ff5f38;
+          border: 1px solid rgba(255, 95, 56, 0.3);
+          opacity: 1;
+        }
+
+        .nav-tab:not(.is-active) {
+          background: transparent;
+          color: rgba(255, 255, 255, 0.25);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          opacity: 0.6;
+        }
+
+        /* ── Hero Row ── */
+        .proj-hero {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 2rem;
+          margin-bottom: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .proj-hero-left {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .proj-hero-title {
+          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
+          font-size: clamp(3rem, 8vw, 5.5rem);
+          font-weight: 900;
+          text-transform: uppercase;
+          color: #ffffff;
+          margin: 0;
+          line-height: 0.95;
+          letter-spacing: -0.02em;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .proj-hero-right {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 6px;
+          flex-shrink: 0;
+          padding-top: 6px;
+        }
+
+        .proj-hero-year {
+          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
+          font-size: clamp(1.8rem, 4vw, 2.5rem);
+          font-weight: 900;
+          color: rgba(255, 255, 255, 0.9);
+          line-height: 1;
+        }
+
+        .proj-hero-category {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.2em;
+          color: rgba(255, 255, 255, 0.5);
+        }
+
+        .proj-hero-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          justify-content: flex-end;
+          margin-top: 4px;
+        }
+
+        .proj-pill {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 9px;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          color: rgba(255, 255, 255, 0.7);
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          border-radius: 3px;
+          padding: 4px 10px;
+          background: rgba(255, 255, 255, 0.04);
+        }
+
+        /* ── Dashed Divider ── */
+        .proj-dashed {
+          border-top: 1px dashed rgba(255, 255, 255, 0.12);
+          margin-bottom: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        /* ── Grid Showcase ── */
+        .proj-grid {
+          display: grid;
+          grid-template-columns: 1fr 2fr 1fr;
+          gap: 16px;
+          min-height: 280px;
+        }
+
+        .proj-grid-left {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 8px 0;
+        }
+
+        .proj-desc {
           font-family: var(--font-geist-mono), monospace;
           font-size: 11px;
-          color: var(--project-accent);
           text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.55);
+          line-height: 1.9;
           letter-spacing: 0.05em;
-          margin-bottom: 2.5rem;
+          margin: 0 0 1.5rem 0;
+        }
+
+        .proj-impact {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 10px;
+          text-transform: uppercase;
+          color: #ff5f38;
+          letter-spacing: 0.08em;
+          margin-bottom: 1.5rem;
           display: block;
         }
 
-        .project-actions {
+        .proj-actions {
           display: flex;
-          gap: 12px;
+          gap: 8px;
           flex-wrap: wrap;
-          justify-content: flex-start;
         }
 
-        .project-btn {
+        .proj-btn {
           font-family: var(--font-geist-mono), monospace;
-          font-size: 12px;
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
           text-decoration: none;
-          padding: 12px 24px;
-          border-radius: 999px;
-          transition: all 200ms ease;
+          padding: 8px 16px;
+          border-radius: 3px;
+          transition: all 0.2s ease;
           border: 1px solid transparent;
         }
 
-        .primary-btn {
-          background: #ffffff;
-          font-weight: 500;
-          border: 1px solid transparent;
+        .proj-btn-primary {
+          background: #ff5f38;
+          color: #121212;
+          font-weight: 700;
+          border-color: transparent;
         }
 
-        .primary-btn:hover {
-          background: transparent !important;
-          border-color: #ffffff;
-          color: #ffffff !important;
-        }
-
-        .secondary-btn {
+        .proj-btn-primary:hover {
           background: transparent;
-          border-color: rgba(255, 255, 255, 0.3);
-          color: rgba(255, 255, 255, 0.9);
+          border-color: #ff5f38;
+          color: #ff5f38;
         }
 
-        .secondary-btn:hover {
-          border-color: #ffffff;
+        .proj-btn-secondary {
+          background: transparent;
+          color: rgba(255, 255, 255, 0.6);
+          border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .proj-btn-secondary:hover {
+          border-color: rgba(255, 255, 255, 0.5);
           color: #ffffff;
         }
 
-        @media (max-width: 768px) {
-          .project-card {
-            --sticky-top: 60px;
-            --sticky-gap: 0px;
+        /* ── Preview Cards ── */
+        .proj-preview-card {
+          background: #1a1a1a;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 10px;
+          overflow: hidden;
+          position: relative;
+        }
+
+        .proj-preview-main {
+          width: 100%;
+          height: 100%;
+          min-height: 250px;
+        }
+
+        .proj-preview-sub {
+          flex: 1;
+        }
+
+        .proj-grid-center {
+          display: flex;
+        }
+
+        .proj-grid-center .proj-preview-main {
+          flex: 1;
+        }
+
+        .proj-grid-right {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .proj-preview-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          transition: transform 0.5s ease;
+        }
+
+        .proj-preview-card:hover .proj-preview-img {
+          transform: scale(1.04);
+        }
+
+        .proj-preview-placeholder {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #1a1a1a;
+        }
+
+        .proj-circle-mask {
+          width: 140px;
+          height: 140px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 70%);
+          border: 1px dashed rgba(255, 255, 255, 0.08);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transform: rotate(-12deg);
+        }
+
+        .proj-circle-mask.small {
+          width: 80px;
+          height: 80px;
+        }
+
+        .proj-circle-label {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 9px;
+          text-transform: uppercase;
+          letter-spacing: 0.2em;
+          color: rgba(255, 255, 255, 0.2);
+          writing-mode: vertical-rl;
+          text-orientation: mixed;
+          transform: rotate(180deg);
+        }
+
+        .proj-circle-mask.small .proj-circle-label {
+          font-size: 8px;
+          writing-mode: horizontal-tb;
+          transform: none;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+          .proj-hero {
+            flex-direction: column;
+            gap: 1rem;
+          }
+
+          .proj-hero-title {
+            font-size: clamp(2rem, 10vw, 3.5rem);
+            white-space: normal;
+          }
+
+          .proj-hero-right {
+            align-items: flex-start;
+          }
+
+          .proj-grid {
             grid-template-columns: 1fr;
+            gap: 16px;
             min-height: auto;
-            margin-bottom: clamp(60px, 10vh, 100px);
           }
 
-          .project-card-right {
-            order: -1;
-            height: 220px;
-            border-left: none;
-            border-bottom: 1px solid var(--project-border);
+          .proj-grid-right {
+            flex-direction: row;
+            gap: 16px;
           }
 
-          .project-image-container {
-            min-height: 100%;
+          .proj-preview-main {
+            min-height: 200px;
           }
 
-          .project-card-left {
-            padding: 2rem 1.5rem;
+          .proj-tab-strip {
+            flex-wrap: wrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+          }
+
+          .proj-tab-strip::-webkit-scrollbar {
+            display: none;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .proj-grid-right {
+            flex-direction: column;
+          }
+
+          .nav-tab {
+            font-size: 8px;
+            padding: 6px 14px;
+            letter-spacing: 0.1em;
           }
         }
       `}</style>

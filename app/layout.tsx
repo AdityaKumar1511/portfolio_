@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body style={{ fontFamily: 'var(--font-geist-sans), system-ui, sans-serif' }}>
         <CustomCursor />
-        <ProgressRail />
+        
         {children}
       </body>
     </html>

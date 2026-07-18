@@ -164,7 +164,7 @@ export default function Hero() {
 
       {/* CSS Styles */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Playfair+Display:ital,wght@1,500;1,600&display=swap');
 
         .hero-section {
           height: 100svh;
@@ -250,6 +250,7 @@ export default function Hero() {
         }
 
         .card-name {
+          font-family: 'Cormorant Garamond', serif;
           font-size: clamp(3.5rem, 6.5vw, 5.5rem);
           font-weight: 600;
           letter-spacing: -0.03em;
