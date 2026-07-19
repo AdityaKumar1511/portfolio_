@@ -395,8 +395,8 @@ export default function GitHub() {
 
         .github-content-grid {
           display: grid;
-          grid-template-columns: 320px 1fr;
-          gap: clamp(2rem, 8vw, 10rem);
+          grid-template-columns: 350px 1fr;
+          gap: clamp(3rem, 10vw, 14rem);
           align-items: flex-start;
           margin-bottom: 2rem;
           min-width: 0;
