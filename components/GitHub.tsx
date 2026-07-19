@@ -41,21 +41,25 @@ export default function GitHub() {
     setSyncedTime(`${hrs === 0 ? 12 : hrs}H AGO`)
 
     // Attempt to fetch real profile data
-    fetch(`https://api.github.com/users/${USERNAME}`)
+    const profileCtrl = new AbortController()
+    const profileTimeout = setTimeout(() => profileCtrl.abort(), 8000)
+    fetch(`https://api.github.com/users/${USERNAME}`, { signal: profileCtrl.signal })
       .then(r => r.json())
       .then(profile => {
         if (profile.public_repos) {
-          // Update commits/stats with some real numbers based on profile
           setStats(prev => ({
             ...prev,
-            commits: (profile.public_repos * 12) + 120, // realistic commits mock based on repo count
+            commits: (profile.public_repos * 12) + 120,
           }))
         }
       })
       .catch(() => {})
+      .finally(() => clearTimeout(profileTimeout))
 
     // Attempt to fetch real contributions from public deno API
-    fetch(`https://github-contributions-api.deno.dev/${USERNAME}.json`)
+    const contribCtrl = new AbortController()
+    const contribTimeout = setTimeout(() => contribCtrl.abort(), 8000)
+    fetch(`https://github-contributions-api.deno.dev/${USERNAME}.json`, { signal: contribCtrl.signal })
       .then(r => r.json())
       .then(data => {
         if (data.contributions && Array.isArray(data.contributions)) {
@@ -107,6 +111,7 @@ export default function GitHub() {
       .catch(() => {
         setLoading(false)
       })
+      .finally(() => clearTimeout(contribTimeout))
   }, [])
 
   // Mock generator helper

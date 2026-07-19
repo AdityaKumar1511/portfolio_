@@ -123,41 +123,54 @@ export default function CP() {
     const hrs = now.getHours()
     setSyncedTime(`${hrs === 0 ? 12 : hrs}H AGO`)
 
-    // LeetCode Profile
-    fetch(`https://alfa-leetcode-api.onrender.com/userProfile/${LEETCODE_USERNAME}`)
-      .then(r => r.json())
-      .then(data => {
-        if (data && data.totalSolved !== undefined) {
-          setLcStats(prev => ({
-            ...prev,
-            totalSolved: data.totalSolved,
-            easySolved: data.easySolved,
-            mediumSolved: data.mediumSolved,
-            hardSolved: data.hardSolved,
-            ranking: data.ranking ? Number(data.ranking).toLocaleString() : prev.ranking,
-          }))
-        }
-      })
-      .catch(() => { })
+    const controllers = Array.from({ length: 5 }, () => new AbortController())
+    const timeouts = controllers.map(c => setTimeout(() => c.abort(), 8000))
 
-    // LeetCode Contest
-    fetch(`https://alfa-leetcode-api.onrender.com/${LEETCODE_USERNAME}/contest`)
+    // LeetCode Profile (Vercel-hosted, no cold starts)
+    fetch(`https://leetcode-api-pied.vercel.app/user/${LEETCODE_USERNAME}`, { signal: controllers[0].signal })
       .then(r => r.json())
       .then(data => {
-        if (data && data.contestRating !== undefined) {
+        if (data && data.submitStats) {
+          const stats = data.submitStats.acSubmissionNum || []
+          const find = (d: string) => stats.find((s: { difficulty: string; count: number }) => s.difficulty === d)?.count || 0
           setLcStats(prev => ({
             ...prev,
-            contestRating: Math.round(data.contestRating),
-            contestGlobalRanking: data.contestGlobalRanking || prev.contestGlobalRanking,
-            topPercentage: data.topPercentage || prev.topPercentage,
-            contestAttendance: data.contestAttendance || (data.contestParticipation ? data.contestParticipation.filter((p: any) => p.attended).length : prev.contestAttendance),
+            totalSolved: find('All'),
+            easySolved: find('Easy'),
+            mediumSolved: find('Medium'),
+            hardSolved: find('Hard'),
+            ranking: data.profile?.ranking ? Number(data.profile.ranking).toLocaleString() : prev.ranking,
           }))
         }
       })
       .catch(() => { })
+      .finally(() => clearTimeout(timeouts[0]))
+
+    // LeetCode Contest (Vercel-hosted)
+    fetch(`https://leetcode-api-pied.vercel.app/user/${LEETCODE_USERNAME}/contests`, { signal: controllers[1].signal })
+      .then(r => r.json())
+      .then(data => {
+        const history = data?.userContestRankingHistory
+        if (Array.isArray(history)) {
+          const attended = history.filter((h: { attended: boolean }) => h.attended)
+          if (attended.length > 0) {
+            const avgRating = attended.reduce((sum: number, h: { rating: number }) => sum + (h.rating || 0), 0) / attended.length
+            const latest = attended[attended.length - 1]
+            setLcStats(prev => ({
+              ...prev,
+              contestRating: Math.round(avgRating),
+              contestGlobalRanking: latest.ranking || prev.contestGlobalRanking,
+              topPercentage: prev.topPercentage,
+              contestAttendance: attended.length,
+            }))
+          }
+        }
+      })
+      .catch(() => { })
+      .finally(() => clearTimeout(timeouts[1]))
 
     // Codeforces Info
-    fetch(`https://codeforces.com/api/user.info?handles=${CODEFORCES_USERNAME}`)
+    fetch(`https://codeforces.com/api/user.info?handles=${CODEFORCES_USERNAME}`, { signal: controllers[2].signal })
       .then(r => r.json())
       .then(data => {
         if (data && data.status === 'OK' && data.result && data.result[0]) {
@@ -175,9 +188,10 @@ export default function CP() {
         }
       })
       .catch(() => { })
+      .finally(() => clearTimeout(timeouts[2]))
 
     // Codeforces Rating / Contests
-    fetch(`https://codeforces.com/api/user.rating?handle=${CODEFORCES_USERNAME}`)
+    fetch(`https://codeforces.com/api/user.rating?handle=${CODEFORCES_USERNAME}`, { signal: controllers[3].signal })
       .then(r => r.json())
       .then(data => {
         if (data && data.status === 'OK' && Array.isArray(data.result)) {
@@ -188,9 +202,10 @@ export default function CP() {
         }
       })
       .catch(() => { })
+      .finally(() => clearTimeout(timeouts[3]))
 
     // Codeforces Status / Solved
-    fetch(`https://codeforces.com/api/user.status?handle=${CODEFORCES_USERNAME}`)
+    fetch(`https://codeforces.com/api/user.status?handle=${CODEFORCES_USERNAME}`, { signal: controllers[4].signal })
       .then(r => r.json())
       .then(data => {
         if (data && data.status === 'OK' && Array.isArray(data.result)) {
@@ -212,6 +227,7 @@ export default function CP() {
       .catch(() => {
         setLoading(false)
       })
+      .finally(() => clearTimeout(timeouts[4]))
   }, [])
 
   // Helper for Codeforces Rank Colors

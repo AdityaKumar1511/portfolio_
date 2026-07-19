@@ -11,7 +11,7 @@ const projects = [
     year: '2025',
     tech: ['Next.js', 'Supabase', 'Firecrawl', 'Resend', 'Vercel'],
     impact: 'Tracks 50+ assets in real-time',
-    liveUrl: 'https://arbitrage.vercel.app',
+    liveUrl: 'https://arbitrage-henna.vercel.app',
     repoUrl: 'https://github.com/AdityaKumar1511/arbitrage',
     thumbnail: '/projects/arb.webp',
   },
