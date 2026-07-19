@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import disciplinesData from '@/data/howIWork.json'
 
 type NodeStep = {
@@ -20,8 +20,8 @@ type DisciplineData = {
 function getIconSvg(symbol: string) {
   const strokeProps = {
     viewBox: '0 0 24 24',
-    width: '18',
-    height: '18',
+    width: '24',
+    height: '24',
     stroke: 'currentColor',
     strokeWidth: '2',
     fill: 'none',
@@ -472,13 +472,30 @@ export default function HowIWork() {
   const disciplines: DisciplineData[] = disciplinesData as DisciplineData[]
 
   const [activeDisc, setActiveDisc] = useState<DisciplineData>(disciplines[0])
+  const [use3Col, setUse3Col] = useState(false)
 
-  // Mapping grid positions for the 12-node serpentine path
-  const gridPositions = [
-    { r: 1, c: 1 }, { r: 1, c: 2 }, { r: 1, c: 3 }, { r: 1, c: 4 }, // Row 1: Left to Right (1,2,3,4)
-    { r: 2, c: 4 }, { r: 2, c: 3 }, { r: 2, c: 2 }, { r: 2, c: 1 }, // Row 2: Right to Left (5,6,7,8)
-    { r: 3, c: 1 }, { r: 3, c: 2 }, { r: 3, c: 3 }, { r: 3, c: 4 }, // Row 3: Left to Right (9,10,11,12)
+  useEffect(() => {
+    const check = () => setUse3Col(window.innerWidth <= 480)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
+  // 4-col serpentine: rows 1-3
+  const gridPositions4Col = [
+    { r: 1, c: 1 }, { r: 1, c: 2 }, { r: 1, c: 3 }, { r: 1, c: 4 },
+    { r: 2, c: 4 }, { r: 2, c: 3 }, { r: 2, c: 2 }, { r: 2, c: 1 },
+    { r: 3, c: 1 }, { r: 3, c: 2 }, { r: 3, c: 3 }, { r: 3, c: 4 },
   ]
+  // 3-col serpentine: rows 1-4
+  const gridPositions3Col = [
+    { r: 1, c: 1 }, { r: 1, c: 2 }, { r: 1, c: 3 },
+    { r: 2, c: 3 }, { r: 2, c: 2 }, { r: 2, c: 1 },
+    { r: 3, c: 1 }, { r: 3, c: 2 }, { r: 3, c: 3 },
+    { r: 4, c: 3 }, { r: 4, c: 2 }, { r: 4, c: 1 },
+  ]
+
+  const gridPositions = use3Col ? gridPositions3Col : gridPositions4Col
 
   return (
     <section id="how-i-work" className="hiw-section">
@@ -535,18 +552,24 @@ export default function HowIWork() {
 
           <div className="nodes-scroller">
             <div className="nodes-grid-container">
-              {/* Connection lines layer (pure SVG rendered beneath nodes) */}
+              {/* Desktop connection lines (4-col, 3-row serpentine) */}
               <svg className="connections-svg" viewBox="0 0 800 450" preserveAspectRatio="none">
-                {/* Row 1 horizontal */}
                 <line x1="100" y1="75" x2="700" y2="75" />
-                {/* Row 1 to Row 2 turn */}
                 <path d="M 700 75 C 770 75, 770 225, 700 225" fill="none" />
-                {/* Row 2 horizontal */}
                 <line x1="700" y1="225" x2="100" y2="225" />
-                {/* Row 2 to Row 3 turn */}
                 <path d="M 100 225 C 30 225, 30 375, 100 375" fill="none" />
-                {/* Row 3 horizontal */}
                 <line x1="100" y1="375" x2="700" y2="375" />
+              </svg>
+
+              {/* Mobile connection lines (3-col, 4-row serpentine) */}
+              <svg className="connections-svg-mobile" viewBox="0 0 800 700" preserveAspectRatio="none">
+                <line x1="133" y1="87" x2="667" y2="87" />
+                <path d="M 667 87 C 730 87, 730 262, 667 262" fill="none" />
+                <line x1="667" y1="262" x2="133" y2="262" />
+                <path d="M 133 262 C 70 262, 70 437, 133 437" fill="none" />
+                <line x1="133" y1="437" x2="667" y2="437" />
+                <path d="M 667 437 C 730 437, 730 612, 667 612" fill="none" />
+                <line x1="667" y1="612" x2="133" y2="612" />
               </svg>
 
               {/* The Node Graph grid layout */}
@@ -807,7 +830,25 @@ export default function HowIWork() {
         .connections-svg path {
           stroke: var(--border);
           stroke-width: 1.5px;
-          stroke-dasharray: 4 4; /* Dotted line styling */
+          stroke-dasharray: 4 4;
+        }
+
+        .connections-svg-mobile {
+          display: none;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1;
+          pointer-events: none;
+        }
+
+        .connections-svg-mobile line,
+        .connections-svg-mobile path {
+          stroke: var(--border);
+          stroke-width: 1.5px;
+          stroke-dasharray: 4 4;
         }
 
         /* The nodes positioning grid */
@@ -844,9 +885,9 @@ export default function HowIWork() {
         }
 
         .node-box {
-          width: 44px;
-          height: 44px;
-          border-radius: 12px;
+          width: 56px;
+          height: 56px;
+          border-radius: 14px;
           background: var(--surface-2);
           border: 1px solid var(--border);
           display: flex;
@@ -939,6 +980,29 @@ export default function HowIWork() {
             padding-top: 0;
           }
 
+          .hiw-sidebar {
+            padding: 1rem;
+          }
+
+          .discipline-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            overflow: visible;
+          }
+
+          .disc-btn {
+            width: 100%;
+            flex-shrink: 1;
+            white-space: nowrap;
+            justify-content: center;
+            padding: 10px 12px;
+          }
+
+          .tech-stack-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+
           .nodes-scroller {
             padding: 2rem 1rem;
             justify-content: flex-start;
@@ -947,11 +1011,17 @@ export default function HowIWork() {
           .node-box {
             width: 36px;
             height: 36px;
-            border-radius: 10px;
+            border-radius: 8px;
+          }
+
+          .node-icon svg {
+            width: 14px;
+            height: 14px;
           }
 
           .node-title {
             font-size: 7px;
+            bottom: -6px;
           }
         }
 
@@ -961,25 +1031,99 @@ export default function HowIWork() {
           }
 
           .hiw-sidebar {
-            padding: 1rem;
+            padding: 0.75rem;
+          }
+
+          .discipline-buttons {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+          }
+
+          .disc-btn {
+            padding: 8px 8px;
+            gap: 6px;
+            border-radius: 8px;
+          }
+
+          .disc-name {
+            font-size: 11px;
+          }
+
+          .disc-icon svg {
+            width: 14px;
+            height: 14px;
+          }
+
+          .tech-stack-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+          }
+
+          .tech-stack-badge {
+            padding: 4px 4px;
+          }
+
+          .tech-badge-name {
+            font-size: 8px;
           }
 
           .nodes-grid-container {
-            min-width: 500px;
+            min-width: auto;
+            aspect-ratio: 0.7;
+          }
+
+          .nodes-grid {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+          }
+
+          .nodes-scroller {
+            padding: 2rem 0.5rem;
+            justify-content: center;
+          }
+
+          .connections-svg {
+            display: none;
+          }
+
+          .connections-svg-mobile {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+          }
+
+          .connections-svg-mobile line,
+          .connections-svg-mobile path {
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 2px;
+            stroke-dasharray: 6 6;
           }
 
           .node-box {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 8px;
+          }
+
+          .node-icon svg {
+            width: 14px;
+            height: 14px;
+          }
+
+          .node-number {
+            font-size: 7px;
+            top: -2px;
           }
 
           .node-title {
             font-size: 6px;
-          }
-
-          .tech-stack-badge {
-            padding: 6px 4px;
+            bottom: -6px;
+            white-space: nowrap;
           }
         }
       `}</style>

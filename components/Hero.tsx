@@ -40,7 +40,7 @@ export default function Hero() {
           <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
             {/* Zone A — Top labels */}
             <div className="card-top-split">
-              <span className="card-label">PORTFOLIO · 2026</span>
+              <span className="card-label card-label-year">PORTFOLIO · 2026</span>
               <span className="card-label">CSE · 2ND YR · NIT PATNA</span>
             </div>
 
@@ -51,7 +51,7 @@ export default function Hero() {
 
             {/* Dynamic changing roles line */}
             <div className="dynamic-role-wrapper">
-              <span className="static-text">I build</span>
+              <span className="static-text role-static-text">I build</span>
               <span key={roleIndex} className="animated-role">{roles[roleIndex]}</span>
             </div>
 
@@ -693,29 +693,187 @@ export default function Hero() {
 
         @media (max-width: 480px) {
           .hero-section {
-            padding: 16px;
+            padding: 12px;
+          }
+
+          .bento-grid {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto;
+            height: auto;
+            gap: 0;
+            overflow: visible;
+            max-height: none;
+            min-height: unset;
           }
 
           .bento-card {
-            padding: 16px;
+            padding: 12px;
+          }
+
+          /* Card 1 — condensed hero */
+          .card-1-upper {
+            grid-column: 1 / 3 !important;
+            grid-row: auto !important;
+            min-height: 280px;
+            border-bottom: 1px solid #1f1f1f;
+            border-right: none;
+          }
+
+          .card-label-year {
+            /* restored — visible on mobile */
+          }
+
+          .card-name-block {
+            margin-top: 0.75rem;
           }
 
           .card-name {
-            font-size: clamp(2.5rem, 12vw, 3.5rem);
+            font-size: clamp(2rem, 10vw, 2.8rem);
+          }
+
+          .role-static-text {
+            display: none;
+          }
+
+          .dynamic-role-wrapper {
+            margin-top: 0.5rem;
+            font-size: 12px;
+            gap: 0;
+          }
+
+          .animated-role {
+            font-size: 12px;
           }
 
           .img-statement {
-            font-size: clamp(1.2rem, 5vw, 1.6rem);
+            font-size: clamp(0.85rem, 4vw, 1.2rem);
+            margin-top: 1rem;
+            line-height: 1.35;
+          }
+
+          /* Card 3 — Status */
+          .card-3 {
+            grid-column: 1 !important;
+            grid-row: auto !important;
+            border-bottom: 1px solid #1f1f1f;
+            border-right: 1px solid #1f1f1f;
+            padding: 12px;
+            min-height: 130px;
+          }
+
+          .status-middle {
+            margin: 0;
+          }
+
+          .status-text {
+            font-size: 13px;
+          }
+
+          .status-bottom {
+            font-size: 8px;
+          }
+
+          /* Card 4 — Featured project */
+          .card-4 {
+            grid-column: 2 !important;
+            grid-row: auto !important;
+            border-bottom: 1px solid #1f1f1f;
+            border-right: none;
+            padding: 12px;
+            min-height: 130px;
+          }
+
+          .card-4 .live-pill {
+            /* restored — visible on mobile */
+          }
+
+          .card-4 .project-name {
+            font-size: 14px;
+            margin: 0;
+          }
+
+          .card-4 .project-desc {
+            font-size: 10px;
+            margin: 2px 0 0 0;
+          }
+
+          .card-4 .tech-pills {
+            margin-top: 6px;
+            gap: 4px;
+          }
+
+          .card-4 .tech-pill {
+            font-size: 7px;
+            padding: 1px 5px;
+          }
+
+          .card-4 .project-links {
+            /* restored — visible on mobile */
+          }
+
+          /* Social grid */
+          .social-grid {
+            grid-column: 1 / 3 !important;
+            grid-row: auto !important;
+            border-bottom: 1px solid #1f1f1f;
+            aspect-ratio: unset;
+            height: 64px;
           }
 
           .social-svg {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
+          }
+
+          /* Resume card */
+          .resume-card {
+            grid-column: 1 / 3 !important;
+            grid-row: auto !important;
+            border: none;
+          }
+
+          .resume-card-inner {
+            flex-direction: row;
+            align-items: center;
           }
 
           .resume-left {
-            padding: 16px;
-            min-width: 160px;
+            width: 100%;
+            border-right: none;
+            padding: 12px 16px;
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+            min-width: unset;
+          }
+
+          .resume-text-block {
+            margin: 0;
+          }
+
+          .resume-title {
+            font-size: 13px;
+            margin: 0;
+          }
+
+          .resume-desc {
+            font-size: 8px;
+          }
+
+          .resume-download-btn {
+            font-size: 10px;
+            padding: 6px 10px;
+            align-self: center;
+            white-space: nowrap;
+          }
+
+          .resume-preview-wrapper {
+            display: none;
+          }
+
+          .card-top-split {
+            flex-direction: row;
+            gap: 0;
           }
         }
       `}</style>

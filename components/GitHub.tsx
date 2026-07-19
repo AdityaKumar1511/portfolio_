@@ -312,6 +312,7 @@ export default function GitHub() {
           margin: 0 auto;
           width: 100%;
           box-sizing: border-box;
+          overflow-x: hidden;
         }
 
         .section-header {
@@ -393,6 +394,7 @@ export default function GitHub() {
           gap: clamp(2rem, 8vw, 10rem);
           align-items: flex-start;
           margin-bottom: 2rem;
+          min-width: 0;
         }
 
         .stats-grid-2x2 {
@@ -427,6 +429,10 @@ export default function GitHub() {
           color: var(--text-muted);
         }
 
+        .heatmap-side {
+          min-width: 0;
+        }
+
         .grid-summary-label {
           font-family: var(--font-geist-mono), monospace;
           font-size: 11px;
@@ -441,6 +447,7 @@ export default function GitHub() {
           gap: 12px;
           align-items: flex-start;
           width: 100%;
+          min-width: 0;
         }
 
         .heatmap-y-axis {
@@ -457,11 +464,22 @@ export default function GitHub() {
         .heatmap-scroller {
           flex: 1;
           overflow-x: auto;
-          scrollbar-width: none; /* Hide default scrollbar */
+          min-width: 0;
+          scrollbar-width: thin;
+          scrollbar-color: #333 transparent;
         }
 
         .heatmap-scroller::-webkit-scrollbar {
-          display: none;
+          height: 4px;
+        }
+
+        .heatmap-scroller::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .heatmap-scroller::-webkit-scrollbar-thumb {
+          background: #333;
+          border-radius: 2px;
         }
 
         .heatmap-inner {
@@ -551,7 +569,6 @@ export default function GitHub() {
 
         @media (max-width: 480px) {
           .stats-grid-2x2 {
-            grid-template-columns: 1fr;
             gap: 1.5rem;
           }
 

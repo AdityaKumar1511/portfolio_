@@ -526,19 +526,18 @@ export default function Projects() {
   }
 
   @media (max-width: 768px) {
+    .projects-stack {
+      padding-bottom: calc(100svh + 60px);
+    }
+
     .project-card-wrapper {
-      position: relative !important;
-      top: 0 !important;
-      margin-bottom: 16px;
+      margin-bottom: 0;
     }
 
     .project-tab-ear {
-      margin-left: 0 !important;
-      width: auto !important;
-      min-width: 80px;
+      min-width: 60px;
       height: 36px;
       padding: 0 10px;
-      clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
     }
 
     .ear-name {
@@ -546,8 +545,8 @@ export default function Projects() {
     }
 
     .project-card-body {
+      min-height: 100svh;
       height: auto;
-      min-height: auto;
       padding: 1.5rem 1.25rem;
     }
 
