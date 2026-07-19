@@ -178,6 +178,39 @@ export default function Contact() {
           width: 36px;
           height: 36px;
         }
+
+        @media (max-width: 640px) {
+          .contact-section {
+            max-height: none;
+            min-height: auto;
+            padding: clamp(4rem, 15vw, 5rem) 24px;
+          }
+
+          .contact-heading {
+            font-size: clamp(2rem, 10vw, 2.5rem);
+          }
+        }
+
+        @media (max-width: 480px) {
+          .contact-social-cell {
+            width: 56px;
+            height: 56px;
+          }
+
+          .contact-social-svg {
+            width: 28px;
+            height: 28px;
+          }
+
+          .contact-section {
+            padding: 3rem 16px;
+          }
+
+          .contact-email-link {
+            font-size: clamp(0.75rem, 3.5vw, 0.85rem);
+            word-break: break-all;
+          }
+        }
       `}</style>
     </section>
   )

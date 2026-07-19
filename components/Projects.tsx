@@ -278,7 +278,7 @@ export default function Projects() {
   /* ── CARD BODY ── */
   .project-card-body {
     width: 100%;
-    height: calc(100vh - 44px);
+    height: calc(100svh - 44px);
     overflow: hidden;
     padding: clamp(1.25rem, 2.5vw, 2rem) clamp(1.5rem, 3vw, 2.5rem);
     display: flex;
@@ -538,6 +538,7 @@ export default function Projects() {
       min-width: 80px;
       height: 36px;
       padding: 0 10px;
+      clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
     }
 
     .ear-name {
@@ -545,8 +546,9 @@ export default function Projects() {
     }
 
     .project-card-body {
-      min-height: unset;
-      padding: 2rem 1.25rem;
+      height: auto;
+      min-height: auto;
+      padding: 1.5rem 1.25rem;
     }
 
     .card-hero-title {
@@ -566,11 +568,23 @@ export default function Projects() {
     .card-showcase-right {
       min-height: 140px;
     }
+
+    .card-showcase {
+      min-height: auto;
+    }
   }
 
   @media (max-width: 480px) {
     .projects-section {
       padding: 3rem 16px;
+    }
+
+    .project-card-body {
+      padding: 1.25rem 1rem;
+    }
+
+    .card-hero-title {
+      font-size: 1.6rem;
     }
   }
 

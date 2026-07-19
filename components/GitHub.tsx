@@ -543,10 +543,33 @@ export default function GitHub() {
           }
         }
 
+        @media (hover: none) {
+          .heatmap-scroll-tip {
+            display: inline;
+          }
+        }
+
         @media (max-width: 480px) {
           .stats-grid-2x2 {
             grid-template-columns: 1fr;
             gap: 1.5rem;
+          }
+
+          .stat-val {
+            font-size: clamp(1.5rem, 8vw, 2rem);
+          }
+
+          .heatmap-cell {
+            width: 8px;
+            height: 8px;
+          }
+
+          .heatmap-grid {
+            gap: 2px;
+          }
+
+          .github-redesign-section {
+            padding: 3rem 16px;
           }
         }
       `}</style>

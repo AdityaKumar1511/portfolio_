@@ -690,6 +690,34 @@ export default function Hero() {
             gap: 4px;
           }
         }
+
+        @media (max-width: 480px) {
+          .hero-section {
+            padding: 16px;
+          }
+
+          .bento-card {
+            padding: 16px;
+          }
+
+          .card-name {
+            font-size: clamp(2.5rem, 12vw, 3.5rem);
+          }
+
+          .img-statement {
+            font-size: clamp(1.2rem, 5vw, 1.6rem);
+          }
+
+          .social-svg {
+            width: 24px;
+            height: 24px;
+          }
+
+          .resume-left {
+            padding: 16px;
+            min-width: 160px;
+          }
+        }
       `}</style>
     </section>
   )

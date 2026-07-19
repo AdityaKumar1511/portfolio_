@@ -240,12 +240,47 @@ export default function About() {
           }
           
           .about-col-right {
-            order: -1; /* Place picture at the top for tablets/mobiles */
+            order: -1;
             height: auto;
           }
 
           .profile-image-wrapper {
             aspect-ratio: 0.85;
+            min-height: 280px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .about-card-container {
+            border-radius: 24px;
+            padding: clamp(1.5rem, 5vw, 2rem);
+          }
+
+          .about-card-header {
+            flex-wrap: wrap;
+            gap: 8px;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+          }
+
+          .profile-image-wrapper {
+            min-height: 240px;
+          }
+
+          .about-buttons-row {
+            flex-direction: column;
+            width: 100%;
+          }
+
+          .github-pill-btn {
+            width: 100%;
+            text-align: center;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .about-section-outer {
+            padding: 16px;
           }
         }
       `}</style>

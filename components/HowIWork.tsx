@@ -922,6 +922,10 @@ export default function HowIWork() {
           .tech-stack-grid {
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
           }
+
+          .nodes-grid-container {
+            min-width: auto;
+          }
         }
 
         @media (max-width: 768px) {
@@ -933,6 +937,49 @@ export default function HowIWork() {
 
           .hiw-right-header {
             padding-top: 0;
+          }
+
+          .nodes-scroller {
+            padding: 2rem 1rem;
+            justify-content: flex-start;
+          }
+
+          .node-box {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+          }
+
+          .node-title {
+            font-size: 7px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .hiw-section {
+            padding: 3rem 16px;
+          }
+
+          .hiw-sidebar {
+            padding: 1rem;
+          }
+
+          .nodes-grid-container {
+            min-width: 500px;
+          }
+
+          .node-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+          }
+
+          .node-title {
+            font-size: 6px;
+          }
+
+          .tech-stack-badge {
+            padding: 6px 4px;
           }
         }
       `}</style>

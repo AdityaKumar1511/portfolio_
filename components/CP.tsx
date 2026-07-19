@@ -677,6 +677,25 @@ export default function CP() {
             gap: 2rem;
           }
         }
+
+        @media (max-width: 480px) {
+          .cp-card {
+            padding: 1.25rem;
+            border-radius: 20px;
+          }
+
+          .stat-num {
+            font-size: 15px;
+          }
+
+          .rating-value {
+            font-size: clamp(1.75rem, 8vw, 2.25rem);
+          }
+
+          .leetcode-redesign-section {
+            padding: 3rem 16px;
+          }
+        }
       `}</style>
     </section>
   )

@@ -10,6 +10,9 @@
   --text: #fafafa;
   --text-secondary: #d0d0d0;
   --text-muted: #a0a0a0;
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
 }
 
 * { box-sizing: border-box; }
@@ -28,8 +31,7 @@ body {
 }
 
 main {
-  padding-left: 12px;
-  padding-right: 12px;
+  padding: 0;
 }
 
 ::selection { background: #fafafa; color: #0a0a0a; }
@@ -90,9 +92,15 @@ body.has-custom-cursor * {
 .hero-section,
 .about-section-outer,
 .experience-section,
-.proj-section,
+.projects-section,
 .github-redesign-section,
 .leetcode-redesign-section,
 .contact-section {
   min-height: 100vh;
+}
+
+@media (max-width: 1024px) {
+  .contact-section {
+    min-height: auto;
+  }
 }

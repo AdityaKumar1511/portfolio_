@@ -194,13 +194,23 @@ export default function Experience() {
           .experience-row {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 4px;
             padding: 24px 0;
           }
 
           .experience-period {
             text-align: left;
             margin-top: 4px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .experience-section {
+            padding: 3rem 16px;
+          }
+
+          .experience-role {
+            font-size: 1.3rem;
           }
         }
       `}</style>
