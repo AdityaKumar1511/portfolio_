@@ -323,7 +323,7 @@ export default function GitHub() {
       {/* CSS Styles */}
       <style>{`
         .github-redesign-section {
-          padding: clamp(4rem, 10vw, 8rem) 24px;
+          padding: clamp(4rem, 10vw, 8rem) 0;
           border-top: 1px solid var(--border);
           max-width: 1400px;
           margin: 0 auto;

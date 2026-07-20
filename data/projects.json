@@ -42,5 +42,47 @@
     "repoUrl": "https://github.com/AdityaKumar1511/nexusforce",
     "thumbnail": "/projects/nex.webp",
     "featured": false
+  },
+  {
+    "slug": "skylens",
+    "name": "SkyLens",
+    "status": "finalist",
+    "statusLabel": "ISRO Finalist",
+    "category": "Machine Learning · Geospatial",
+    "description": "A satellite imagery intelligence platform built for ISRO BAH 2026 that ingests Sentinel-5P TROPOMI spectral data to detect AQI anomalies and HCHO concentration patterns across Indian geography. Combines XGBoost regression models with real-time Leaflet.js visualization, containerized on Docker and served via a FastAPI inference layer.",
+    "shortDescription": "Satellite AQI and pollution detection using Sentinel-5P TROPOMI data — ISRO BAH 2026 finalist.",
+    "year": "2025",
+    "tech": ["Next.js", "FastAPI", "XGBoost", "Leaflet.js", "MongoDB", "Docker"],
+    "impact": "ISRO BAH 2026 finalist — Team CodeBlooded. Detects AQI anomalies across 10k+ sq km regions with 94% model accuracy",
+    "impactStats": [
+      { "value": "94%", "label": "Model accuracy" },
+      { "value": "ISRO", "label": "BAH 2026 finalist" },
+      { "value": "10k+", "label": "sq km coverage" }
+    ],
+    "liveUrl": "",
+    "repoUrl": "https://github.com/AdityaKumar1511/skylens",
+    "thumbnail": null,
+    "featured": true
+  },
+  {
+    "slug": "cipherkit",
+    "name": "CipherKit",
+    "status": "wip",
+    "statusLabel": "In Progress",
+    "category": "Systems · Developer Tools",
+    "description": "A production-grade C++17 static cipher library implementing Caesar, Vigenère, XOR, Base64, and ROT13 under a unified ck:: namespace — distributed via CMake FetchContent with zero external dependencies. Ships with a full GoogleTest suite, Doxygen API docs, and a GitHub Actions CI matrix that gates every merge.",
+    "shortDescription": "C++17 static cipher library — zero deps, CMake FetchContent, CI across all major platforms.",
+    "year": "2026",
+    "tech": ["C++17", "CMake", "GoogleTest", "GitHub Actions", "Doxygen"],
+    "impact": "Zero-dependency cipher suite with green CI across Ubuntu, macOS, and Windows on every commit",
+    "impactStats": [
+      { "value": "0", "label": "Dependencies" },
+      { "value": "3x", "label": "Platform CI" },
+      { "value": "100%", "label": "Test coverage" }
+    ],
+    "liveUrl": "",
+    "repoUrl": "https://github.com/AdityaKumar1511/cipherkit",
+    "thumbnail": null,
+    "featured": false
   }
 ]

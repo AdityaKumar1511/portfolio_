@@ -69,8 +69,8 @@ export default function About() {
 
       <style>{`
         .about-section-outer {
-          padding: 24px;
-          background: #0a0a0a;
+          padding: 24px 0;
+          background: transparent;
           width: 100%;
           box-sizing: border-box;
         }
@@ -130,11 +130,11 @@ export default function About() {
         }
 
         .card-brand {
-          color: #aed8e6; /* Light cyan brand accent */
+          color: #3ec8e0; /* Light cyan brand accent */
         }
 
         .card-serial {
-          color: #aed8e6;
+          color: #3ec8e0;
         }
 
         .about-card-grid {
@@ -170,7 +170,7 @@ export default function About() {
         }
 
         .highlight {
-          color: #aed8e6; /* Light cyan brand accent highlight */
+          color: #3ec8e0; /* Light cyan brand accent highlight */
           font-weight: 600;
         }
 

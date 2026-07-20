@@ -24,7 +24,7 @@ export default function Ticker() {
         .ticker-wrapper {
           border-top: 1px solid var(--border);
           border-bottom: 1px solid var(--border);
-          background: #0a0a0a;
+          background: transparent;
           padding: 24px 0;
           overflow: hidden;
           width: 100%;

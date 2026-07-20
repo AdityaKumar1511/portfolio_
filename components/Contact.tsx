@@ -51,7 +51,7 @@ export default function Contact() {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          padding: clamp(5rem, 12vw, 10rem) 24px;
+          padding: clamp(5rem, 12vw, 10rem) 0;
           border-top: 1px solid var(--border);
           max-width: 1400px;
           margin: 0 auto;
@@ -176,7 +176,7 @@ export default function Contact() {
           .contact-section {
             max-height: none;
             min-height: auto;
-            padding: clamp(4rem, 15vw, 5rem) 24px;
+            padding: clamp(4rem, 15vw, 5rem) 0;
           }
 
           .contact-heading {

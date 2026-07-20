@@ -111,7 +111,7 @@ export default function Projects() {
                       )}
                       {project.repoUrl && (
                         <a href={project.repoUrl} target="_blank" rel="noreferrer"
-                          className="card-btn card-btn-secondary">
+                          className="card-btn card-btn-primary">
                           REPO ↗
                         </a>
                       )}
@@ -143,7 +143,7 @@ export default function Projects() {
       <style>{`
 
   .projects-section {
-    padding: clamp(4rem, 10vw, 8rem) 24px;
+    padding: clamp(4rem, 10vw, 8rem) 0;
     border-top: 1px solid var(--border);
     max-width: 1800px;
     margin: 0 auto;
@@ -430,17 +430,6 @@ export default function Projects() {
     background: transparent;
     border-color: #ff5f38;
     color: #ff5f38;
-  }
-
-  .card-btn-secondary {
-    background: transparent;
-    color: rgba(255, 255, 255, 0.6);
-    border-color: rgba(255, 255, 255, 0.15);
-  }
-
-  .card-btn-secondary:hover {
-    border-color: rgba(255, 255, 255, 0.5);
-    color: #ffffff;
   }
 
   /* ── Right: Thumbnail ── */

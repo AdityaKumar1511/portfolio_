@@ -2,5 +2,8 @@
   { "num": "01", "role": "Open Source Contributor", "org": "GSSoC", "period": "2024 — Present" },
   { "num": "02", "role": "Hackathon Lead (CodeBlooded)", "org": "ISRO BAH 2026", "period": "2026" },
   { "num": "03", "role": "Competitive Programmer", "org": "Codeforces + LeetCode", "period": "2023 — Present" },
-  { "num": "04", "role": "Project Lead", "org": "NIT Patna", "period": "2025 — Present" }
+  { "num": "04", "role": "Project Lead", "org": "NIT Patna", "period": "2025 — Present" },
+  { "num": "05", "role": "Campus Ambassador", "org": "GeeksforGeeks", "period": "2025 — Present" },
+  { "num": "06", "role": "Technical Head", "org": "ACM Chapter, NIT Patna", "period": "2025 — 2026" },
+  { "num": "07", "role": "Freelance Developer", "org": "Various Clients", "period": "2024 — Present" }
 ]

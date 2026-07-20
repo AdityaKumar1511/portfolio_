@@ -1,5 +1,6 @@
 'use client'
 import items from '@/data/experience.json'
+import FadeIn from './FadeIn'
 
 export default function Experience() {
   return (
@@ -8,13 +9,17 @@ export default function Experience() {
         {/* Left Column (Sticky) */}
         <div className="experience-left">
           <div>
+            <FadeIn>
             <div className="experience-label-container">
               <span className="experience-label-line" />
               <span className="experience-label-text">Experience</span>
             </div>
+            </FadeIn>
+            <FadeIn delay={0.1}>
             <h2 className="experience-heading">
               Where I&apos;ve built.
             </h2>
+            </FadeIn>
           </div>
           {/* Decorative dot at the bottom of the sticky section */}
           <div className="experience-dot" />
@@ -43,7 +48,7 @@ export default function Experience() {
       {/* Embedded CSS for layout and responsiveness */}
       <style>{`
         .experience-section {
-          padding: clamp(4rem, 10vw, 8rem) 24px;
+          padding: clamp(4rem, 10vw, 8rem) 0;
           border-top: 1px solid var(--border);
           max-width: 1400px;
           margin: 0 auto;
