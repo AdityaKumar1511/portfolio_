@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import disciplinesData from '@/data/howIWork.json'
+import FadeIn from './FadeIn'
 
 type NodeStep = {
   num: number
@@ -507,6 +508,7 @@ export default function HowIWork() {
   return (
     <section id="how-i-work" className="hiw-section">
       {/* Header Block */}
+      <FadeIn>
       <div className="hiw-header">
         <div className="hiw-left-header">
           <div className="hiw-label-container">
@@ -521,8 +523,10 @@ export default function HowIWork() {
           <span>{howIWork.description}</span>
         </div>
       </div>
+      </FadeIn>
 
       {/* Main Board Container */}
+      <FadeIn delay={0.15}>
       <div className="hiw-board">
         {/* Sidebar */}
         <div className="hiw-sidebar">
@@ -605,6 +609,7 @@ export default function HowIWork() {
           </div>
         </div>
       </div>
+      </FadeIn>
 
       {/* CSS Styles */}
       <style>{`

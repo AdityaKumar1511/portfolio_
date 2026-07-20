@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import meta from '@/data/meta.json'
 import aboutData from '@/data/about.json'
+import FadeIn from './FadeIn'
 
 export default function About() {
   const [imgErr, setImgErr] = useState(false)
@@ -12,6 +13,7 @@ export default function About() {
 
   return (
     <section id="about" className="about-section-outer">
+      <FadeIn>
       <div className="about-card-container">
         {/* Header inside rust card */}
         <div className="about-card-header">
@@ -63,6 +65,7 @@ export default function About() {
 
         </div>
       </div>
+      </FadeIn>
 
       <style>{`
         .about-section-outer {

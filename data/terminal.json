@@ -16,8 +16,8 @@
   },
   {
     "command": "cat nexusforge",
-    "description": "Display details about the NexusForge project",
-    "output": "Project: NexusForge\nDescription: Decentralized blockchain escrow platform governed by a lightweight DAO structure.\nTech: Wagmi, Chainlink VRF, IPFS, Firebase\nImpact: Secures transactions through multi-signature escrow and verifiable randomness"
+    "description": "Display details about the NexusForce project",
+    "output": "Project: NexusForce\nDescription: Decentralized blockchain escrow platform governed by a lightweight DAO structure.\nTech: Wagmi, Chainlink VRF, IPFS, Firebase\nImpact: Secures transactions through multi-signature escrow and verifiable randomness"
   },
   {
     "command": "cat skills",

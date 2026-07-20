@@ -18,10 +18,10 @@
     "bottomText": "Available from Aug 2026"
   },
   "resumeCard": {
-    "label": "RÉSUMÉ",
+    "label": "RESUME",
     "title": "Aditya Kumar",
     "description": "2nd Year CSE · Open to <span style=\"color: #4ade80\">internships</span>",
-    "downloadLabel": "Download PDF ↗",
+    "downloadLabel": "Download RESUME ↗",
     "pdfSrc": "/resume.pdf"
   }
 }

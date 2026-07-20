@@ -2,6 +2,7 @@
 import meta from '@/data/meta.json'
 import contactData from '@/data/contact.json'
 import socialsData from '@/data/socials.json'
+import FadeIn from './FadeIn'
 
 export default function Contact() {
   const { email } = meta
@@ -12,19 +13,26 @@ export default function Contact() {
       <div className="contact-glow contact-glow-2" />
 
       <div className="contact-label-container">
+        <FadeIn>
         <span className="contact-label-text">{contactData.label}</span>
+        </FadeIn>
       </div>
 
+      <FadeIn delay={0.1}>
       <h2 className="contact-heading">
         {contactData.heading1}<br></br>
         {contactData.heading2}
       </h2>
+      </FadeIn>
 
+      <FadeIn delay={0.2}>
       <a href={`mailto:${email}`} className="contact-email-link">
         {email} ↗
       </a>
       <p className="contact-response-time" dangerouslySetInnerHTML={{ __html: contactData.responseTime }} />
+      </FadeIn>
 
+      <FadeIn delay={0.3}>
       <div className="contact-socials">
         {socialsData.map(s => (
           <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="contact-social-cell" aria-label={s.label}>
@@ -34,6 +42,7 @@ export default function Contact() {
           </a>
         ))}
       </div>
+      </FadeIn>
 
       <style>{`
         .contact-section {

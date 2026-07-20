@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import meta from '@/data/meta.json'
 import cpDefaults from '@/data/cpDefaults.json'
 import theme from '@/data/theme.json'
+import FadeIn from './FadeIn'
 
 const LEETCODE_USERNAME = meta.leetcodeUsername
 const CODEFORCES_USERNAME = meta.codeforcesUsername
@@ -244,6 +245,7 @@ export default function CP() {
   return (
     <section id="leetcode" className="leetcode-redesign-section">
       {/* Upper header segment */}
+      <FadeIn>
       <div className="section-header">
         <div className="section-label-container">
           <span className="section-label-line" />
@@ -258,16 +260,20 @@ export default function CP() {
           </div>
         </div>
       </div>
+      </FadeIn>
 
       {/* Main header title */}
+      <FadeIn delay={0.1}>
       <h2 className="main-heading">
         {cpDefaults.sectionHeading}
       </h2>
+      </FadeIn>
 
       {/* Content grid containing side-by-side cards */}
       <div className="cp-content-grid">
 
         {/* LeetCode Card */}
+        <FadeIn delay={0.2}>
         <div className="cp-card leetcode-card" ref={lcRef}>
           <div className="card-top">
             <div className="brand-info">
@@ -337,8 +343,10 @@ export default function CP() {
             </div>
           </div>
         </div>
+        </FadeIn>
 
         {/* Codeforces Card */}
+        <FadeIn delay={0.3}>
         <div className="cp-card codeforces-card" ref={cfRef}>
           <div className="card-top">
             <div className="brand-info">
@@ -412,6 +420,7 @@ export default function CP() {
             </div>
           </div>
         </div>
+        </FadeIn>
 
       </div>
 

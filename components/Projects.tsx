@@ -1,6 +1,7 @@
 'use client'
 import projectsData from '@/data/projects.json'
 import theme from '@/data/theme.json'
+import FadeIn from './FadeIn'
 
 const projects = projectsData.map(p => ({
   ...p,
@@ -17,10 +18,12 @@ const NAV_OFFSET = 0
 export default function Projects() {
   return (
     <section id="projects" className="projects-section">
+      <FadeIn>
       <div className="projects-label-container">
         <span className="projects-label-line" />
         <span className="projects-label-text">Selected projects</span>
       </div>
+      </FadeIn>
 
       <div className="projects-stack">
         {projects.map((project, i) => {
@@ -51,6 +54,7 @@ export default function Projects() {
                 className="project-card-body"
                 style={{ background: cardBg[i] }}
               >
+                <FadeIn delay={i * 0.15}>
                 <div className="card-hero-row">
                   <h3 className="card-hero-title">{project.name}</h3>
                   <div className="card-hero-meta">
@@ -77,14 +81,26 @@ export default function Projects() {
                     </div>
                   </div>
                 </div>
+                </FadeIn>
 
                 <hr className="card-hr" />
 
+                <FadeIn delay={i * 0.15 + 0.1}>
                 <div className="card-showcase">
                   <div className="card-showcase-left">
                     <p className="card-desc">{project.description}</p>
                     {project.impact && (
                       <span className="card-impact">{project.impact}</span>
+                    )}
+                    {project.impactStats && (
+                      <div className="impact-stats-row">
+                        {project.impactStats.map((stat, si) => (
+                          <div key={si} className="impact-stat-item">
+                            <span className="impact-stat-value">{stat.value}</span>
+                            <span className="impact-stat-label">{stat.label}</span>
+                          </div>
+                        ))}
+                      </div>
                     )}
                     <div className="card-actions">
                       {project.liveUrl && (
@@ -117,6 +133,7 @@ export default function Projects() {
                     )}
                   </div>
                 </div>
+                </FadeIn>
               </div>
             </div>
           )
@@ -242,13 +259,13 @@ export default function Projects() {
 
   .card-hero-title {
     font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
-    font-size: clamp(3rem, 5.5vw, 4.5rem);
+    font-size: clamp(4rem, 10.5vw, 10rem);
     font-weight: 900;
     text-transform: uppercase;
     color: #ffffff;
     margin: 0;
-    line-height: 0.95;
-    letter-spacing: -0.02em;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -300,7 +317,7 @@ export default function Projects() {
 
   .card-pill {
     font-family: var(--font-geist-mono), monospace;
-    font-size: 9px;
+    font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: rgba(255, 255, 255, 0.7);
@@ -335,22 +352,52 @@ export default function Projects() {
 
   .card-desc {
     font-family: var(--font-geist-mono), monospace;
-    font-size: 11px;
+    font-size: 14px;
+    font-weight: 500;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.55);
-    line-height: 1.9;
-    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.8;
+    letter-spacing: 0.04em;
     margin: 0 0 1.5rem 0;
   }
 
   .card-impact {
     font-family: var(--font-geist-mono), monospace;
-    font-size: 10px;
+    font-size: 12px;
+    font-weight: 600;
     text-transform: uppercase;
     color: #ff5f38;
     letter-spacing: 0.08em;
     margin-bottom: 1.5rem;
     display: block;
+  }
+
+  .impact-stats-row {
+    display: flex;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .impact-stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .impact-stat-value {
+    font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1;
+  }
+
+  .impact-stat-label {
+    font-family: var(--font-geist-mono), monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.45);
   }
 
   .card-actions {
@@ -361,11 +408,12 @@ export default function Projects() {
 
   .card-btn {
     font-family: var(--font-geist-mono), monospace;
-    font-size: 10px;
+    font-size: 11px;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     text-decoration: none;
-    padding: 8px 16px;
+    padding: 10px 20px;
     border-radius: 3px;
     transition: all 200ms ease;
     border: 1px solid transparent;
@@ -448,7 +496,7 @@ export default function Projects() {
     }
 
     .card-hero-title {
-      font-size: clamp(2rem, 10vw, 3.5rem);
+      font-size: clamp(3rem, 10vw, 4.5rem);
       white-space: normal;
     }
 
@@ -464,6 +512,10 @@ export default function Projects() {
 
     .card-showcase-right {
       min-height: 180px;
+    }
+
+    .impact-stats-row {
+      gap: 1.5rem;
     }
   }
 
@@ -493,7 +545,7 @@ export default function Projects() {
     }
 
     .card-hero-title {
-      font-size: 2rem;
+      font-size: 2.5rem;
     }
 
     .card-actions {
@@ -513,6 +565,11 @@ export default function Projects() {
     .card-showcase {
       min-height: auto;
     }
+
+    .impact-stats-row {
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
   }
 
   @media (max-width: 480px) {
@@ -525,7 +582,7 @@ export default function Projects() {
     }
 
     .card-hero-title {
-      font-size: 1.6rem;
+      font-size: 2rem;
     }
   }
 

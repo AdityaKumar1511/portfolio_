@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import meta from '@/data/meta.json'
 import githubDefaults from '@/data/githubDefaults.json'
 import theme from '@/data/theme.json'
+import FadeIn from './FadeIn'
 
 const USERNAME = meta.githubUsername
 
@@ -209,6 +210,7 @@ export default function GitHub() {
   return (
     <section id="github" className="github-redesign-section">
       {/* Upper header segment */}
+      <FadeIn>
       <div className="section-header">
         <div className="section-label-container">
           <span className="section-label-line" />
@@ -226,14 +228,18 @@ export default function GitHub() {
           </a>
         </div>
       </div>
+      </FadeIn>
 
       {/* Main header title */}
+      <FadeIn delay={0.1}>
       <h2 className="main-heading">
         {githubDefaults.sectionHeading}
       </h2>
+      </FadeIn>
 
       {/* Content grid containing stats on left and heatmap on right */}
       <div className="github-content-grid">
+        <FadeIn delay={0.2}>
         <div className="stats-side">
           <div className="stats-grid-2x2">
             <div className="stat-col">
@@ -254,7 +260,9 @@ export default function GitHub() {
             </div>
           </div>
         </div>
+        </FadeIn>
 
+        <FadeIn delay={0.3}>
         <div className="heatmap-side">
           {/* Grid label */}
           <div className="grid-summary-label">
@@ -309,6 +317,7 @@ export default function GitHub() {
             </div>
           </div>
         </div>
+        </FadeIn>
       </div>
 
       {/* CSS Styles */}
