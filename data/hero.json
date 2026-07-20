@@ -1,8 +1,27 @@
 {
-  "title": {
-    "line1": "Engineering",
-    "line2": "systems that",
-    "line3": "scale"
+  "portfolioLabel": "PORTFOLIO · 2026",
+  "collegeLabel": "CSE · 2ND YR · NIT PATNA",
+  "roles": [
+    "full-stack systems",
+    "ML pipelines",
+    "fast APIs",
+    "blockchain protocols",
+    "data-driven products"
+  ],
+  "statementPrefix": "I build",
+  "statement": "I build <span style=\"color: #e07a5f\">production-grade</span> digital products at the intersection of <span style=\"color: #e07a5f\">meticulous engineering</span> and <span style=\"color: #e07a5f\">purposeful design.</span>",
+  "statusCard": {
+    "label": "STATUS",
+    "statusLine1": "Open to",
+    "statusLine2": "Internships",
+    "statusColor": "#4ade80",
+    "bottomText": "Available from Aug 2026"
   },
-  "subtitle": "Fast, resilient systems — from the data layer to the last pixel."
+  "resumeCard": {
+    "label": "RÉSUMÉ",
+    "title": "Aditya Kumar",
+    "description": "2nd Year CSE · Open to <span style=\"color: #4ade80\">internships</span>",
+    "downloadLabel": "Download PDF ↗",
+    "pdfSrc": "/resume.pdf"
+  }
 }

@@ -2,15 +2,16 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import CustomCursor from '@/components/CustomCursor'
+import meta from '@/data/meta.json'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Aditya Kumar — Portfolio',
-  description: 'Full-stack developer and ML builder. CSE undergrad at NIT Patna.',
+  title: meta.seo.title,
+  description: meta.seo.description,
   openGraph: {
-    title: 'Aditya Kumar — Portfolio',
-    description: 'Full-stack developer and ML builder. CSE undergrad at NIT Patna.',
-    url: 'https://adityakumar15.vercel.app',
+    title: meta.seo.title,
+    description: meta.seo.description,
+    url: meta.seo.url,
   },
 }
 

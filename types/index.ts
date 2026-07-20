@@ -1,14 +1,19 @@
 export interface Project {
   slug: string;
   name: string;
+  status: string;
+  statusLabel: string;
   description: string;
-  thumbnail: string;
+  thumbnail: string | null;
   tech: string[];
   impact: string;
-  liveUrl: string;
+  liveUrl: string | null;
   repoUrl: string;
   featured: boolean;
   category: string;
+  year: string;
+  heroDescription?: string;
+  heroTech?: string[];
 }
 
 export interface Skills {
@@ -42,6 +47,10 @@ export interface Meta {
   resumeUrl: string;
   openToWork: boolean;
   statusText: string;
+  profileImage: string;
+  tickerText: string;
+  sections: { id: string; label: string }[];
+  seo: { title: string; description: string; url: string };
 }
 
 export interface TerminalCommand {

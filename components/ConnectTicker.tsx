@@ -1,7 +1,8 @@
 'use client'
+import meta from '@/data/meta.json'
 
 export default function ConnectTicker() {
-  const text = "LET'S CONNECT"
+  const text = meta.tickerText
   const items = Array.from({ length: 16 }, (_, i) => i)
 
   return (

@@ -2,38 +2,63 @@
   {
     "slug": "arbitrage",
     "name": "Arbitrage",
+    "status": "live",
+    "statusLabel": "Live",
+    "category": "Web",
     "description": "Live crypto price tracker with real-time email alerts",
-    "thumbnail": "/projects/arb.webp",
-    "tech": [
-      "Next.js",
-      "Supabase",
-      "Firecrawl",
-      "Resend",
-      "Vercel"
-    ],
-    "impact": "Tracks 50+ assets in real-time",
-    "liveUrl": "https://arbitrage.vercel.app",
-    "repoUrl": "https://github.com/AdityaKumar1511/arbitrage",
-    "featured": true,
     "year": "2025",
-    "category": "Web"
+    "tech": ["Next.js", "Supabase", "Firecrawl", "Resend", "Vercel"],
+    "impact": "Tracks 50+ assets in real-time",
+    "liveUrl": "https://arbitrage-henna.vercel.app",
+    "repoUrl": "https://github.com/AdityaKumar1511/arbitrage",
+    "thumbnail": "/projects/arb.webp",
+    "featured": true,
+    "heroDescription": "Live crypto tracker with automated email alerts",
+    "heroTech": ["Next.js", "Supabase", "Resend"]
   },
   {
     "slug": "nexusforge",
     "name": "NexusForge",
+    "status": "shipped",
+    "statusLabel": "Shipped",
+    "category": "Blockchain",
     "description": "Blockchain escrow platform governed by a DAO tribunal",
-    "thumbnail": "/projects/nex.webp",
-    "tech": [
-      "Wagmi",
-      "Chainlink VRF",
-      "IPFS",
-      "Firebase"
-    ],
+    "year": "2024",
+    "tech": ["Wagmi", "Chainlink VRF", "IPFS", "Firebase"],
     "impact": "Multi-sig escrow with verifiable randomness",
     "liveUrl": "https://nexusforge.vercel.app",
     "repoUrl": "https://github.com/AdityaKumar1511/nexusforge",
-    "featured": false,
-    "year": "2024",
-    "category": "Blockchain"
+    "thumbnail": "/projects/nex.webp",
+    "featured": false
+  },
+  {
+    "slug": "skylens",
+    "name": "SkyLens",
+    "status": "finalist",
+    "statusLabel": "Finalist",
+    "category": "Machine Learning",
+    "description": "Satellite imagery analysis platform with ML-powered terrain classification",
+    "year": "2025",
+    "tech": ["Python", "TensorFlow", "FastAPI", "MapboxGL", "AWS"],
+    "impact": "Processes 10k+ images daily with 94% accuracy",
+    "liveUrl": "https://skylens.vercel.app",
+    "repoUrl": "https://github.com/AdityaKumar1511/skylens",
+    "thumbnail": null,
+    "featured": false
+  },
+  {
+    "slug": "cipherkit",
+    "name": "CipherKit",
+    "status": "wip",
+    "statusLabel": "In Progress",
+    "category": "Developer Tools",
+    "description": "End-to-end encrypted messaging SDK for developers",
+    "year": "2026",
+    "tech": ["Rust", "WebAssembly", "TypeScript", "libsodium"],
+    "impact": "Sub-1ms encryption overhead per message",
+    "liveUrl": null,
+    "repoUrl": "https://github.com/AdityaKumar1511/cipherkit",
+    "thumbnail": null,
+    "featured": false
   }
 ]

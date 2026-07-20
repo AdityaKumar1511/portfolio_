@@ -1,74 +1,16 @@
 'use client'
+import projectsData from '@/data/projects.json'
+import theme from '@/data/theme.json'
 
-const projects = [
-  {
-    slug: 'arbitrage',
-    name: 'Arbitrage',
-    status: 'live' as const,
-    statusLabel: 'Live',
-    category: 'Web',
-    description: 'Live crypto price tracker with real-time email alerts',
-    year: '2025',
-    tech: ['Next.js', 'Supabase', 'Firecrawl', 'Resend', 'Vercel'],
-    impact: 'Tracks 50+ assets in real-time',
-    liveUrl: 'https://arbitrage-henna.vercel.app',
-    repoUrl: 'https://github.com/AdityaKumar1511/arbitrage',
-    thumbnail: '/projects/arb.webp',
-  },
-  {
-    slug: 'nexusforge',
-    name: 'NexusForge',
-    status: 'shipped' as const,
-    statusLabel: 'Shipped',
-    category: 'Blockchain',
-    description: 'Blockchain escrow platform governed by a DAO tribunal',
-    year: '2024',
-    tech: ['Wagmi', 'Chainlink VRF', 'IPFS', 'Firebase'],
-    impact: 'Multi-sig escrow with verifiable randomness',
-    liveUrl: 'https://nexusforge.vercel.app',
-    repoUrl: 'https://github.com/AdityaKumar1511/nexusforge',
-    thumbnail: '/projects/nex.webp',
-  },
-  {
-    slug: 'skylens',
-    name: 'SkyLens',
-    status: 'finalist' as const,
-    statusLabel: 'Finalist',
-    category: 'Machine Learning',
-    description: 'Satellite imagery analysis platform with ML-powered terrain classification',
-    year: '2025',
-    tech: ['Python', 'TensorFlow', 'FastAPI', 'MapboxGL', 'AWS'],
-    impact: 'Processes 10k+ images daily with 94% accuracy',
-    liveUrl: 'https://skylens.vercel.app',
-    repoUrl: 'https://github.com/AdityaKumar1511/skylens',
-    thumbnail: null,
-  },
-  {
-    slug: 'cipherkit',
-    name: 'CipherKit',
-    status: 'wip' as const,
-    statusLabel: 'In Progress',
-    category: 'Developer Tools',
-    description: 'End-to-end encrypted messaging SDK for developers',
-    year: '2026',
-    tech: ['Rust', 'WebAssembly', 'TypeScript', 'libsodium'],
-    impact: 'Sub-1ms encryption overhead per message',
-    liveUrl: null,
-    repoUrl: 'https://github.com/AdityaKumar1511/cipherkit',
-    thumbnail: null,
-  },
-] as const
+const projects = projectsData.map(p => ({
+  ...p,
+  status: p.status as 'live' | 'finalist' | 'wip' | 'shipped',
+}))
 
 type ProjectStatus = 'live' | 'finalist' | 'wip' | 'shipped'
 
-const cardBg: string[] = ['#0e0e0e', '#131313', '#181818', '#1e1e1e']
-
-const statusColors: Record<ProjectStatus, { color: string; bg: string; border: string }> = {
-  live:     { color: '#4ade80', bg: 'rgba(74,222,128,0.08)',  border: 'rgba(74,222,128,0.2)'  },
-  finalist: { color: '#fbbf24', bg: 'rgba(251,191,36,0.08)', border: 'rgba(251,191,36,0.2)'  },
-  wip:      { color: '#888888', bg: 'rgba(136,136,136,0.08)', border: 'rgba(136,136,136,0.2)' },
-  shipped:  { color: '#aed8e6', bg: 'rgba(174,216,230,0.08)', border: 'rgba(174,216,230,0.2)' },
-}
+const cardBg: string[] = theme.projectCardBg
+const statusColors = theme.projectStatusColors as Record<ProjectStatus, { color: string; bg: string; border: string }>
 
 const NAV_OFFSET = 0
 

@@ -1,0 +1,26 @@
+{
+  "leetcode": {
+    "totalSolved": 282,
+    "easySolved": 120,
+    "mediumSolved": 140,
+    "hardSolved": 22,
+    "ranking": "3,054,682",
+    "contestRating": 1542,
+    "contestGlobalRanking": 84320,
+    "topPercentage": 12.5,
+    "contestAttendance": 8
+  },
+  "codeforces": {
+    "rating": 1204,
+    "maxRating": 1250,
+    "rank": "pupil",
+    "maxRank": "pupil",
+    "solvedCount": 145,
+    "contestsCount": 15,
+    "contribution": 0,
+    "friendOfCount": 12,
+    "avatar": "https://userpic.codeforces.org/no-avatar.jpg"
+  },
+  "sectionLabel": "Competitive Programming",
+  "sectionHeading": "Sharpening the algorithms."
+}

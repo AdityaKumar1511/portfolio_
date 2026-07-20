@@ -18,5 +18,22 @@
   "tickerSkills": [
     "Next.js", "Node.js", "Go", "PostgreSQL", "Redis", "GraphQL", "AWS", "Docker",
     "TypeScript", "React", "FastAPI", "Python", "MongoDB", "Solidity", "C++17"
-  ]
+  ],
+  "profileImage": "/profile.png",
+  "tickerText": "LET'S CONNECT",
+  "sections": [
+    { "id": "hero", "label": "Home" },
+    { "id": "about", "label": "About" },
+    { "id": "experience", "label": "Experience" },
+    { "id": "projects", "label": "Projects" },
+    { "id": "github", "label": "GitHub" },
+    { "id": "leetcode", "label": "CP" },
+    { "id": "how-i-work", "label": "How I Work" },
+    { "id": "contact", "label": "Contact" }
+  ],
+  "seo": {
+    "title": "Aditya Kumar — Portfolio",
+    "description": "Full-stack developer and ML builder. CSE undergrad at NIT Patna.",
+    "url": "https://adityakumar15.vercel.app"
+  }
 }

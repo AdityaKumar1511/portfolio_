@@ -7,8 +7,8 @@ import aboutData from '@/data/about.json'
 export default function About() {
   const [imgErr, setImgErr] = useState(false)
 
-  const { name, github, resumeUrl } = meta
-  const { serial, heading, bio, fallbackInitials } = aboutData
+  const { name, github, resumeUrl, profileImage } = meta
+  const { serial, heading, bio, fallbackInitials, githubBtnLabel, resumeBtnLabel } = aboutData
 
   return (
     <section id="about" className="about-section-outer">
@@ -32,10 +32,10 @@ export default function About() {
             
             <div className="about-buttons-row">
               <a href={github} target="_blank" rel="noreferrer" className="github-pill-btn">
-                View GitHub →
+                {githubBtnLabel}
               </a>
               <a href={resumeUrl} target="_blank" rel="noreferrer" className="github-pill-btn">
-                View Resume →
+                {resumeBtnLabel}
               </a>
             </div>
           </div>
@@ -45,7 +45,7 @@ export default function About() {
             <div className="profile-image-wrapper">
               {!imgErr ? (
                 <Image
-                  src="/profile.png"
+                  src={profileImage}
                   alt={name}
                   fill
                   sizes="(max-width: 1024px) 100vw, 500px"

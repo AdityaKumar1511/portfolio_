@@ -1,0 +1,26 @@
+{
+  "projectCardBg": ["#0e0e0e", "#131313", "#181818", "#1e1e1e"],
+  "projectStatusColors": {
+    "live": { "color": "#4ade80", "bg": "rgba(74,222,128,0.08)", "border": "rgba(74,222,128,0.2)" },
+    "finalist": { "color": "#fbbf24", "bg": "rgba(251,191,36,0.08)", "border": "rgba(251,191,36,0.2)" },
+    "wip": { "color": "#888888", "bg": "rgba(136,136,136,0.08)", "border": "rgba(136,136,136,0.2)" },
+    "shipped": { "color": "#aed8e6", "bg": "rgba(174,216,230,0.08)", "border": "rgba(174,216,230,0.2)" }
+  },
+  "cfRankColors": {
+    "newbie": "#e0e0e0",
+    "pupil": "#c2ebd4",
+    "specialist": "#aed8e6",
+    "expert": "#adcaff",
+    "candidate master": "#e8b4e8",
+    "master": "#ffd2a1",
+    "grandmaster": "#f9b6c3",
+    "default": "#ffffff"
+  },
+  "heatmapColors": {
+    "level1": "#3d231d",
+    "level2": "#6b372a",
+    "level3": "#a8503b",
+    "level4": "#e05d43",
+    "empty": "#161616"
+  }
+}

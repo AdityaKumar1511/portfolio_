@@ -16,6 +16,12 @@ type DisciplineData = {
   tech: string[]
 }
 
+type HowIWorkData = {
+  heading: string
+  description: string
+  disciplines: DisciplineData[]
+}
+
 // Classic SVG icon helper to replace emojis
 function getIconSvg(symbol: string) {
   const strokeProps = {
@@ -469,7 +475,8 @@ function getIconSvg(symbol: string) {
 }
 
 export default function HowIWork() {
-  const disciplines: DisciplineData[] = disciplinesData as DisciplineData[]
+  const howIWork = disciplinesData as HowIWorkData
+  const disciplines = howIWork.disciplines
 
   const [activeDisc, setActiveDisc] = useState<DisciplineData>(disciplines[0])
   const [use3Col, setUse3Col] = useState(false)
@@ -507,11 +514,11 @@ export default function HowIWork() {
             <span className="hiw-label-text">How I Work</span>
           </div>
           <h2 className="hiw-heading">
-            Pick a discipline, trace the pipeline.
+            {howIWork.heading}
           </h2>
         </div>
         <div className="hiw-right-header">
-          <span>SIX PRACTICES I WORK ACROSS — EACH ONE A NODE GRAPH FROM BRIEF TO SHIP.</span>
+          <span>{howIWork.description}</span>
         </div>
       </div>
 

@@ -1,16 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
+import meta from '@/data/meta.json'
 
-const SECTIONS = [
-  { id: 'hero', label: 'Home' },
-  { id: 'about', label: 'About' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'github', label: 'GitHub' },
-  { id: 'leetcode', label: 'CP' },
-  { id: 'how-i-work', label: 'How I Work' },
-  { id: 'contact', label: 'Contact' },
-]
+const SECTIONS = meta.sections
 
 export default function ProgressRail() {
   const [activeIdx, setActiveIdx] = useState(0)

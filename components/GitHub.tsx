@@ -1,6 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
 import meta from '@/data/meta.json'
+import githubDefaults from '@/data/githubDefaults.json'
+import theme from '@/data/theme.json'
 
 const USERNAME = meta.githubUsername
 
@@ -21,10 +23,10 @@ interface CalendarDay {
 
 export default function GitHub() {
   const [stats, setStats] = useState<GitHubStats>({
-    contributions: 1142,
-    currentStreak: 18,
-    longestStreak: 32,
-    commits: 468,
+    contributions: githubDefaults.stats.contributions,
+    currentStreak: githubDefaults.stats.currentStreak,
+    longestStreak: githubDefaults.stats.longestStreak,
+    commits: githubDefaults.stats.commits,
   })
   const [calendarData, setCalendarData] = useState<CalendarDay[]>([])
   const [syncedTime, setSyncedTime] = useState('20H AGO')
@@ -194,12 +196,13 @@ export default function GitHub() {
 
   // Get color based on level (custom brown/orange theme from screenshot)
   const getCellColor = (level: number) => {
+    const hc = theme.heatmapColors
     switch (level) {
-      case 1: return '#3d231d'
-      case 2: return '#6b372a'
-      case 3: return '#a8503b'
-      case 4: return '#e05d43'
-      default: return '#161616' // empty background
+      case 1: return hc.level1
+      case 2: return hc.level2
+      case 3: return hc.level3
+      case 4: return hc.level4
+      default: return hc.empty
     }
   }
 
@@ -209,7 +212,7 @@ export default function GitHub() {
       <div className="section-header">
         <div className="section-label-container">
           <span className="section-label-line" />
-          <span className="section-label-text">Open Source</span>
+          <span className="section-label-text">{githubDefaults.sectionLabel}</span>
         </div>
         
         {/* Right-aligned meta details */}
@@ -226,7 +229,7 @@ export default function GitHub() {
 
       {/* Main header title */}
       <h2 className="main-heading">
-        Building in public.
+        {githubDefaults.sectionHeading}
       </h2>
 
       {/* Content grid containing stats on left and heatmap on right */}
@@ -270,7 +273,7 @@ export default function GitHub() {
               <div className="heatmap-inner">
                 {/* Month labels */}
                 <div className="heatmap-months">
-                  {['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'].map((m, idx) => (
+                  {githubDefaults.monthLabels.map((m, idx) => (
                     <span key={idx}>{m}</span>
                   ))}
                 </div>
@@ -294,11 +297,11 @@ export default function GitHub() {
                   <span className="heatmap-scroll-tip">Swipe/Scroll to view &rarr;</span>
                   <div className="heatmap-legend">
                     <span>Less</span>
-                    <span className="legend-cell" style={{ background: '#161616' }} />
-                    <span className="legend-cell" style={{ background: '#3d231d' }} />
-                    <span className="legend-cell" style={{ background: '#6b372a' }} />
-                    <span className="legend-cell" style={{ background: '#a8503b' }} />
-                    <span className="legend-cell" style={{ background: '#e05d43' }} />
+                    <span className="legend-cell" style={{ background: theme.heatmapColors.empty }} />
+                    <span className="legend-cell" style={{ background: theme.heatmapColors.level1 }} />
+                    <span className="legend-cell" style={{ background: theme.heatmapColors.level2 }} />
+                    <span className="legend-cell" style={{ background: theme.heatmapColors.level3 }} />
+                    <span className="legend-cell" style={{ background: theme.heatmapColors.level4 }} />
                     <span>More</span>
                   </div>
                 </div>

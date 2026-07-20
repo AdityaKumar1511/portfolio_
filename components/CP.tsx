@@ -2,6 +2,8 @@
 import { useEffect, useRef, useState } from 'react'
 
 import meta from '@/data/meta.json'
+import cpDefaults from '@/data/cpDefaults.json'
+import theme from '@/data/theme.json'
 
 const LEETCODE_USERNAME = meta.leetcodeUsername
 const CODEFORCES_USERNAME = meta.codeforcesUsername
@@ -70,27 +72,27 @@ function useCountUp(target: number, visible: boolean, duration = 1200): number {
 
 export default function CP() {
   const [lcStats, setLcStats] = useState<LeetCodeStats>({
-    totalSolved: 282,
-    easySolved: 120,
-    mediumSolved: 140,
-    hardSolved: 22,
-    ranking: '3,054,682',
-    contestRating: 1542,
-    contestGlobalRanking: 84320,
-    topPercentage: 12.5,
-    contestAttendance: 8,
+    totalSolved: cpDefaults.leetcode.totalSolved,
+    easySolved: cpDefaults.leetcode.easySolved,
+    mediumSolved: cpDefaults.leetcode.mediumSolved,
+    hardSolved: cpDefaults.leetcode.hardSolved,
+    ranking: cpDefaults.leetcode.ranking,
+    contestRating: cpDefaults.leetcode.contestRating,
+    contestGlobalRanking: cpDefaults.leetcode.contestGlobalRanking,
+    topPercentage: cpDefaults.leetcode.topPercentage,
+    contestAttendance: cpDefaults.leetcode.contestAttendance,
   })
 
   const [cfStats, setCfStats] = useState<CodeforcesStats>({
-    rating: 1204,
-    maxRating: 1250,
-    rank: 'pupil',
-    maxRank: 'pupil',
-    solvedCount: 145,
-    contestsCount: 15,
-    contribution: 0,
-    friendOfCount: 12,
-    avatar: 'https://userpic.codeforces.org/no-avatar.jpg',
+    rating: cpDefaults.codeforces.rating,
+    maxRating: cpDefaults.codeforces.maxRating,
+    rank: cpDefaults.codeforces.rank,
+    maxRank: cpDefaults.codeforces.maxRank,
+    solvedCount: cpDefaults.codeforces.solvedCount,
+    contestsCount: cpDefaults.codeforces.contestsCount,
+    contribution: cpDefaults.codeforces.contribution,
+    friendOfCount: cpDefaults.codeforces.friendOfCount,
+    avatar: cpDefaults.codeforces.avatar,
   })
 
   const [syncedTime, setSyncedTime] = useState('20H AGO')
@@ -233,14 +235,10 @@ export default function CP() {
   // Helper for Codeforces Rank Colors
   const getCfRankColor = (rankName: string) => {
     const r = rankName.toLowerCase()
-    if (r.includes('newbie')) return '#e0e0e0' // soft white/gray
-    if (r.includes('pupil')) return '#c2ebd4' // soft green
-    if (r.includes('specialist')) return '#aed8e6' // soft cyan
-    if (r.includes('expert')) return '#adcaff' // soft blue
-    if (r.includes('candidate master')) return '#e8b4e8' // soft purple
-    if (r.includes('master')) return '#ffd2a1' // soft orange
-    if (r.includes('grandmaster')) return '#f9b6c3' // soft red
-    return '#ffffff'
+    for (const [key, color] of Object.entries(theme.cfRankColors)) {
+      if (r.includes(key)) return color
+    }
+    return theme.cfRankColors.default
   }
 
   return (
@@ -249,7 +247,7 @@ export default function CP() {
       <div className="section-header">
         <div className="section-label-container">
           <span className="section-label-line" />
-          <span className="section-label-text">Competitive Programming</span>
+          <span className="section-label-text">{cpDefaults.sectionLabel}</span>
         </div>
 
         {/* Right-aligned meta details */}
@@ -263,7 +261,7 @@ export default function CP() {
 
       {/* Main header title */}
       <h2 className="main-heading">
-        Sharpening the algorithms.
+        {cpDefaults.sectionHeading}
       </h2>
 
       {/* Content grid containing side-by-side cards */}
