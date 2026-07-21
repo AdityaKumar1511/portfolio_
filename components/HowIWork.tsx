@@ -614,7 +614,7 @@ export default function HowIWork() {
       {/* CSS Styles */}
       <style>{`
         .hiw-section {
-          padding: clamp(4rem, 10vw, 8rem) 0;
+          padding: clamp(4rem, 10vw, 8rem) 48px;
           border-top: 1px solid var(--border);
           max-width: 1400px;
           margin: 0 auto;
@@ -1039,7 +1039,7 @@ export default function HowIWork() {
 
         @media (max-width: 480px) {
           .hiw-section {
-            padding: 3rem 16px;
+            padding: 3rem 20px;
           }
 
           .hiw-sidebar {

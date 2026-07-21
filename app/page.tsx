@@ -15,8 +15,8 @@ export default function Page() {
       <Hero />
       <About />
       <Ticker />
-      <Experience />
       <Projects />
+      <Experience />
       <GitHub />
       <CP />
       <HowIWork />

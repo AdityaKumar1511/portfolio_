@@ -156,6 +156,7 @@ export default function Projects() {
     align-items: center;
     gap: 12px;
     margin-bottom: clamp(2rem, 4vh, 3rem);
+    padding: 0 48px;
   }
 
   .projects-label-line {
@@ -563,7 +564,11 @@ export default function Projects() {
 
   @media (max-width: 480px) {
     .projects-section {
-      padding: 3rem 16px;
+      padding: 3rem 0;
+    }
+
+    .projects-label-container {
+      padding: 0 20px;
     }
 
     .project-card-body {

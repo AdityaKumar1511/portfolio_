@@ -416,7 +416,7 @@ export default function CP() {
 
       <style>{`
         .cp-section {
-          padding: clamp(4rem, 10vw, 8rem) 0;
+          padding: clamp(4rem, 10vw, 8rem) 48px;
           border-top: 1px solid var(--border);
           max-width: 1400px;
           margin: 0 auto;
@@ -678,7 +678,7 @@ export default function CP() {
 
         @media (max-width: 480px) {
           .cp-section {
-            padding: 3rem 16px;
+            padding: 3rem 20px;
           }
 
           .cp-card-inner {

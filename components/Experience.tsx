@@ -12,12 +12,12 @@ export default function Experience() {
             <FadeIn>
             <div className="experience-label-container">
               <span className="experience-label-line" />
-              <span className="experience-label-text">Experience</span>
+              <span className="experience-label-text">Achievements</span>
             </div>
             </FadeIn>
             <FadeIn delay={0.1}>
             <h2 className="experience-heading">
-              Where I&apos;ve built.
+              Where I&apos;ve shown.
             </h2>
             </FadeIn>
           </div>
@@ -26,6 +26,7 @@ export default function Experience() {
         </div>
 
         {/* Right Column (List of Experience Rows) */}
+        <FadeIn delay={0.2}>
         <div className="experience-list">
           {items.map((item, i) => (
             <div key={i} className="experience-row">
@@ -43,12 +44,13 @@ export default function Experience() {
             </div>
           ))}
         </div>
+        </FadeIn>
       </div>
 
       {/* Embedded CSS for layout and responsiveness */}
       <style>{`
         .experience-section {
-          padding: clamp(4rem, 10vw, 8rem) 0;
+          padding: clamp(4rem, 10vw, 8rem) 48px;
           border-top: 1px solid var(--border);
           max-width: 1400px;
           margin: 0 auto;
@@ -211,7 +213,7 @@ export default function Experience() {
 
         @media (max-width: 480px) {
           .experience-section {
-            padding: 3rem 16px;
+            padding: 3rem 20px;
           }
 
           .experience-role {

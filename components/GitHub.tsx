@@ -323,7 +323,7 @@ export default function GitHub() {
       {/* CSS Styles */}
       <style>{`
         .github-redesign-section {
-          padding: clamp(4rem, 10vw, 8rem) 0;
+          padding: clamp(4rem, 10vw, 8rem) 48px;
           border-top: 1px solid var(--border);
           max-width: 1400px;
           margin: 0 auto;
@@ -603,7 +603,7 @@ export default function GitHub() {
           }
 
           .github-redesign-section {
-            padding: 3rem 16px;
+            padding: 3rem 20px;
           }
         }
       `}</style>

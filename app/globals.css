@@ -18,7 +18,6 @@
 * { box-sizing: border-box; }
 
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 60px;
   overflow-x: hidden;
 }
@@ -130,6 +129,16 @@ body.has-custom-cursor * {
   height: 48px;
   background: #ffffff !important;
   mix-blend-mode: difference;
+}
+
+.custom-cursor-trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background: #ffffff;
+  mix-blend-mode: difference;
+  will-change: transform;
 }
 
 /* Section height — every section fills at least 100vh except How I Work */

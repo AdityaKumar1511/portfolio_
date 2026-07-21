@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import CustomCursor from '@/components/CustomCursor'
+import SmoothScroll from '@/components/SmoothScroll'
 import meta from '@/data/meta.json'
 import './globals.css'
 
@@ -21,7 +22,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body style={{ fontFamily: 'var(--font-geist-sans), system-ui, sans-serif' }}>
         <CustomCursor />
         
-        {children}
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   )
