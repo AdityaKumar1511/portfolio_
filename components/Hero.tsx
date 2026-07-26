@@ -24,6 +24,7 @@ const fadeUp = (delay: number) => ({
 export default function Hero() {
   const { name } = meta
   const [roleIndex, setRoleIndex] = useState(0)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -32,21 +33,51 @@ export default function Hero() {
     return () => clearInterval(timer)
   }, [])
 
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden'
+      document.documentElement.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
+  }, [menuOpen])
+
   return (
     <section id="hero" className="hero-section">
       <motion.div className="hero-top-row" {...fadeUp(0.1)}>
         <span className="hero-status">
           OPEN TO <span className="hero-status-green">INTERNSHIP</span>
         </span>
-        <nav className="hero-nav">
+        <button
+          className={`hamburger ${menuOpen ? 'is-open' : ''}`}
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-label="Toggle menu"
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </motion.div>
+
+      <div className={`overlay-menu ${menuOpen ? 'is-open' : ''}`}>
+        <nav className="overlay-nav">
           {NAV_LINKS.map(link => (
-            <a key={link.id} href={link.href || `#${link.id}`}
-              {...(link.href?.startsWith('http') ? { target: '_blank', rel: 'noreferrer' } : {})}>
+            <a
+              key={link.id}
+              href={link.href || `#${link.id}`}
+              onClick={() => setMenuOpen(false)}
+              {...(link.href?.startsWith('http') ? { target: '_blank', rel: 'noreferrer' } : {})}
+            >
               {link.label}
             </a>
           ))}
         </nav>
-      </motion.div>
+      </div>
 
       <div className="hero-main">
         <div className="hero-text">
@@ -93,7 +124,6 @@ export default function Hero() {
           align-items: center;
           width: 100%;
           padding-bottom: 1rem;
-          border-bottom: 1px solid #1f1f1f;
         }
 
         .hero-status {
@@ -109,75 +139,98 @@ export default function Hero() {
           font-weight: 700;
         }
 
-        .hero-nav {
+        .hamburger {
           display: flex;
-          gap: 24px;
+          flex-direction: column;
+          justify-content: center;
+          gap: 5px;
+          width: 36px;
+          height: 36px;
+          background: transparent;
+          border: 1px solid #333;
+          border-radius: 4px;
+          cursor: pointer;
+          padding: 6px;
+          z-index: 1001;
+          transition: border-color 0.2s ease;
         }
 
-        .hero-nav a {
+        .hamburger:hover {
+          border-color: #666;
+        }
+
+        .hamburger span {
+          display: block;
+          width: 100%;
+          height: 2px;
+          background: #fafafa;
+          border-radius: 1px;
+          transition: transform 0.3s ease, opacity 0.3s ease;
+          transform-origin: center;
+        }
+
+        .hamburger.is-open span:nth-child(1) {
+          transform: translateY(7px) rotate(45deg);
+        }
+
+        .hamburger.is-open span:nth-child(2) {
+          opacity: 0;
+        }
+
+        .hamburger.is-open span:nth-child(3) {
+          transform: translateY(-7px) rotate(-45deg);
+        }
+
+        .overlay-menu {
+          position: fixed;
+          top: 0;
+          right: 0;
+          width: 100%;
+          height: 100svh;
+          background: #0d0d0d;
+          z-index: 1000;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          padding-right: 48px;
+          transform: translateX(100%);
+          transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+          pointer-events: none;
+          overflow: hidden;
+          overscroll-behavior: none;
+          touch-action: none;
+        }
+
+        .overlay-menu.is-open {
+          transform: translateX(0);
+          pointer-events: auto;
+        }
+
+        .overlay-nav {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 12px;
+        }
+
+        .overlay-nav a {
           font-family: var(--font-geist-mono), monospace;
-          font-size: 11px;
+          font-size: 14px;
           text-transform: uppercase;
           letter-spacing: 0.12em;
-          color: #1e1e2e;
+          color: #fafafa;
           text-decoration: none;
-          padding: 8px 16px;
-          border: none;
-          border-radius: 0;
-          background: #e07a5f;
-          position: relative;
-          z-index: 1;
-          transform: translateY(0);
-          transition: transform 0.15s ease, background 0.15s ease;
+          padding: 14px 32px;
+          background: #1a1a1a;
+          display: block;
+          min-width: 220px;
+          text-align: right;
+          transition: background 0.2s ease, color 0.2s ease;
         }
 
-        .hero-nav a::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 100%;
-          width: 100%;
-          height: 4px;
-          background: #b5654a;
-          transform: skewX(45deg);
-          transform-origin: top left;
-        }
-
-        .hero-nav a::after {
-          content: '';
-          position: absolute;
-          left: 100%;
-          top: 0;
-          width: 4px;
-          height: 100%;
-          background: #c96a50;
-          transform: skewY(45deg);
-          transform-origin: top left;
-        }
-
-        .hero-nav a:hover {
-          background: #e98f74;
-          transform: translateY(-4px);
-        }
-
-        .hero-nav a:hover::before {
-          transform: translateY(4px) skewX(45deg);
-        }
-
-        .hero-nav a:hover::after {
-          transform: translateY(4px) skewY(45deg);
-        }
-
-        .hero-nav a:active {
-          transform: translateY(2px);
-        }
-
-        .hero-nav a:active::before {
-          transform: translateY(-2px) skewX(45deg);
-        }
-
-        .hero-nav a:active::after {
-          transform: translateY(-2px) skewY(45deg);
+        .overlay-nav a:hover {
+          background: #fafafa;
+          color: #0d0d0d;
         }
 
         .hero-main {
@@ -277,16 +330,19 @@ export default function Hero() {
             padding: 20px 20px;
           }
 
-          .hero-top-row {
-            flex-direction: column;
-            gap: 12px;
-            align-items: flex-start;
-          padding-bottom: 0.5rem;
+          .overlay-menu {
+            padding-right: 20px;
+            justify-content: flex-end;
           }
 
-          .hero-nav {
-            flex-wrap: wrap;
-            gap: 16px;
+          .overlay-nav {
+            gap: 10px;
+          }
+
+          .overlay-nav a {
+            min-width: 180px;
+            font-size: 13px;
+            padding: 12px 24px;
           }
 
           .hero-main {
