@@ -3,8 +3,15 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import meta from '@/data/meta.json'
 import heroData from '@/data/hero.json'
+import socials from '@/data/socials.json'
 
 const roles = heroData.roles
+
+const DESKTOP_NAV = [
+  { id: 'experience', label: 'EXPERIENCE' },
+  { id: 'projects', label: 'PROJECTS' },
+  { id: 'about', label: 'ABOUT' },
+]
 
 const NAV_LINKS = [
   { id: 'about', label: 'About' },
@@ -49,10 +56,17 @@ export default function Hero() {
 
   return (
     <section id="hero" className="hero-section">
-      <motion.div className="hero-top-row" {...fadeUp(0.1)}>
-        <span className="hero-status">
-          OPEN TO <span className="hero-status-green">INTERNSHIP</span>
+      <motion.div className="hero-top-bar" {...fadeUp(0.1)}>
+        <span className="availability">
+          AVAILABILITY <span className="availability-highlight">OPEN TO Internships.</span>
         </span>
+        <nav className="desktop-nav">
+          {DESKTOP_NAV.map((link) => (
+            <a key={link.id} href={`#${link.id}`}>
+              {link.label}
+            </a>
+          ))}
+        </nav>
         <button
           className={`hamburger ${menuOpen ? 'is-open' : ''}`}
           onClick={() => setMenuOpen((o) => !o)}
@@ -64,14 +78,78 @@ export default function Hero() {
         </button>
       </motion.div>
 
+      <div className="hero-body">
+        <motion.div className="hero-name-area" {...fadeUp(0.25)}>
+          <h2 className="card-name">{name}</h2>
+        </motion.div>
+
+        <motion.div className="social-sidebar" {...fadeUp(0.4)}>
+          {socials.map((s) => (
+            <a
+              key={s.label}
+              href={s.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={s.label}
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d={s.svgPath} />
+              </svg>
+            </a>
+          ))}
+          {Array.from({ length: 14 }).map((_, i) => (
+            <div key={`empty-${i}`} className="social-empty" />
+          ))}
+        </motion.div>
+
+        <div className="hero-content">
+          <div className="hero-content-upper">
+            <motion.div className="hero-cta-row" {...fadeUp(0.4)}>
+              <span className="role-text">
+                <span className="role-prefix">{heroData.statementPrefix}</span>
+                <span key={roleIndex} className="animated-role">
+                  {roles[roleIndex]}
+                </span>
+              </span>
+              <a className="see-work-link" href="#projects">
+                SEE MY WORK ↗
+              </a>
+            </motion.div>
+          </div>
+          <div className="hero-content-lower">
+            <motion.p
+              className="hero-statement"
+              {...fadeUp(0.55)}
+              dangerouslySetInnerHTML={{ __html: heroData.statement }}
+            />
+          </div>
+        </div>
+
+        <motion.div className="resume-card" {...fadeUp(0.3)}>
+          <div className="resume-pdf-preview">
+            <iframe src={meta.resumeUrl} className="resume-iframe" title="Resume Preview" />
+          </div>
+          <a
+            className="resume-btn"
+            href={meta.resumeUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Download Resume
+          </a>
+        </motion.div>
+      </div>
+
       <div className={`overlay-menu ${menuOpen ? 'is-open' : ''}`}>
         <nav className="overlay-nav">
-          {NAV_LINKS.map(link => (
+          {NAV_LINKS.map((link) => (
             <a
               key={link.id}
               href={link.href || `#${link.id}`}
               onClick={() => setMenuOpen(false)}
-              {...(link.href?.startsWith('http') ? { target: '_blank', rel: 'noreferrer' } : {})}
+              {...(link.href?.startsWith('http')
+                ? { target: '_blank', rel: 'noreferrer' }
+                : {})}
             >
               {link.label}
             </a>
@@ -79,36 +157,13 @@ export default function Hero() {
         </nav>
       </div>
 
-      <div className="hero-main">
-        <div className="hero-text">
-          <motion.div className="card-name-block" {...fadeUp(0.25)}>
-            <h2 className="card-name">{name}</h2>
-          </motion.div>
-
-          <motion.div className="dynamic-role-wrapper" {...fadeUp(0.4)}>
-            <span className="static-text role-static-text">{heroData.statementPrefix}</span>
-            <span key={roleIndex} className="animated-role">{roles[roleIndex]}</span>
-          </motion.div>
-
-          <motion.p className="img-statement" {...fadeUp(0.55)} dangerouslySetInnerHTML={{ __html: heroData.statement }} />
-        </div>
-
-      </div>
-
-      <motion.div className="scroll-cue" {...fadeUp(1.2)}>
-        <span className="scroll-cmd">$ scroll <span className="scroll-flag">--down</span></span>
-        <span className="scroll-cursor">_</span>
-      </motion.div>
-
       <style>{`
-
         .hero-section {
           min-height: 100svh;
           max-height: 100svh;
-          padding: 16px 48px;
+          padding: 16px 0;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
           max-width: 1400px;
           margin: 0 auto;
           width: 100%;
@@ -118,29 +173,50 @@ export default function Hero() {
           position: relative;
         }
 
-        .hero-top-row {
+        .hero-top-bar {
           display: flex;
           justify-content: space-between;
           align-items: center;
           width: 100%;
           padding-bottom: 1rem;
+          border-bottom: 1px solid #444;
+          flex-shrink: 0;
         }
 
-        .hero-status {
+        .availability {
           font-family: var(--font-geist-mono), monospace;
-          font-size: 12px;
+          font-size: 11px;
           text-transform: uppercase;
-          letter-spacing: 0.15em;
-          color: #777777;
+          letter-spacing: 0.12em;
+          color: #555;
         }
 
-        .hero-status-green {
+        .availability-highlight {
           color: #4ade80;
-          font-weight: 700;
+          font-weight: 600;
+        }
+
+        .desktop-nav {
+          display: flex;
+          gap: 28px;
+        }
+
+        .desktop-nav a {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          color: #666;
+          text-decoration: none;
+          transition: color 0.2s;
+        }
+
+        .desktop-nav a:hover {
+          color: #fafafa;
         }
 
         .hamburger {
-          display: flex;
+          display: none;
           flex-direction: column;
           justify-content: center;
           gap: 5px;
@@ -179,6 +255,199 @@ export default function Hero() {
 
         .hamburger.is-open span:nth-child(3) {
           transform: translateY(-7px) rotate(-45deg);
+        }
+
+        .hero-body {
+          display: grid;
+          grid-template-columns: 160px 1fr 160px;
+          grid-template-rows: auto 1fr;
+          flex: 1;
+          min-height: 0;
+        }
+
+        .hero-name-area {
+          grid-column: 1 / 3;
+          grid-row: 1;
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+          padding-top: clamp(3rem, 5vh, 4rem);
+          padding-bottom: clamp(3rem, 5vh, 4rem);
+          border-bottom: 1px solid #444;
+        }
+
+        .card-name {
+          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
+          font-size: clamp(4rem, 8vw, 8rem);
+          font-weight: 600;
+          letter-spacing: -0.03em;
+          color: #f0e6d3;
+          line-height: 0.9;
+          margin: 0;
+          text-transform: uppercase;
+        }
+
+        .social-sidebar {
+          grid-column: 1;
+          grid-row: 2;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          border-left: 1px solid #444;
+          height: 100%;
+          overflow: hidden;
+        }
+
+        .social-sidebar a {
+          aspect-ratio: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-right: 1px solid #444;
+          border-bottom: 1px solid #444;
+          color: #555;
+          transition: color 0.2s, background 0.2s;
+          text-decoration: none;
+        }
+
+        .social-sidebar a:hover {
+          color: #fafafa;
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        .social-sidebar a svg {
+          width: 20px;
+          height: 20px;
+        }
+
+        .social-empty {
+          aspect-ratio: 1;
+          border-right: 1px solid #444;
+          border-bottom: 1px solid #444;
+        }
+
+        .hero-content {
+          grid-column: 2 / -1;
+          grid-row: 2;
+          display: flex;
+          flex-direction: column;
+          padding-left: clamp(1rem, 2vw, 2rem);
+        }
+
+        .hero-content-upper {
+          min-height: 80px;
+          display: flex;
+          align-items: center;
+          width: 100%;
+          border-bottom: 1px solid #444;
+        }
+
+        .hero-content-lower {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .hero-cta-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+        }
+
+        .role-text {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: clamp(14px, 1.8vw, 18px);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .role-prefix {
+          color: #666;
+        }
+
+        .animated-role {
+          color: #3ec8e0;
+          font-weight: 500;
+          display: inline-block;
+          animation: roleFadeIn 0.3s ease forwards;
+        }
+
+        @keyframes roleFadeIn {
+          0% { opacity: 0; transform: translateY(6px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .see-work-link {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: clamp(14px, 1.8vw, 18px);
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: #fafafa;
+          text-decoration: none;
+          transition: color 0.2s;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+
+        .see-work-link:hover {
+          color: #3ec8e0;
+        }
+
+        .hero-statement {
+          font-size: clamp(1.2rem, 2.2vw, 2rem);
+          font-weight: 500;
+          line-height: 1.35;
+          color: #fafafa;
+          letter-spacing: -0.02em;
+          max-width: 640px;
+          margin: 0;
+          text-align: center;
+        }
+
+        .resume-card {
+          grid-column: 3;
+          grid-row: 1;
+          border-left: 1px solid #444;
+          border-bottom: 1px solid #444;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          padding: 12px;
+        }
+
+        .resume-pdf-preview {
+          flex: 1;
+          overflow: hidden;
+          border: 1px solid #444;
+          margin-bottom: 8px;
+          min-height: 0;
+        }
+
+        .resume-iframe {
+          width: 100%;
+          height: 100%;
+          border: none;
+          display: block;
+        }
+
+        .resume-btn {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          color: #0a0a0a;
+          text-decoration: none;
+          padding: 10px 12px;
+          background: #fafafa;
+          text-align: center;
+          transition: all 0.2s;
+          display: block;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .resume-btn:hover {
+          background: #3ec8e0;
         }
 
         .overlay-menu {
@@ -233,106 +502,126 @@ export default function Hero() {
           color: #0d0d0d;
         }
 
-        .hero-main {
-          display: flex;
-          align-items: flex-end;
-          padding-top: 0.5rem;
+        @media (max-width: 1024px) {
+          .hero-body {
+            grid-template-columns: 140px 1fr 140px;
+          }
         }
 
-        .hero-text {
-          flex: 1;
-          max-width: 50%;
-        }
-
-        .card-name-block {
-          margin-top: 0;
-        }
-
-        .card-name {
-          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
-          font-size: clamp(4rem, 7vw, 6rem);
-          font-weight: 600;
-          letter-spacing: -0.03em;
-          color: #f0e6d3;
-          line-height: 0.95;
-          margin: 0;
-          text-transform: uppercase;
-        }
-
-        .dynamic-role-wrapper {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-family: var(--font-geist-mono), monospace;
-          font-size: clamp(15px, 2vw, 20px);
-          margin-top: clamp(0.75rem, 1.5vh, 1rem);
-        }
-
-        .static-text {
-          color: #777777;
-        }
-
-        .animated-role {
-          color: #3ec8e0;
-          font-weight: 500;
-          display: inline-block;
-          animation: roleFadeIn 0.3s ease forwards;
-        }
-
-        @keyframes roleFadeIn {
-          0% { opacity: 0; transform: translateY(6px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .img-statement {
-          font-size: clamp(1.4rem, 2.5vw, 2.2rem);
-          font-weight: 500;
-          line-height: 1.35;
-          color: #fafafa;
-          letter-spacing: -0.02em;
-          max-width: 720px;
-          margin-top: clamp(0.75rem, 2vh, 1.5rem);
-        }
-
-        .scroll-cue {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 4px;
-          padding-bottom: 1.5rem;
-        }
-
-        .scroll-cmd {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 12px;
-          color: #888;
-          letter-spacing: 0.05em;
-        }
-
-        .scroll-flag {
-          color: #aaa;
-        }
-
-        .scroll-cursor {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 12px;
-          color: #888;
-          animation: cursorBlink 1s step-end infinite;
-        }
-
-        @keyframes cursorBlink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0; }
-        }
-
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
           .hero-section {
-            padding: 20px 20px;
+            padding: 16px 20px;
+            max-height: none;
+            min-height: 100svh;
+          }
+
+          .desktop-nav {
+            display: none;
+          }
+
+          .hamburger {
+            display: flex;
+          }
+
+          .hero-body {
+            grid-template-columns: 60px 1fr auto;
+            grid-template-rows: auto auto 1fr;
+          }
+
+          .hero-name-area {
+            grid-column: 1 / -1;
+            grid-row: 1;
+            justify-content: flex-start;
+            padding-bottom: 1rem;
+          }
+
+          .card-name {
+            font-size: clamp(3rem, 14vw, 5rem);
+          }
+
+          .resume-card {
+            grid-column: 3;
+            grid-row: 1;
+            border-left: none;
+          border-bottom: 1px solid #444;
+          }
+
+          .resume-preview {
+            display: none;
+          }
+
+          .resume-btn {
+            font-size: 10px;
+            padding: 8px 10px;
+          }
+
+          .social-sidebar {
+            grid-column: 1;
+            grid-row: 2 / 4;
+            grid-template-columns: 1fr;
+            height: auto;
+            overflow: visible;
+          }
+
+          .social-sidebar a svg {
+            width: 16px;
+            height: 16px;
+          }
+
+          .social-sidebar a:nth-child(3),
+          .social-sidebar a:nth-child(4),
+          .social-sidebar a:nth-child(5) {
+            display: none;
+          }
+
+          .social-empty {
+            display: none;
+          }
+
+          .hero-content {
+            grid-column: 2 / -1;
+            grid-row: 2;
+            padding-left: 1rem;
+          }
+
+          .hero-content-upper {
+            min-height: auto;
+            border-bottom: none;
+          }
+
+          .hero-content-lower {
+            flex: none;
+          }
+
+          .hero-cta-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+          }
+
+          .role-prefix {
+            display: none;
+          }
+
+          .role-text {
+            font-size: 13px;
+          }
+
+          .animated-role {
+            font-size: 13px;
+          }
+
+          .see-work-link {
+            margin-left: 0;
+          }
+
+          .hero-statement {
+            font-size: clamp(0.85rem, 3.5vw, 1.2rem);
+            text-align: left;
           }
 
           .overlay-menu {
             padding-right: 20px;
-            justify-content: flex-end;
           }
 
           .overlay-nav {
@@ -344,43 +633,33 @@ export default function Hero() {
             font-size: 13px;
             padding: 12px 24px;
           }
+        }
 
-          .hero-main {
-            flex-direction: column;
-            padding-top: 1rem;
-            align-items: flex-start;
-          }
-
-          .card-name-block {
-            margin-top: 0.75rem;
+        @media (max-width: 480px) {
+          .hero-section {
+            padding: 12px 16px;
           }
 
           .card-name {
-            font-size: clamp(2.5rem, 10vw, 3.5rem);
+            font-size: clamp(2.5rem, 16vw, 4rem);
           }
 
-          .role-static-text {
-            display: none;
+          .resume-card {
+            padding: 0;
           }
 
-          .dynamic-role-wrapper {
-            margin-top: 0.5rem;
-            font-size: 12px;
-            gap: 0;
+          .resume-btn {
+            font-size: 9px;
+            padding: 7px 8px;
           }
 
-          .animated-role {
-            font-size: 12px;
+          .hero-content {
+            padding-left: 0.75rem;
           }
 
-          .img-statement {
-            font-size: clamp(0.85rem, 4vw, 1.2rem);
-            margin-top: 0.75rem;
-            line-height: 1.35;
-          }
-
-          .scroll-cue {
-            display: none;
+          .hero-statement {
+            font-size: clamp(0.8rem, 4vw, 1rem);
+            text-align: left;
           }
         }
       `}</style>
