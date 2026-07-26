@@ -4,6 +4,9 @@ import { motion } from 'framer-motion'
 import meta from '@/data/meta.json'
 import heroData from '@/data/hero.json'
 import socials from '@/data/socials.json'
+import dynamic from 'next/dynamic'
+
+const PdfPreview = dynamic(() => import('./PdfPreview'), { ssr: false })
 
 const roles = heroData.roles
 
@@ -127,7 +130,7 @@ export default function Hero() {
 
         <motion.div className="resume-card" {...fadeUp(0.3)}>
           <div className="resume-pdf-preview">
-            <iframe src={meta.resumeUrl} className="resume-iframe" title="Resume Preview" />
+            <PdfPreview src={meta.resumeUrl} />
           </div>
           <a
             className="resume-btn"
@@ -179,7 +182,7 @@ export default function Hero() {
           align-items: center;
           width: 100%;
           padding-bottom: 1rem;
-          border-bottom: 1px solid #444;
+          border-bottom: 1px solid #fff;
           flex-shrink: 0;
         }
 
@@ -188,7 +191,7 @@ export default function Hero() {
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.12em;
-          color: #555;
+          color: #fff;
         }
 
         .availability-highlight {
@@ -206,7 +209,7 @@ export default function Hero() {
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.12em;
-          color: #666;
+          color: #fff;
           text-decoration: none;
           transition: color 0.2s;
         }
@@ -223,7 +226,7 @@ export default function Hero() {
           width: 36px;
           height: 36px;
           background: transparent;
-          border: 1px solid #333;
+          border: 1px solid #fff;
           border-radius: 4px;
           cursor: pointer;
           padding: 6px;
@@ -232,7 +235,7 @@ export default function Hero() {
         }
 
         .hamburger:hover {
-          border-color: #666;
+          border-color: #fff;
         }
 
         .hamburger span {
@@ -273,7 +276,7 @@ export default function Hero() {
           justify-content: center;
           padding-top: clamp(3rem, 5vh, 4rem);
           padding-bottom: clamp(3rem, 5vh, 4rem);
-          border-bottom: 1px solid #444;
+          border-bottom: 1px solid #fff;
         }
 
         .card-name {
@@ -292,7 +295,7 @@ export default function Hero() {
           grid-row: 2;
           display: grid;
           grid-template-columns: 1fr 1fr;
-          border-left: 1px solid #444;
+          box-shadow: inset 1px 0 0 0 #fff;
           height: 100%;
           overflow: hidden;
         }
@@ -302,9 +305,9 @@ export default function Hero() {
           display: flex;
           align-items: center;
           justify-content: center;
-          border-right: 1px solid #444;
-          border-bottom: 1px solid #444;
-          color: #555;
+          border-right: 1px solid #fff;
+          border-bottom: 1px solid #fff;
+          color: #fff;
           transition: color 0.2s, background 0.2s;
           text-decoration: none;
         }
@@ -321,8 +324,8 @@ export default function Hero() {
 
         .social-empty {
           aspect-ratio: 1;
-          border-right: 1px solid #444;
-          border-bottom: 1px solid #444;
+          border-right: 1px solid #fff;
+          border-bottom: 1px solid #fff;
         }
 
         .hero-content {
@@ -338,7 +341,16 @@ export default function Hero() {
           display: flex;
           align-items: center;
           width: 100%;
-          border-bottom: 1px solid #444;
+          position: relative;
+        }
+
+        .hero-content-upper::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: calc(-1 * clamp(1rem, 2vw, 2rem));
+          right: 0;
+          border-bottom: 1px solid #fff;
         }
 
         .hero-content-lower {
@@ -364,7 +376,7 @@ export default function Hero() {
         }
 
         .role-prefix {
-          color: #666;
+          color: #fff;
         }
 
         .animated-role {
@@ -409,8 +421,8 @@ export default function Hero() {
         .resume-card {
           grid-column: 3;
           grid-row: 1;
-          border-left: 1px solid #444;
-          border-bottom: 1px solid #444;
+          border-left: 1px solid #fff;
+          border-bottom: 1px solid #fff;
           display: flex;
           flex-direction: column;
           justify-content: flex-end;
@@ -420,16 +432,9 @@ export default function Hero() {
         .resume-pdf-preview {
           flex: 1;
           overflow: hidden;
-          border: 1px solid #444;
+          border: 1px solid #fff;
           margin-bottom: 8px;
           min-height: 0;
-        }
-
-        .resume-iframe {
-          width: 100%;
-          height: 100%;
-          border: none;
-          display: block;
         }
 
         .resume-btn {
@@ -536,17 +541,18 @@ export default function Hero() {
           }
 
           .card-name {
-            font-size: clamp(3rem, 14vw, 5rem);
+            font-size: clamp(2rem, 8vw, 3.5rem);
           }
 
           .resume-card {
             grid-column: 3;
             grid-row: 1;
             border-left: none;
-          border-bottom: 1px solid #444;
+            border-bottom: 1px solid #fff;
+            max-width: 200px;
           }
 
-          .resume-preview {
+          .resume-pdf-preview {
             display: none;
           }
 
@@ -586,7 +592,10 @@ export default function Hero() {
 
           .hero-content-upper {
             min-height: auto;
-            border-bottom: none;
+          }
+
+          .hero-content-upper::after {
+            display: none;
           }
 
           .hero-content-lower {
@@ -641,16 +650,11 @@ export default function Hero() {
           }
 
           .card-name {
-            font-size: clamp(2.5rem, 16vw, 4rem);
+            font-size: clamp(1.8rem, 8vw, 3rem);
           }
 
           .resume-card {
-            padding: 0;
-          }
-
-          .resume-btn {
-            font-size: 9px;
-            padding: 7px 8px;
+            display: none;
           }
 
           .hero-content {
