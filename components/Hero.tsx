@@ -182,7 +182,7 @@ export default function Hero() {
           align-items: center;
           width: 100%;
           padding-bottom: 1rem;
-          border-bottom: 1px solid #fff;
+          border-bottom: 0.5px solid #fff;
           flex-shrink: 0;
         }
 
@@ -215,7 +215,7 @@ export default function Hero() {
         }
 
         .desktop-nav a:hover {
-          color: #fafafa;
+          color: #c97b4b;
         }
 
         .hamburger {
@@ -226,7 +226,7 @@ export default function Hero() {
           width: 36px;
           height: 36px;
           background: transparent;
-          border: 1px solid #fff;
+          border: 0.5px solid #fff;
           border-radius: 4px;
           cursor: pointer;
           padding: 6px;
@@ -274,14 +274,14 @@ export default function Hero() {
           display: flex;
           align-items: flex-end;
           justify-content: center;
-          padding-top: clamp(3rem, 5vh, 4rem);
-          padding-bottom: clamp(3rem, 5vh, 4rem);
-          border-bottom: 1px solid #fff;
+          padding-top: clamp(1.5rem, 3vh, 2rem);
+          padding-bottom: clamp(1.5rem, 3vh, 2rem);
+          border-bottom: 0.5px solid #fff;
         }
 
         .card-name {
           font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
-          font-size: clamp(4rem, 8vw, 8rem);
+          font-size: clamp(5rem, 10vw, 10rem);
           font-weight: 600;
           letter-spacing: -0.03em;
           color: #f0e6d3;
@@ -305,8 +305,8 @@ export default function Hero() {
           display: flex;
           align-items: center;
           justify-content: center;
-          border-right: 1px solid #fff;
-          border-bottom: 1px solid #fff;
+          border-right: 0.5px solid #fff;
+          border-bottom: 0.5px solid #fff;
           color: #fff;
           transition: color 0.2s, background 0.2s;
           text-decoration: none;
@@ -324,8 +324,8 @@ export default function Hero() {
 
         .social-empty {
           aspect-ratio: 1;
-          border-right: 1px solid #fff;
-          border-bottom: 1px solid #fff;
+          border-right: 0.5px solid #fff;
+          border-bottom: 0.5px solid #fff;
         }
 
         .hero-content {
@@ -350,7 +350,7 @@ export default function Hero() {
           bottom: 0;
           left: calc(-1 * clamp(1rem, 2vw, 2rem));
           right: 0;
-          border-bottom: 1px solid #fff;
+          border-bottom: 0.5px solid #fff;
         }
 
         .hero-content-lower {
@@ -380,7 +380,7 @@ export default function Hero() {
         }
 
         .animated-role {
-          color: #3ec8e0;
+          color: #c97b4b;
           font-weight: 500;
           display: inline-block;
           animation: roleFadeIn 0.3s ease forwards;
@@ -404,16 +404,16 @@ export default function Hero() {
         }
 
         .see-work-link:hover {
-          color: #3ec8e0;
+          color: #c97b4b;
         }
 
         .hero-statement {
-          font-size: clamp(1.2rem, 2.2vw, 2rem);
+          font-size: clamp(1.4rem, 2.8vw, 2.6rem);
           font-weight: 500;
           line-height: 1.35;
           color: #fafafa;
           letter-spacing: -0.02em;
-          max-width: 640px;
+          max-width: 720px;
           margin: 0;
           text-align: center;
         }
@@ -421,20 +421,22 @@ export default function Hero() {
         .resume-card {
           grid-column: 3;
           grid-row: 1;
-          border-left: 1px solid #fff;
-          border-bottom: 1px solid #fff;
+          border-left: 0.5px solid #fff;
+          border-bottom: 0.5px solid #fff;
           display: flex;
           flex-direction: column;
           justify-content: flex-end;
-          padding: 12px;
+          padding: 8px;
+          overflow: hidden;
         }
 
         .resume-pdf-preview {
-          flex: 1;
+          flex: 0 1 auto;
           overflow: hidden;
-          border: 1px solid #fff;
+          border: 0.5px solid #fff;
           margin-bottom: 8px;
           min-height: 0;
+          max-height: 120px;
         }
 
         .resume-btn {
@@ -452,7 +454,8 @@ export default function Hero() {
         }
 
         .resume-btn:hover {
-          background: #3ec8e0;
+          background: #0a0a0a;
+          color: #fafafa;
         }
 
         .overlay-menu {
@@ -503,7 +506,7 @@ export default function Hero() {
         }
 
         .overlay-nav a:hover {
-          background: #fafafa;
+          background: #c97b4b;
           color: #0d0d0d;
         }
 
@@ -541,14 +544,14 @@ export default function Hero() {
           }
 
           .card-name {
-            font-size: clamp(2rem, 8vw, 3.5rem);
+            font-size: clamp(2.5rem, 9vw, 4rem);
           }
 
           .resume-card {
             grid-column: 3;
             grid-row: 1;
             border-left: none;
-            border-bottom: 1px solid #fff;
+            border-bottom: 0.5px solid #fff;
             max-width: 200px;
           }
 
@@ -625,7 +628,7 @@ export default function Hero() {
           }
 
           .hero-statement {
-            font-size: clamp(0.85rem, 3.5vw, 1.2rem);
+            font-size: clamp(1rem, 4vw, 1.4rem);
             text-align: left;
           }
 
@@ -650,7 +653,7 @@ export default function Hero() {
           }
 
           .card-name {
-            font-size: clamp(1.8rem, 8vw, 3rem);
+            font-size: clamp(2.2rem, 9vw, 3.5rem);
           }
 
           .resume-card {
@@ -662,7 +665,7 @@ export default function Hero() {
           }
 
           .hero-statement {
-            font-size: clamp(0.8rem, 4vw, 1rem);
+            font-size: clamp(0.9rem, 4.5vw, 1.2rem);
             text-align: left;
           }
         }
