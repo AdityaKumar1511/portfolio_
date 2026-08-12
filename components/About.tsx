@@ -67,12 +67,54 @@ export default function About() {
       </div>
       </FadeIn>
 
+      <div className="wave wave-bottom" aria-hidden="true">
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
+          <defs>
+            <pattern id="about-noise" width="128" height="128" patternUnits="userSpaceOnUse">
+              <image href="/noise.png" x="0" y="0" width="128" height="128" preserveAspectRatio="xMidYMid slice" />
+            </pattern>
+            <clipPath id="about-wave-clip">
+              <path d="M0,0 C180,40 340,80 520,60 C700,40 820,-10 1000,30 C1180,70 1320,40 1440,20 L1440,100 L0,100 Z" />
+            </clipPath>
+          </defs>
+          <path d="M0,0 C180,40 340,80 520,60 C700,40 820,-10 1000,30 C1180,70 1320,40 1440,20 L1440,100 L0,100 Z" fill="#0a0a0a" />
+          <g clipPath="url(#about-wave-clip)" opacity="0.05">
+            <rect width="1440" height="100" fill="url(#about-noise)" />
+          </g>
+        </svg>
+      </div>
+
       <style>{`
         .about-section-outer {
           padding: 24px 0;
-          background: transparent;
+          background: #ba5c43;
           width: 100%;
           box-sizing: border-box;
+          position: relative;
+        }
+
+        .wave {
+          position: absolute;
+          left: 0;
+          width: 100%;
+          height: clamp(60px, 10vw, 110px);
+          z-index: 0;
+          pointer-events: none;
+        }
+
+        .wave svg {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+
+        .wave-bottom {
+          bottom: 0;
+        }
+
+        .about-card-container {
+          position: relative;
+          z-index: 1;
         }
 
         @media (min-width: 1025px) {
@@ -106,13 +148,8 @@ export default function About() {
         }
 
         .about-card-container {
-          background: #ba5c43; /* Terracotta/Rust red-orange */
-          border-radius: 40px;
           padding: clamp(2rem, 5vw, 4.5rem);
           color: #ffffff;
-          max-width: 1352px;
-          margin: 0 auto;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
         .about-card-header {
@@ -130,11 +167,11 @@ export default function About() {
         }
 
         .card-brand {
-          color: #3ec8e0; /* Light cyan brand accent */
+          color: #0d0d0d;
         }
 
         .card-serial {
-          color: #3ec8e0;
+          color: #0d0d0d;
         }
 
         .about-card-grid {
@@ -170,7 +207,7 @@ export default function About() {
         }
 
         .highlight {
-          color: #3ec8e0; /* Light cyan brand accent highlight */
+          color: #0d0d0d; /* Charcoal brand accent highlight */
           font-weight: 600;
         }
 
@@ -254,8 +291,11 @@ export default function About() {
         }
 
         @media (max-width: 640px) {
+          .wave {
+            height: 48px;
+          }
+
           .about-card-container {
-            border-radius: 24px;
             padding: clamp(1.5rem, 5vw, 2rem);
           }
 

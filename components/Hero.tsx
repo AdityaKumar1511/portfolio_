@@ -1,673 +1,371 @@
 'use client'
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { useEffect, useRef } from 'react'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { Code, GraduationCap } from 'lucide-react'
 import meta from '@/data/meta.json'
-import heroData from '@/data/hero.json'
-import socials from '@/data/socials.json'
-import dynamic from 'next/dynamic'
 
-const PdfPreview = dynamic(() => import('./PdfPreview'), { ssr: false })
+gsap.registerPlugin(useGSAP)
 
-const roles = heroData.roles
+function GithubMark() {
+  return (
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+    </svg>
+  )
+}
 
-const DESKTOP_NAV = [
-  { id: 'experience', label: 'EXPERIENCE' },
-  { id: 'projects', label: 'PROJECTS' },
-  { id: 'about', label: 'ABOUT' },
+const TYPING_ROLES = [
+  'Full-Stack Developer',
+  'Systems Programmer',
+  'Building Web Apps',
 ]
 
-const NAV_LINKS = [
-  { id: 'about', label: 'About' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'contact', label: 'Contact' },
-  { id: 'github', label: 'GitHub', href: meta.github },
-  { id: 'resume', label: 'Resume', href: meta.resumeUrl },
+const TYPE_SPEED = 55
+const DELETE_SPEED = 28
+const HOLD_MS = 1600
+
+const STATS = [
+  { icon: Code, label: 'LeetCode · 1800+', href: `https://leetcode.com/u/${meta.leetcodeUsername}/` },
+  { icon: GithubMark, label: 'GitHub · 40+ repos', href: meta.github },
+  { icon: GraduationCap, label: "NIT Patna · '29", href: null as string | null },
 ]
 
-const fadeUp = (delay: number) => ({
-  initial: { opacity: 0, y: 30 },
-  animate: { opacity: 1, y: 0 },
-  transition: { delay, duration: 0.8, ease: [0.22, 1, 0.36, 1] as const },
-})
+const firstName = meta.name.split(' ')[0]
+const lastName = meta.name.split(' ')[1] || ''
 
 export default function Hero() {
-  const { name } = meta
-  const [roleIndex, setRoleIndex] = useState(0)
-  const [menuOpen, setMenuOpen] = useState(false)
+  const scopeRef = useRef<HTMLDivElement>(null)
+  const typeRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setRoleIndex((prev) => (prev + 1) % roles.length)
-    }, 1500)
-    return () => clearInterval(timer)
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    let roleIndex = 0
+    let charIndex = 0
+    let deleting = false
+    let timer: ReturnType<typeof setTimeout>
+
+    const tick = () => {
+      const role = TYPING_ROLES[roleIndex]
+      if (typeRef.current) {
+        typeRef.current.textContent = role.slice(0, charIndex)
+      }
+
+      if (!deleting) {
+        charIndex++
+        if (charIndex > role.length) {
+          deleting = true
+          timer = setTimeout(tick, HOLD_MS)
+          return
+        }
+      } else {
+        charIndex--
+        if (charIndex === 0) {
+          deleting = false
+          roleIndex = (roleIndex + 1) % TYPING_ROLES.length
+        }
+      }
+
+      timer = setTimeout(tick, deleting ? DELETE_SPEED : TYPE_SPEED)
+    }
+
+    timer = setTimeout(tick, TYPE_SPEED)
+    return () => clearTimeout(timer)
   }, [])
 
-  useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden'
-      document.documentElement.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-      document.documentElement.style.overflow = ''
-    }
-    return () => {
-      document.body.style.overflow = ''
-      document.documentElement.style.overflow = ''
-    }
-  }, [menuOpen])
+  useGSAP(
+    () => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+
+      tl.fromTo(
+        '.hero-eyebrow',
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.5 }
+      )
+        .fromTo(
+          '.hero-name',
+          { opacity: 0, scale: 0.96 },
+          { opacity: 1, scale: 1, duration: 0.7 },
+          '-=0.25'
+        )
+        .call(() => {}, [], '+=0.05')
+        .fromTo(
+          '.hero-para',
+          { opacity: 0, y: 12 },
+          { opacity: 1, y: 0, duration: 0.5 },
+          '+=0.1'
+        )
+        .fromTo(
+          '.hero-cta-row > *',
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.08 },
+          '-=0.2'
+        )
+        .fromTo(
+          '.hero-divider',
+          { scaleX: 0, opacity: 0 },
+          { scaleX: 1, opacity: 1, duration: 0.5, transformOrigin: 'center' },
+          '-=0.2'
+        )
+        .fromTo(
+          '.hero-stats',
+          { opacity: 0, y: 10 },
+          { opacity: 1, y: 0, duration: 0.5 },
+          '-=0.3'
+        )
+    },
+    { scope: scopeRef }
+  )
 
   return (
-    <section id="hero" className="hero-section">
-      <motion.div className="hero-top-bar" {...fadeUp(0.1)}>
-        <span className="availability">
-          AVAILABILITY <span className="availability-highlight">OPEN TO Internships.</span>
-        </span>
-        <nav className="desktop-nav">
-          {DESKTOP_NAV.map((link) => (
-            <a key={link.id} href={`#${link.id}`}>
-              {link.label}
-            </a>
-          ))}
-        </nav>
-        <button
-          className={`hamburger ${menuOpen ? 'is-open' : ''}`}
-          onClick={() => setMenuOpen((o) => !o)}
-          aria-label="Toggle menu"
-        >
-          <span />
-          <span />
-          <span />
-        </button>
-      </motion.div>
-
-      <div className="hero-body">
-        <motion.div className="hero-name-area" {...fadeUp(0.25)}>
-          <h2 className="card-name">{name}</h2>
-        </motion.div>
-
-        <motion.div className="social-sidebar" {...fadeUp(0.4)}>
-          {socials.map((s) => (
-            <a
-              key={s.label}
-              href={s.href}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={s.label}
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d={s.svgPath} />
-              </svg>
-            </a>
-          ))}
-          {Array.from({ length: 14 }).map((_, i) => (
-            <div key={`empty-${i}`} className="social-empty" />
-          ))}
-        </motion.div>
-
-        <div className="hero-content">
-          <div className="hero-content-upper">
-            <motion.div className="hero-cta-row" {...fadeUp(0.4)}>
-              <span className="role-text">
-                <span className="role-prefix">{heroData.statementPrefix}</span>
-                <span key={roleIndex} className="animated-role">
-                  {roles[roleIndex]}
-                </span>
-              </span>
-              <a className="see-work-link" href="#projects">
-                SEE MY WORK ↗
-              </a>
-            </motion.div>
-          </div>
-          <div className="hero-content-lower">
-            <motion.p
-              className="hero-statement"
-              {...fadeUp(0.55)}
-              dangerouslySetInnerHTML={{ __html: heroData.statement }}
-            />
-          </div>
-        </div>
-
-        <motion.div className="resume-card" {...fadeUp(0.3)}>
-          <div className="resume-pdf-preview">
-            <PdfPreview src={meta.resumeUrl} />
-          </div>
-          <a
-            className="resume-btn"
-            href={meta.resumeUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Download Resume
-          </a>
-        </motion.div>
+    <section id="hero" className="hero-section" ref={scopeRef}>
+      <div className="hero-bg" aria-hidden="true">
+        <div className="hero-dots" />
       </div>
 
-      <div className={`overlay-menu ${menuOpen ? 'is-open' : ''}`}>
-        <nav className="overlay-nav">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.id}
-              href={link.href || `#${link.id}`}
-              onClick={() => setMenuOpen(false)}
-              {...(link.href?.startsWith('http')
-                ? { target: '_blank', rel: 'noreferrer' }
-                : {})}
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
+      <div className="hero-inner">
+        <div className="hero-eyebrow">
+          available for internships
+        </div>
+
+        <h1 className="hero-name">
+          <span className="hero-name-line">{firstName}</span>
+          <span className="hero-name-line hero-name-line--muted">{lastName}</span>
+        </h1>
+
+        <div className="hero-typewriter">
+          <span className="hero-typewriter-text" ref={typeRef} />
+          <span className="hero-typewriter-caret" aria-hidden="true" />
+        </div>
+
+        <p className="hero-para">
+          I build production-grade digital products at the intersection of
+          meticulous engineering and purposeful design.
+        </p>
+
+        <div className="hero-cta-row">
+          <a className="hero-btn hero-btn--primary" href={meta.resumeUrl} target="_blank" rel="noreferrer">
+            View Resume ↗
+          </a>
+          <a className="hero-btn hero-btn--outline" href="#projects">
+            See My Work ↗
+          </a>
+        </div>
+
+        <div className="hero-divider" />
+
+        <div className="hero-stats">
+          {STATS.map((stat) => {
+            const Icon = stat.icon
+            const content = (
+              <>
+                <Icon size={14} strokeWidth={1.75} />
+                <span>{stat.label}</span>
+              </>
+            )
+            return stat.href ? (
+              <a key={stat.label} className="hero-stat" href={stat.href} target="_blank" rel="noreferrer">
+                {content}
+              </a>
+            ) : (
+              <span key={stat.label} className="hero-stat">
+                {content}
+              </span>
+            )
+          })}
+        </div>
       </div>
 
       <style>{`
         .hero-section {
-          min-height: 100svh;
-          max-height: 100svh;
-          padding: 16px 0;
-          display: flex;
-          flex-direction: column;
-          max-width: 1400px;
-          margin: 0 auto;
-          width: 100%;
-          box-sizing: border-box;
-          background: transparent;
-          color: #fafafa;
           position: relative;
-        }
-
-        .hero-top-bar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          width: 100%;
-          padding-bottom: 1rem;
-          border-bottom: 0.5px solid #fff;
-          flex-shrink: 0;
-        }
-
-        .availability {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 11px;
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          color: #fff;
-        }
-
-        .availability-highlight {
-          color: #4ade80;
-          font-weight: 600;
-        }
-
-        .desktop-nav {
-          display: flex;
-          gap: 28px;
-        }
-
-        .desktop-nav a {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 11px;
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          color: #fff;
-          text-decoration: none;
-          transition: color 0.2s;
-        }
-
-        .desktop-nav a:hover {
-          color: #c97b4b;
-        }
-
-        .hamburger {
-          display: none;
-          flex-direction: column;
-          justify-content: center;
-          gap: 5px;
-          width: 36px;
-          height: 36px;
+          min-height: 100svh;
           background: transparent;
-          border: 0.5px solid #fff;
-          border-radius: 4px;
-          cursor: pointer;
-          padding: 6px;
-          z-index: 1001;
-          transition: border-color 0.2s ease;
-        }
-
-        .hamburger:hover {
-          border-color: #fff;
-        }
-
-        .hamburger span {
-          display: block;
-          width: 100%;
-          height: 2px;
-          background: #fafafa;
-          border-radius: 1px;
-          transition: transform 0.3s ease, opacity 0.3s ease;
-          transform-origin: center;
-        }
-
-        .hamburger.is-open span:nth-child(1) {
-          transform: translateY(7px) rotate(45deg);
-        }
-
-        .hamburger.is-open span:nth-child(2) {
-          opacity: 0;
-        }
-
-        .hamburger.is-open span:nth-child(3) {
-          transform: translateY(-7px) rotate(-45deg);
-        }
-
-        .hero-body {
-          display: grid;
-          grid-template-columns: 160px 1fr 160px;
-          grid-template-rows: auto 1fr;
-          flex: 1;
-          min-height: 0;
-        }
-
-        .hero-name-area {
-          grid-column: 1 / 3;
-          grid-row: 1;
           display: flex;
-          align-items: flex-end;
+          align-items: center;
           justify-content: center;
-          padding-top: clamp(1.5rem, 3vh, 2rem);
-          padding-bottom: clamp(1.5rem, 3vh, 2rem);
-          border-bottom: 0.5px solid #fff;
-        }
-
-        .card-name {
-          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
-          font-size: clamp(5rem, 10vw, 10rem);
-          font-weight: 600;
-          letter-spacing: -0.03em;
-          color: #f0e6d3;
-          line-height: 0.9;
-          margin: 0;
-          text-transform: uppercase;
-        }
-
-        .social-sidebar {
-          grid-column: 1;
-          grid-row: 2;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          box-shadow: inset 1px 0 0 0 #fff;
-          height: 100%;
+          padding: 96px 24px 48px;
+          box-sizing: border-box;
           overflow: hidden;
         }
 
-        .social-sidebar a {
-          aspect-ratio: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-right: 0.5px solid #fff;
-          border-bottom: 0.5px solid #fff;
-          color: #fff;
-          transition: color 0.2s, background 0.2s;
-          text-decoration: none;
+        .hero-bg {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
         }
 
-        .social-sidebar a:hover {
-          color: #fafafa;
-          background: rgba(255, 255, 255, 0.05);
+        .hero-dots {
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+          background-size: 24px 24px;
         }
 
-        .social-sidebar a svg {
-          width: 20px;
-          height: 20px;
-        }
-
-        .social-empty {
-          aspect-ratio: 1;
-          border-right: 0.5px solid #fff;
-          border-bottom: 0.5px solid #fff;
-        }
-
-        .hero-content {
-          grid-column: 2 / -1;
-          grid-row: 2;
+        .hero-inner {
+          position: relative;
+          z-index: 1;
+          width: 100%;
+          max-width: 900px;
           display: flex;
           flex-direction: column;
-          padding-left: clamp(1rem, 2vw, 2rem);
+          align-items: center;
+          text-align: center;
         }
 
-        .hero-content-upper {
-          min-height: 80px;
+        .hero-eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 12px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          color: #a0a0a0;
+          padding: 8px 16px;
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          border-radius: 999px;
+          margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+        }
+
+        .hero-name {
+          margin: 0;
+          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
+          font-size: clamp(3rem, 9vw, 6rem);
+          font-weight: 900;
+          text-transform: uppercase;
+          letter-spacing: -0.03em;
+          line-height: 0.95;
+          color: #fafafa;
+          white-space: nowrap;
+        }
+
+        .hero-name-line { display: inline; }
+
+        .hero-typewriter {
           display: flex;
           align-items: center;
-          width: 100%;
-          position: relative;
+          font-family: var(--font-geist-mono), monospace;
+          font-size: clamp(0.9rem, 2vw, 1.1rem);
+          color: #e07a5f;
+          min-height: 1.4em;
+          margin-top: clamp(1.25rem, 3vh, 2rem);
         }
 
-        .hero-content-upper::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: calc(-1 * clamp(1rem, 2vw, 2rem));
-          right: 0;
-          border-bottom: 0.5px solid #fff;
+        .hero-typewriter-caret {
+          width: 2px;
+          height: 1.1em;
+          margin-left: 4px;
+          background: #e07a5f;
+          animation: caretBlink 1s steps(1) infinite;
         }
 
-        .hero-content-lower {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+        @keyframes caretBlink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+
+        .hero-para {
+          max-width: 620px;
+          margin: clamp(1.5rem, 4vh, 2.25rem) 0 0;
+          font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+          line-height: 1.7;
+          color: #a0a0a0;
         }
 
         .hero-cta-row {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-          width: 100%;
+          gap: 14px;
+          margin-top: clamp(1.75rem, 4.5vh, 2.5rem);
+          flex-wrap: wrap;
+          justify-content: center;
         }
 
-        .role-text {
+        .hero-btn {
           font-family: var(--font-geist-mono), monospace;
-          font-size: clamp(14px, 1.8vw, 18px);
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .role-prefix {
-          color: #fff;
-        }
-
-        .animated-role {
-          color: #c97b4b;
-          font-weight: 500;
-          display: inline-block;
-          animation: roleFadeIn 0.3s ease forwards;
-        }
-
-        @keyframes roleFadeIn {
-          0% { opacity: 0; transform: translateY(6px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .see-work-link {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: clamp(14px, 1.8vw, 18px);
+          font-size: 13px;
+          font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 0.1em;
-          color: #fafafa;
+          padding: 13px 30px;
+          border-radius: 999px;
           text-decoration: none;
-          transition: color 0.2s;
-          white-space: nowrap;
-          flex-shrink: 0;
+          transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
         }
 
-        .see-work-link:hover {
-          color: #c97b4b;
+        .hero-btn:hover {
+          transform: translateY(-2px);
         }
 
-        .hero-statement {
-          font-size: clamp(1.4rem, 2.8vw, 2.6rem);
-          font-weight: 500;
-          line-height: 1.35;
-          color: #fafafa;
-          letter-spacing: -0.02em;
-          max-width: 720px;
-          margin: 0;
-          text-align: center;
-        }
-
-        .resume-card {
-          grid-column: 3;
-          grid-row: 1;
-          border-left: 0.5px solid #fff;
-          border-bottom: 0.5px solid #fff;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-end;
-          padding: 8px;
-          overflow: hidden;
-        }
-
-        .resume-pdf-preview {
-          flex: 0 1 auto;
-          overflow: hidden;
-          border: 0.5px solid #fff;
-          margin-bottom: 8px;
-          min-height: 0;
-          max-height: 120px;
-        }
-
-        .resume-btn {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 11px;
+        .hero-btn--primary {
+          background: #e07a5f;
           color: #0a0a0a;
-          text-decoration: none;
-          padding: 10px 12px;
-          background: #fafafa;
-          text-align: center;
-          transition: all 0.2s;
-          display: block;
-          width: 100%;
-          box-sizing: border-box;
         }
 
-        .resume-btn:hover {
-          background: #0a0a0a;
+        .hero-btn--primary:hover {
+          background: #c75b3f;
+        }
+
+        .hero-btn--outline {
+          border: 1px solid rgba(255, 255, 255, 0.35);
           color: #fafafa;
+          background: transparent;
         }
 
-        .overlay-menu {
-          position: fixed;
-          top: 0;
-          right: 0;
-          width: 100%;
-          height: 100svh;
-          background: #0d0d0d;
-          z-index: 1000;
+        .hero-btn--outline:hover {
+          border-color: #e07a5f;
+          color: #e07a5f;
+        }
+
+        .hero-divider {
+          width: 160px;
+          height: 1px;
+          background: rgba(255, 255, 255, 0.2);
+          margin: clamp(2rem, 5vh, 3rem) 0 clamp(1.25rem, 3vh, 2rem);
+        }
+
+        .hero-stats {
           display: flex;
           align-items: center;
-          justify-content: flex-end;
-          padding-right: 48px;
-          transform: translateX(100%);
-          transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-          pointer-events: none;
-          overflow: hidden;
-          overscroll-behavior: none;
-          touch-action: none;
-        }
-
-        .overlay-menu.is-open {
-          transform: translateX(0);
-          pointer-events: auto;
-        }
-
-        .overlay-nav {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
+          justify-content: center;
+          flex-wrap: wrap;
           gap: 12px;
-        }
-
-        .overlay-nav a {
           font-family: var(--font-geist-mono), monospace;
-          font-size: 14px;
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          color: #fafafa;
+          font-size: 12px;
+          color: #a0a0a0;
+        }
+
+        .hero-stat {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          color: #a0a0a0;
           text-decoration: none;
-          padding: 14px 32px;
-          background: #1a1a1a;
-          display: block;
-          min-width: 220px;
-          text-align: right;
-          transition: background 0.2s ease, color 0.2s ease;
+          padding: 0 10px;
+          transition: color 0.2s ease;
         }
 
-        .overlay-nav a:hover {
-          background: #c97b4b;
-          color: #0d0d0d;
-        }
-
-        @media (max-width: 1024px) {
-          .hero-body {
-            grid-template-columns: 140px 1fr 140px;
-          }
+        a.hero-stat:hover {
+          color: #fafafa;
         }
 
         @media (max-width: 768px) {
-          .hero-section {
-            padding: 16px 20px;
-            max-height: none;
-            min-height: 100svh;
+          .hero-name {
+            white-space: normal;
           }
 
-          .desktop-nav {
-            display: none;
-          }
+          .hero-name-line { display: block; }
 
-          .hamburger {
-            display: flex;
-          }
-
-          .hero-body {
-            grid-template-columns: 60px 1fr auto;
-            grid-template-rows: auto auto 1fr;
-          }
-
-          .hero-name-area {
-            grid-column: 1 / -1;
-            grid-row: 1;
-            justify-content: flex-start;
-            padding-bottom: 1rem;
-          }
-
-          .card-name {
-            font-size: clamp(2.5rem, 9vw, 4rem);
-          }
-
-          .resume-card {
-            grid-column: 3;
-            grid-row: 1;
-            border-left: none;
-            border-bottom: 0.5px solid #fff;
-            max-width: 200px;
-          }
-
-          .resume-pdf-preview {
-            display: none;
-          }
-
-          .resume-btn {
-            font-size: 10px;
-            padding: 8px 10px;
-          }
-
-          .social-sidebar {
-            grid-column: 1;
-            grid-row: 2 / 4;
-            grid-template-columns: 1fr;
-            height: auto;
-            overflow: visible;
-          }
-
-          .social-sidebar a svg {
-            width: 16px;
-            height: 16px;
-          }
-
-          .social-sidebar a:nth-child(3),
-          .social-sidebar a:nth-child(4),
-          .social-sidebar a:nth-child(5) {
-            display: none;
-          }
-
-          .social-empty {
-            display: none;
-          }
-
-          .hero-content {
-            grid-column: 2 / -1;
-            grid-row: 2;
-            padding-left: 1rem;
-          }
-
-          .hero-content-upper {
-            min-height: auto;
-          }
-
-          .hero-content-upper::after {
-            display: none;
-          }
-
-          .hero-content-lower {
-            flex: none;
-          }
-
-          .hero-cta-row {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-          }
-
-          .role-prefix {
-            display: none;
-          }
-
-          .role-text {
-            font-size: 13px;
-          }
-
-          .animated-role {
-            font-size: 13px;
-          }
-
-          .see-work-link {
-            margin-left: 0;
-          }
-
-          .hero-statement {
-            font-size: clamp(1rem, 4vw, 1.4rem);
-            text-align: left;
-          }
-
-          .overlay-menu {
-            padding-right: 20px;
-          }
-
-          .overlay-nav {
-            gap: 10px;
-          }
-
-          .overlay-nav a {
-            min-width: 180px;
-            font-size: 13px;
-            padding: 12px 24px;
-          }
+          .hero-name-line--muted { color: #a0a0a0; }
         }
 
-        @media (max-width: 480px) {
-          .hero-section {
-            padding: 12px 16px;
-          }
-
-          .card-name {
-            font-size: clamp(2.2rem, 9vw, 3.5rem);
-          }
-
-          .resume-card {
-            display: none;
-          }
-
-          .hero-content {
-            padding-left: 0.75rem;
-          }
-
-          .hero-statement {
-            font-size: clamp(0.9rem, 4.5vw, 1.2rem);
-            text-align: left;
-          }
+        @media (max-width: 640px) {
+          .hero-stat { padding: 0 8px; }
         }
       `}</style>
     </section>
