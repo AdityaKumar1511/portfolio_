@@ -143,7 +143,7 @@ export default function Projects() {
       <style>{`
 
   .projects-section {
-    padding: clamp(4rem, 10vw, 8rem) 0;
+    padding: clamp(4rem, 10vw, 8rem) var(--pad-x);
     border-top: 1px solid var(--border);
     max-width: 1800px;
     margin: 0 auto;
@@ -156,7 +156,7 @@ export default function Projects() {
     align-items: center;
     gap: 12px;
     margin-bottom: clamp(2rem, 4vh, 3rem);
-    padding: 0 48px;
+    padding: 0;
   }
 
   .projects-label-line {
@@ -564,11 +564,11 @@ export default function Projects() {
 
   @media (max-width: 480px) {
     .projects-section {
-      padding: 3rem 0;
+      padding: 3rem var(--pad-x);
     }
 
     .projects-label-container {
-      padding: 0 20px;
+      padding: 0;
     }
 
     .project-card-body {

@@ -24,8 +24,8 @@
   "sections": [
     { "id": "hero", "label": "Home" },
     { "id": "about", "label": "About" },
-    { "id": "experience", "label": "Experience" },
     { "id": "projects", "label": "Projects" },
+    { "id": "experience", "label": "Experience" },
     { "id": "github", "label": "GitHub" },
     { "id": "leetcode", "label": "CP" },
     { "id": "how-i-work", "label": "How I Work" },

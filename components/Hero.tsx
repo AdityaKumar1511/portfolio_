@@ -187,7 +187,7 @@ export default function Hero() {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 96px 24px 48px;
+          padding: 96px var(--pad-x) 48px;
           box-sizing: border-box;
           overflow: hidden;
         }

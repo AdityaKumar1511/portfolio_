@@ -10,6 +10,9 @@
   --text: #fafafa;
   --text-secondary: #d0d0d0;
   --text-muted: #a0a0a0;
+  --pad-x: clamp(20px, 5vw, 56px);
+  --corner-x: clamp(12px, 2vw, 24px);
+  --corner-y: clamp(12px, 2vw, 20px);
   --bp-sm: 640px;
   --bp-md: 768px;
   --bp-lg: 1024px;

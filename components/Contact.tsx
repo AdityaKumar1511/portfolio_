@@ -51,7 +51,7 @@ export default function Contact() {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          padding: clamp(5rem, 12vw, 10rem) 0;
+          padding: clamp(5rem, 12vw, 10rem) var(--pad-x);
           border-top: 1px solid var(--border);
           max-width: 1400px;
           margin: 0 auto;
@@ -176,7 +176,7 @@ export default function Contact() {
           .contact-section {
             max-height: none;
             min-height: auto;
-            padding: clamp(4rem, 15vw, 5rem) 0;
+            padding: clamp(4rem, 15vw, 5rem) var(--pad-x);
           }
 
           .contact-heading {
@@ -196,7 +196,7 @@ export default function Contact() {
           }
 
           .contact-section {
-            padding: 3rem 16px;
+            padding: 3rem var(--pad-x);
           }
 
           .contact-email-link {

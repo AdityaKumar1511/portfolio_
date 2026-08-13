@@ -50,7 +50,7 @@ export default function Experience() {
       {/* Embedded CSS for layout and responsiveness */}
       <style>{`
         .experience-section {
-          padding: clamp(4rem, 10vw, 8rem) 48px;
+          padding: clamp(4rem, 10vw, 8rem) var(--pad-x);
           border-top: 1px solid var(--border);
           max-width: 1400px;
           margin: 0 auto;
@@ -213,7 +213,7 @@ export default function Experience() {
 
         @media (max-width: 480px) {
           .experience-section {
-            padding: 3rem 20px;
+            padding: 3rem var(--pad-x);
           }
 
           .experience-role {
