@@ -25,10 +25,10 @@
     { "id": "hero", "label": "Home" },
     { "id": "about", "label": "About" },
     { "id": "projects", "label": "Projects" },
-    { "id": "experience", "label": "Experience" },
+    { "id": "experience", "label": "Work" },
     { "id": "github", "label": "GitHub" },
     { "id": "leetcode", "label": "CP" },
-    { "id": "how-i-work", "label": "How I Work" },
+    { "id": "how-i-work", "label": "Method" },
     { "id": "contact", "label": "Contact" }
   ],
   "seo": {

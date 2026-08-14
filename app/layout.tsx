@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import CustomCursor from '@/components/CustomCursor'
+import Magnetic from '@/components/Magnetic'
 import Navbar from '@/components/Navbar'
 import Terminal from '@/components/Terminal'
 import SmoothScroll from '@/components/SmoothScroll'
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body style={{ fontFamily: 'var(--font-geist-sans), system-ui, sans-serif' }}>
         <CustomCursor />
+        <Magnetic />
         <Navbar />
         <Terminal />
         <SmoothScroll>

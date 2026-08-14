@@ -43,6 +43,7 @@ export default function Navbar() {
               key={section.id}
               href={`#${section.id}`}
               className={`chrome-link ${active === section.id ? 'is-active' : ''}`}
+              data-magnetic-ignore
             >
               {section.label}
             </a>
@@ -60,6 +61,7 @@ export default function Navbar() {
             rel="noreferrer"
             aria-label={s.label}
             title={s.label}
+            data-magnetic-ignore
           >
             <svg viewBox="0 0 24 24" fill="currentColor">
               <path d={s.svgPath} />

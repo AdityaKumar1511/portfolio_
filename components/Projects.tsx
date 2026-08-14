@@ -360,6 +360,10 @@ export default function Projects() {
     line-height: 1.8;
     letter-spacing: 0.04em;
     margin: 0 0 1.5rem 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
   }
 
   .card-impact {
