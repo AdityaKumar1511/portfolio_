@@ -32,7 +32,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="chrome-top">
+      <header className={`chrome-top${active === 'about' ? ' chrome-top--on-about' : ''}`}>
         <a className="chrome-brand" href="#hero">
           ADI
         </a>
@@ -95,14 +95,14 @@ export default function Navbar() {
           font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 0.14em;
-          color: #fafafa;
+          color: #d4cec7;
           text-decoration: none;
           white-space: nowrap;
           transition: color 0.2s ease;
         }
 
         .chrome-brand:hover {
-          color: #e07a5f;
+          color: #fa5f34;
         }
 
         .chrome-links {
@@ -119,7 +119,7 @@ export default function Navbar() {
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.12em;
-          color: #a0a0a0;
+          color: #d4cec7;
           text-decoration: none;
           padding: 4px 0;
           transition: color 0.2s ease;
@@ -132,14 +132,14 @@ export default function Navbar() {
           bottom: 0;
           width: 100%;
           height: 1px;
-          background: #e07a5f;
+          background: #fa5f34;
           transform: scaleX(0);
           transform-origin: left;
           transition: transform 0.25s ease;
         }
 
         .chrome-link:hover {
-          color: #fafafa;
+          color: #d4cec7;
         }
 
         .chrome-link:hover::after {
@@ -147,11 +147,23 @@ export default function Navbar() {
         }
 
         .chrome-link.is-active {
-          color: #e07a5f;
+          color: #fa5f34;
         }
 
         .chrome-link.is-active::after {
           transform: scaleX(1);
+        }
+
+        .chrome-top--on-about .chrome-link.is-active {
+          color: #0a0a0a;
+        }
+
+        .chrome-top--on-about .chrome-link.is-active::after {
+          background: #0a0a0a;
+        }
+
+        .chrome-top--on-about .chrome-link:hover::after {
+          background: #0a0a0a;
         }
 
         .chrome-left {
@@ -170,14 +182,14 @@ export default function Navbar() {
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #a0a0a0;
+          color: #d4cec7;
           text-decoration: none;
           padding: 4px;
           transition: color 0.2s ease, transform 0.2s ease;
         }
 
         .chrome-social:hover {
-          color: #e07a5f;
+          color: #fa5f34;
           transform: translateY(-2px);
         }
 

@@ -299,9 +299,9 @@ export default function Terminal() {
           width: 44px;
           height: 44px;
           border-radius: 10px;
-          border: 1px solid rgba(255, 255, 255, 0.18);
+          border: 1px solid rgba(212, 206, 199, 0.18);
           background: rgba(10, 10, 10, 0.7);
-          color: #fafafa;
+          color: #d4cec7;
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -310,9 +310,9 @@ export default function Terminal() {
         }
 
         .terminal-btn:hover {
-          color: #e07a5f;
-          border-color: #e07a5f;
-          background: rgba(224, 122, 95, 0.08);
+          color: #fa5f34;
+          border-color: #fa5f34;
+          background: rgba(250, 95, 52, 0.08);
         }
 
         .terminal-btn-icon {
@@ -388,7 +388,7 @@ export default function Terminal() {
           text-align: center;
           font-family: var(--font-geist-mono), monospace;
           font-size: 12px;
-          color: #888;
+          color: #d4cec7;
           letter-spacing: 0.04em;
           overflow: hidden;
           white-space: nowrap;
@@ -398,7 +398,7 @@ export default function Terminal() {
         .terminal-close {
           background: transparent;
           border: none;
-          color: #666;
+          color: #d4cec7;
           cursor: pointer;
           font-size: 13px;
           padding: 4px;
@@ -407,7 +407,7 @@ export default function Terminal() {
         }
 
         .terminal-close:hover {
-          color: #fafafa;
+          color: #d4cec7;
         }
 
         .terminal-body {
@@ -417,7 +417,7 @@ export default function Terminal() {
           font-family: var(--font-geist-mono), monospace;
           font-size: 13px;
           line-height: 1.75;
-          color: #d0d0d0;
+          color: #d4cec7;
           scrollbar-width: thin;
           scrollbar-color: #333 transparent;
         }
@@ -437,12 +437,12 @@ export default function Terminal() {
         }
 
         .t-prompt-line {
-          color: #fafafa;
+          color: #d4cec7;
           margin-top: 6px;
         }
 
         .t-prompt {
-          color: #e07a5f;
+          color: #fa5f34;
           font-weight: 700;
           margin-right: 8px;
         }
@@ -452,11 +452,11 @@ export default function Terminal() {
         }
 
         .t-cmd {
-          color: #e07a5f;
+          color: #fa5f34;
         }
 
         .t-lbl {
-          color: #e07a5f;
+          color: #fa5f34;
           text-transform: uppercase;
           letter-spacing: 0.06em;
           font-size: 11px;
@@ -464,7 +464,7 @@ export default function Terminal() {
         }
 
         .t-dim {
-          color: #888;
+          color: #d4cec7;
         }
 
         .t-err {
@@ -472,27 +472,27 @@ export default function Terminal() {
         }
 
         .t-brand {
-          color: #fafafa;
+          color: #d4cec7;
           font-weight: 600;
         }
 
         .t-sep {
-          color: #666;
+          color: #d4cec7;
         }
 
         .t-desc {
-          color: #888;
+          color: #d4cec7;
         }
 
         .t-link {
-          color: #fafafa;
+          color: #d4cec7;
           text-decoration: underline;
           text-underline-offset: 3px;
           transition: color 0.15s ease;
         }
 
         .t-link:hover {
-          color: #e07a5f;
+          color: #fa5f34;
         }
 
         .terminal-input-row {
@@ -508,10 +508,10 @@ export default function Terminal() {
           background: transparent;
           border: none;
           outline: none;
-          color: #fafafa;
+          color: #d4cec7;
           font-family: var(--font-geist-mono), monospace;
           font-size: 13px;
-          caret-color: #e07a5f;
+          caret-color: #fa5f34;
           padding: 0;
         }
 

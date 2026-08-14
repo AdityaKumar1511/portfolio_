@@ -348,7 +348,7 @@ export default function GitHub() {
         .section-label-line {
           width: 24px;
           height: 1px;
-          background: #ff5f38;
+          background: #fa5f34;
         }
 
         .section-label-text {
@@ -356,7 +356,7 @@ export default function GitHub() {
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.15em;
-          color: #ff5f38;
+          color: #fa5f34;
           font-weight: 700;
         }
 
@@ -380,7 +380,7 @@ export default function GitHub() {
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          background: #ff5f38;
+          background: #fa5f34;
           display: inline-block;
         }
 
@@ -435,7 +435,7 @@ export default function GitHub() {
         }
 
         .accent-val {
-          color: #ff5f38; /* Orange color accent */
+          color: #fa5f34; /* Orange color accent */
         }
 
         .stat-lbl {

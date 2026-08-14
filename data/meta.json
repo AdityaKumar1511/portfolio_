@@ -19,7 +19,7 @@
     "Next.js", "Node.js", "Go", "PostgreSQL", "Redis", "GraphQL", "AWS", "Docker",
     "TypeScript", "React", "FastAPI", "Python", "MongoDB", "Solidity", "C++17"
   ],
-  "profileImage": "/profile.png",
+  "profileImage": "/profile.png?v=4",
   "tickerText": "LET'S CONNECT",
   "sections": [
     { "id": "hero", "label": "Home" },

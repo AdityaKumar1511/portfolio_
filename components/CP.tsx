@@ -440,7 +440,7 @@ export default function CP() {
         .cp-label-line {
           width: 24px;
           height: 1px;
-          background: #ff5f38;
+          background: #fa5f34;
         }
 
         .cp-label-text {
@@ -448,7 +448,7 @@ export default function CP() {
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.15em;
-          color: #ff5f38;
+          color: #fa5f34;
           font-weight: 700;
         }
 
@@ -472,7 +472,7 @@ export default function CP() {
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          background: #ff5f38;
+          background: #fa5f34;
           display: inline-block;
         }
 
@@ -502,7 +502,7 @@ export default function CP() {
         }
 
         .cp-card:hover {
-          border-color: rgba(255, 255, 255, 0.15);
+          border-color: rgba(212, 206, 199, 0.15);
         }
 
         .cp-card-left-accent {
@@ -538,7 +538,7 @@ export default function CP() {
           width: 36px;
           height: 36px;
           border-radius: 10px;
-          background: rgba(255, 255, 255, 0.05);
+          background: rgba(212, 206, 199, 0.05);
           border: 1px solid var(--border);
           display: flex;
           align-items: center;
@@ -574,7 +574,7 @@ export default function CP() {
           font-family: var(--font-geist-mono), monospace;
           font-size: 11px;
           color: var(--text-muted);
-          background: rgba(255, 255, 255, 0.04);
+          background: rgba(212, 206, 199, 0.04);
           border: 1px solid var(--border);
           padding: 5px 12px;
           border-radius: 99px;
@@ -605,7 +605,7 @@ export default function CP() {
 
         .cp-divider {
           border: none;
-          border-top: 1px dashed rgba(255, 255, 255, 0.08);
+          border-top: 1px dashed rgba(212, 206, 199, 0.08);
           margin: 0;
         }
 
@@ -653,7 +653,7 @@ export default function CP() {
           font-family: var(--font-geist-mono), monospace;
           font-size: 11px;
           font-weight: 600;
-          color: #ff5f38;
+          color: #fa5f34;
           text-decoration: none;
           transition: opacity 150ms;
           align-self: flex-start;

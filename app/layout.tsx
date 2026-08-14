@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar'
 import Terminal from '@/components/Terminal'
 import SmoothScroll from '@/components/SmoothScroll'
 import meta from '@/data/meta.json'
+import 'lenis/dist/lenis.css'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -26,9 +27,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CustomCursor />
         <Magnetic />
         <Navbar />
-        <Terminal />
         <SmoothScroll>
           {children}
+          <Terminal />
         </SmoothScroll>
       </body>
     </html>

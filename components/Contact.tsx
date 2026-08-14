@@ -100,7 +100,7 @@ export default function Contact() {
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.15em;
-          color: #ff5f38;
+          color: #fa5f34;
           font-weight: 700;
         }
 
@@ -119,7 +119,7 @@ export default function Contact() {
         .contact-email-link {
           font-family: var(--font-geist-mono), monospace;
           font-size: clamp(0.85rem, 1.8vw, 1.1rem);
-          color: #ff5f38;
+          color: #fa5f34;
           text-decoration: none;
           display: inline-block;
           margin-bottom: 0.5rem;
@@ -137,7 +137,7 @@ export default function Contact() {
           font-size: 10px;
           text-transform: uppercase;
           letter-spacing: 0.1em;
-          color: #777777;
+          color: #d4cec7;
           margin: 0 0 2.5rem 0;
           position: relative;
           z-index: 1;
@@ -157,13 +157,13 @@ export default function Contact() {
           justify-content: center;
           width: 72px;
           height: 72px;
-          color: #BBBBBB;
+          color: #d4cec7;
           text-decoration: none;
           transition: color 200ms ease, background 200ms ease;
         }
 
         .contact-social-cell:hover {
-          color: #999999;
+          color: #d4cec7;
           background: #111111;
         }
 

@@ -122,10 +122,6 @@ export default function Hero() {
 
   return (
     <section id="hero" className="hero-section" ref={scopeRef}>
-      <div className="hero-bg" aria-hidden="true">
-        <div className="hero-dots" />
-      </div>
-
       <div className="hero-inner">
         <div className="hero-eyebrow">
           available for internships
@@ -133,6 +129,7 @@ export default function Hero() {
 
         <h1 className="hero-name">
           <span className="hero-name-line">{firstName}</span>
+          {' '}
           <span className="hero-name-line hero-name-line--muted">{lastName}</span>
         </h1>
 
@@ -192,20 +189,6 @@ export default function Hero() {
           overflow: hidden;
         }
 
-        .hero-bg {
-          position: absolute;
-          inset: 0;
-          z-index: 0;
-          pointer-events: none;
-        }
-
-        .hero-dots {
-          position: absolute;
-          inset: 0;
-          background-image: radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px);
-          background-size: 24px 24px;
-        }
-
         .hero-inner {
           position: relative;
           z-index: 1;
@@ -226,9 +209,9 @@ export default function Hero() {
           font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 0.12em;
-          color: #a0a0a0;
+          color: #d4cec7;
           padding: 8px 16px;
-          border: 1px solid rgba(255, 255, 255, 0.15);
+          border: 1px solid rgba(212, 206, 199, 0.15);
           border-radius: 999px;
           margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
         }
@@ -241,7 +224,7 @@ export default function Hero() {
           text-transform: uppercase;
           letter-spacing: -0.03em;
           line-height: 0.95;
-          color: #fafafa;
+          color: #d4cec7;
           white-space: nowrap;
         }
 
@@ -252,7 +235,7 @@ export default function Hero() {
           align-items: center;
           font-family: var(--font-geist-mono), monospace;
           font-size: clamp(0.9rem, 2vw, 1.1rem);
-          color: #e07a5f;
+          color: #fa5f34;
           min-height: 1.4em;
           margin-top: clamp(1.25rem, 3vh, 2rem);
         }
@@ -261,7 +244,7 @@ export default function Hero() {
           width: 2px;
           height: 1.1em;
           margin-left: 4px;
-          background: #e07a5f;
+          background: #fa5f34;
           animation: caretBlink 1s steps(1) infinite;
         }
 
@@ -275,7 +258,7 @@ export default function Hero() {
           margin: clamp(1.5rem, 4vh, 2.25rem) 0 0;
           font-size: clamp(0.95rem, 1.8vw, 1.15rem);
           line-height: 1.7;
-          color: #a0a0a0;
+          color: #d4cec7;
         }
 
         .hero-cta-row {
@@ -303,7 +286,7 @@ export default function Hero() {
         }
 
         .hero-btn--primary {
-          background: #e07a5f;
+          background: #fa5f34;
           color: #0a0a0a;
         }
 
@@ -312,20 +295,20 @@ export default function Hero() {
         }
 
         .hero-btn--outline {
-          border: 1px solid rgba(255, 255, 255, 0.35);
-          color: #fafafa;
+          border: 1px solid rgba(212, 206, 199, 0.35);
+          color: #d4cec7;
           background: transparent;
         }
 
         .hero-btn--outline:hover {
-          border-color: #e07a5f;
-          color: #e07a5f;
+          border-color: #fa5f34;
+          color: #fa5f34;
         }
 
         .hero-divider {
           width: 160px;
           height: 1px;
-          background: rgba(255, 255, 255, 0.2);
+          background: rgba(212, 206, 199, 0.2);
           margin: clamp(2rem, 5vh, 3rem) 0 clamp(1.25rem, 3vh, 2rem);
         }
 
@@ -337,21 +320,21 @@ export default function Hero() {
           gap: 12px;
           font-family: var(--font-geist-mono), monospace;
           font-size: 12px;
-          color: #a0a0a0;
+          color: #d4cec7;
         }
 
         .hero-stat {
           display: inline-flex;
           align-items: center;
           gap: 7px;
-          color: #a0a0a0;
+          color: #d4cec7;
           text-decoration: none;
           padding: 0 10px;
           transition: color 0.2s ease;
         }
 
         a.hero-stat:hover {
-          color: #fafafa;
+          color: #d4cec7;
         }
 
         @media (max-width: 768px) {
@@ -361,7 +344,7 @@ export default function Hero() {
 
           .hero-name-line { display: block; }
 
-          .hero-name-line--muted { color: #a0a0a0; }
+          .hero-name-line--muted { color: #d4cec7; }
         }
 
         @media (max-width: 640px) {

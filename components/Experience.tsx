@@ -84,7 +84,7 @@ export default function Experience() {
         .experience-label-line {
           width: 24px;
           height: 1px;
-          background: #ff5f38;
+          background: #fa5f34;
         }
 
         .experience-label-text {
@@ -92,7 +92,7 @@ export default function Experience() {
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.15em;
-          color: #ff5f38;
+          color: #fa5f34;
           font-weight: 700;
         }
 
@@ -136,7 +136,7 @@ export default function Experience() {
           font-family: var(--font-geist-mono), monospace;
           font-size: 13px;
           font-weight: 600;
-          color: #ff5f38; /* Accent red/orange color from screenshot */
+          color: #fa5f34; /* Accent red/orange color from screenshot */
         }
 
         .experience-role {

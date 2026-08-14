@@ -7,9 +7,9 @@
   --surface: #121212;
   --surface-2: #1a1a1a;
   --border: #222222;
-  --text: #fafafa;
-  --text-secondary: #d0d0d0;
-  --text-muted: #a0a0a0;
+  --text: #d4cec7;
+  --text-secondary: #d4cec7;
+  --text-muted: #d4cec7;
   --pad-x: clamp(20px, 5vw, 56px);
   --corner-x: clamp(12px, 2vw, 24px);
   --corner-y: clamp(12px, 2vw, 20px);
@@ -41,29 +41,17 @@ body::after {
   z-index: -1;
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.05;
-  background-image: url('/noise.png');
-  background-repeat: repeat;
-  background-size: 128px 128px;
-}
-
 main {
   padding: 0;
 }
 
-::selection { background: #fafafa; color: #0a0a0a; }
+::selection { background: #d4cec7; color: #0a0a0a; }
 
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 
-*:focus-visible { outline: 1px solid #fafafa; outline-offset: 3px; }
+*:focus-visible { outline: 1px solid #d4cec7; outline-offset: 3px; }
 
 @keyframes marquee {
   from { transform: translateX(0); }
@@ -93,7 +81,7 @@ body.has-custom-cursor * {
 .custom-cursor {
   width: 12px;
   height: 12px;
-  background: #ffffff !important;
+  background: #d4cec7 !important;
   border-radius: 50%;
   position: fixed;
   transform: translate(-50%, -50%);
@@ -107,18 +95,8 @@ body.has-custom-cursor * {
 .custom-cursor.cursor-hovered {
   width: 48px;
   height: 48px;
-  background: #ffffff !important;
+  background: #d4cec7 !important;
   mix-blend-mode: difference;
-}
-
-.custom-cursor-trail {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  background: #ffffff;
-  mix-blend-mode: difference;
-  will-change: transform;
 }
 
 /* Section height — every section fills at least 100vh except How I Work */

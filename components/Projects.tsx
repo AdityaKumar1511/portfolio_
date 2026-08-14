@@ -162,7 +162,7 @@ export default function Projects() {
   .projects-label-line {
     width: 24px;
     height: 1px;
-    background: #ff5f38;
+    background: #fa5f34;
   }
 
   .projects-label-text {
@@ -170,7 +170,7 @@ export default function Projects() {
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.15em;
-    color: #ff5f38;
+    color: #fa5f34;
     font-weight: 700;
   }
 
@@ -208,7 +208,7 @@ export default function Projects() {
     font-family: var(--font-geist-mono), monospace;
     font-size: 10px;
     font-weight: 700;
-    color: #e07a5f;
+    color: #fa5f34;
     letter-spacing: 0.06em;
     flex-shrink: 0;
   }
@@ -223,7 +223,7 @@ export default function Projects() {
   .ear-name {
     font-family: var(--font-geist-mono), monospace;
     font-size: 11px;
-    color: #aaaaaa;
+    color: #d4cec7;
     letter-spacing: 0.03em;
     white-space: nowrap;
     overflow: hidden;
@@ -232,7 +232,7 @@ export default function Projects() {
   }
 
   .project-card-wrapper:hover .ear-name {
-    color: #cccccc;
+    color: #d4cec7;
   }
 
   /* ── CARD BODY ── */
@@ -263,7 +263,7 @@ export default function Projects() {
     font-size: clamp(4rem, 10.5vw, 10rem);
     font-weight: 900;
     text-transform: uppercase;
-    color: #ffffff;
+    color: #d4cec7;
     margin: 0;
     line-height: 0.9;
     letter-spacing: -0.03em;
@@ -287,7 +287,7 @@ export default function Projects() {
     font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
     font-size: clamp(1.8rem, 4vw, 2.5rem);
     font-weight: 900;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(212, 206, 199, 0.9);
     line-height: 1;
   }
 
@@ -296,7 +296,7 @@ export default function Projects() {
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.2em;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(212, 206, 199, 0.5);
   }
 
   .card-status-badge {
@@ -321,17 +321,17 @@ export default function Projects() {
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: rgba(212, 206, 199, 0.7);
+    border: 1px solid rgba(212, 206, 199, 0.18);
     border-radius: 3px;
     padding: 4px 10px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(212, 206, 199, 0.04);
   }
 
   /* ── SEPARATOR ── */
   .card-hr {
     border: none;
-    border-top: 1px dashed rgba(255, 255, 255, 0.12);
+    border-top: 1px dashed rgba(212, 206, 199, 0.12);
     margin: 0 0 clamp(0.75rem, 1.5vw, 1rem) 0;
   }
 
@@ -356,7 +356,7 @@ export default function Projects() {
     font-size: 14px;
     font-weight: 500;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(212, 206, 199, 0.65);
     line-height: 1.8;
     letter-spacing: 0.04em;
     margin: 0 0 1.5rem 0;
@@ -371,7 +371,7 @@ export default function Projects() {
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
-    color: #ff5f38;
+    color: #fa5f34;
     letter-spacing: 0.08em;
     margin-bottom: 1.5rem;
     display: block;
@@ -393,7 +393,7 @@ export default function Projects() {
     font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
     font-size: clamp(1.5rem, 3vw, 2.25rem);
     font-weight: 900;
-    color: #ffffff;
+    color: #d4cec7;
     line-height: 1;
   }
 
@@ -402,7 +402,7 @@ export default function Projects() {
     font-size: 9px;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.45);
+    color: rgba(212, 206, 199, 0.45);
   }
 
   .card-actions {
@@ -425,7 +425,7 @@ export default function Projects() {
   }
 
   .card-btn-primary {
-    background: #ff5f38;
+    background: #fa5f34;
     color: #121212;
     font-weight: 700;
     border-color: transparent;
@@ -433,8 +433,8 @@ export default function Projects() {
 
   .card-btn-primary:hover {
     background: transparent;
-    border-color: #ff5f38;
-    color: #ff5f38;
+    border-color: #fa5f34;
+    color: #fa5f34;
   }
 
   /* ── Right: Thumbnail ── */
@@ -450,7 +450,7 @@ export default function Projects() {
     height: 100%;
     object-fit: cover;
     border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(212, 206, 199, 0.06);
     display: block;
   }
 
@@ -458,7 +458,7 @@ export default function Projects() {
     width: 100%;
     height: 100%;
     border-radius: 10px;
-    border: 1px dashed rgba(255, 255, 255, 0.08);
+    border: 1px dashed rgba(212, 206, 199, 0.08);
     background: #1a1a1a;
     display: flex;
     flex-direction: column;
@@ -471,7 +471,7 @@ export default function Projects() {
     font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
     font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 900;
-    color: rgba(255, 255, 255, 0.08);
+    color: rgba(212, 206, 199, 0.08);
   }
 
   .card-thumbnail-fallback-label {
@@ -479,7 +479,7 @@ export default function Projects() {
     font-size: 9px;
     text-transform: uppercase;
     letter-spacing: 0.2em;
-    color: rgba(255, 255, 255, 0.15);
+    color: rgba(212, 206, 199, 0.15);
   }
 
   /* ── MOBILE ── */

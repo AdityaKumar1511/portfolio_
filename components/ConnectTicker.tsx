@@ -62,7 +62,7 @@ export default function ConnectTicker() {
           font-family: var(--font-geist-mono), monospace;
           font-size: clamp(14px, 2.5vw, 18px);
           font-weight: 600;
-          color: #e07a5f;
+          color: #fa5f34;
         }
       `}</style>
     </div>

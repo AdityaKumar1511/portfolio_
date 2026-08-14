@@ -51,7 +51,7 @@ export default function About() {
                   alt={name}
                   fill
                   sizes="(max-width: 1024px) 100vw, 500px"
-                  style={{ objectFit: 'cover' }}
+                  style={{ objectFit: 'contain' }}
                   onError={() => setImgErr(true)}
                   priority
                 />
@@ -69,25 +69,14 @@ export default function About() {
 
       <div className="wave wave-bottom" aria-hidden="true">
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
-          <defs>
-            <pattern id="about-noise" width="128" height="128" patternUnits="userSpaceOnUse">
-              <image href="/noise.png" x="0" y="0" width="128" height="128" preserveAspectRatio="xMidYMid slice" />
-            </pattern>
-            <clipPath id="about-wave-clip">
-              <path d="M0,0 C180,40 340,80 520,60 C700,40 820,-10 1000,30 C1180,70 1320,40 1440,20 L1440,100 L0,100 Z" />
-            </clipPath>
-          </defs>
           <path d="M0,0 C180,40 340,80 520,60 C700,40 820,-10 1000,30 C1180,70 1320,40 1440,20 L1440,100 L0,100 Z" fill="#0a0a0a" />
-          <g clipPath="url(#about-wave-clip)" opacity="0.05">
-            <rect width="1440" height="100" fill="url(#about-noise)" />
-          </g>
         </svg>
       </div>
 
       <style>{`
         .about-section-outer {
           padding: 24px 0;
-          background: #ba5c43;
+          background: #fa5f34;
           width: 100%;
           box-sizing: border-box;
           position: relative;
@@ -122,34 +111,39 @@ export default function About() {
             height: 100vh;
             max-height: 100vh;
             display: flex;
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
             overflow: hidden;
+            padding: 24px 0 0 0;
           }
 
           .about-card-container {
-            height: calc(100% - 48px);
+            height: 100%;
             width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             box-sizing: border-box;
-            padding: clamp(1.5rem, 3.5vh, 4.5rem) clamp(2rem, 5vw, 4.5rem) !important;
+            padding: calc(24px + clamp(1.5rem, 3.5vh, 4.5rem)) clamp(2rem, 5vw, 4.5rem) 0 !important;
           }
 
           .about-card-header {
-            margin-bottom: clamp(1rem, 2.5vh, 2.5rem) !important;
+            margin-bottom: 0 !important;
           }
 
           .about-card-grid {
             flex: 1;
             align-items: stretch !important;
           }
+
+          .about-col-left {
+            margin-top: clamp(1rem, 2.5vh, 2.5rem);
+          }
         }
 
         .about-card-container {
           padding: clamp(2rem, 5vw, 4.5rem);
-          color: #ffffff;
+          color: #d4cec7;
         }
 
         .about-card-header {
@@ -160,8 +154,8 @@ export default function About() {
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.15em;
-          color: rgba(255, 255, 255, 0.7);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+          color: rgba(212, 206, 199, 0.7);
+          border-bottom: 1px solid rgba(212, 206, 199, 0.15);
           padding-bottom: 1.5rem;
           margin-bottom: 3rem;
         }
@@ -194,14 +188,14 @@ export default function About() {
           font-weight: 500;
           line-height: 1.05;
           letter-spacing: -0.03em;
-          color: #ffffff;
+          color: #d4cec7;
           margin: 0 0 2rem 0;
         }
 
         .about-card-bio {
           font-size: clamp(14px, 1.8vw, 15px);
           line-height: 1.7;
-          color: rgba(255, 255, 255, 0.9);
+          color: rgba(212, 206, 199, 0.9);
           margin: 0 0 2.5rem 0;
           max-width: 540px;
         }
@@ -219,8 +213,8 @@ export default function About() {
         }
 
         .github-pill-btn {
-          background: #ffffff;
-          color: #ba5c43;
+          background: #d4cec7;
+          color: #fa5f34;
           font-size: 13px;
           font-weight: 500;
           padding: 12px 28px;
@@ -233,8 +227,8 @@ export default function About() {
 
         .github-pill-btn:hover {
           background: transparent;
-          border-color: #ffffff;
-          color: #ffffff;
+          border-color: #d4cec7;
+          color: #d4cec7;
         }
 
         /* Right Column: Profile Image Frame */
@@ -252,8 +246,6 @@ export default function About() {
           min-height: 380px;
           border-radius: 24px;
           overflow: hidden;
-          background: rgba(0,0,0,0.1);
-          border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .profile-fallback {
@@ -262,13 +254,13 @@ export default function About() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(255, 255, 255, 0.15);
+          background: rgba(212, 206, 199, 0.15);
         }
 
         .fallback-initials {
           font-family: var(--font-geist-mono), monospace;
           font-size: 4rem;
-          color: #ffffff;
+          color: #d4cec7;
           font-weight: 300;
         }
 

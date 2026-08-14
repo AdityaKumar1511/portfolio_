@@ -642,7 +642,7 @@ export default function HowIWork() {
         .hiw-label-line {
           width: 24px;
           height: 1px;
-          background: #ff5f38;
+          background: #fa5f34;
         }
 
         .hiw-label-text {
@@ -650,7 +650,7 @@ export default function HowIWork() {
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.15em;
-          color: #ff5f38;
+          color: #fa5f34;
           font-weight: 700;
         }
 
@@ -732,7 +732,7 @@ export default function HowIWork() {
 
         .active-disc-btn {
           background: var(--surface-2);
-          border-color: rgba(224, 122, 95, 0.3); /* Terracotta tint */
+          border-color: rgba(250, 95, 52, 0.3); /* Terracotta tint */
           color: var(--text);
           box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
@@ -745,7 +745,7 @@ export default function HowIWork() {
         }
 
         .active-disc-btn .disc-icon {
-          color: #e07a5f;
+          color: #fa5f34;
         }
 
         .disc-name {
@@ -806,7 +806,7 @@ export default function HowIWork() {
         .graph-nodes-count {
           font-family: var(--font-geist-mono), monospace;
           font-size: 11px;
-          color: #e07a5f;
+          color: #fa5f34;
           font-weight: 500;
         }
 
@@ -911,9 +911,9 @@ export default function HowIWork() {
         }
 
         .node-cell-wrapper:hover .node-box {
-          border-color: #e07a5f;
+          border-color: #fa5f34;
           transform: scale(1.1);
-          box-shadow: 0 0 15px rgba(224, 122, 95, 0.2);
+          box-shadow: 0 0 15px rgba(250, 95, 52, 0.2);
         }
 
         .node-icon {
@@ -1111,7 +1111,7 @@ export default function HowIWork() {
 
           .connections-svg-mobile line,
           .connections-svg-mobile path {
-            stroke: rgba(255, 255, 255, 0.15);
+            stroke: rgba(212, 206, 199, 0.15);
             stroke-width: 2px;
             stroke-dasharray: 6 6;
           }
