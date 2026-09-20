@@ -212,7 +212,7 @@ export default function Hero() {
           color: #d4cec7;
           padding: 8px 16px;
           border: 1px solid rgba(212, 206, 199, 0.15);
-          border-radius: 999px;
+          border-radius: 2px;
           margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
         }
 
@@ -276,7 +276,7 @@ export default function Hero() {
           text-transform: uppercase;
           letter-spacing: 0.1em;
           padding: 13px 30px;
-          border-radius: 999px;
+          border-radius: 2px;
           text-decoration: none;
           transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
         }

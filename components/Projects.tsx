@@ -304,7 +304,7 @@ export default function Projects() {
     font-size: 10px;
     font-weight: 500;
     padding: 4px 10px;
-    border-radius: 999px;
+    border-radius: 2px;
     letter-spacing: 0.06em;
   }
 
@@ -419,7 +419,7 @@ export default function Projects() {
     letter-spacing: 0.1em;
     text-decoration: none;
     padding: 10px 20px;
-    border-radius: 3px;
+    border-radius: 2px;
     transition: all 200ms ease;
     border: 1px solid transparent;
   }
@@ -449,7 +449,7 @@ export default function Projects() {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 4px;
     border: 1px solid rgba(212, 206, 199, 0.06);
     display: block;
   }
@@ -457,7 +457,7 @@ export default function Projects() {
   .card-thumbnail-fallback {
     width: 100%;
     height: 100%;
-    border-radius: 10px;
+    border-radius: 4px;
     border: 1px dashed rgba(212, 206, 199, 0.08);
     background: #1a1a1a;
     display: flex;

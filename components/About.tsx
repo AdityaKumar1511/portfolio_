@@ -218,7 +218,7 @@ export default function About() {
           font-size: 13px;
           font-weight: 500;
           padding: 12px 28px;
-          border-radius: 999px;
+          border-radius: 2px;
           text-decoration: none;
           display: inline-block;
           transition: all 250ms ease;
@@ -244,7 +244,7 @@ export default function About() {
           width: 100%;
           height: 100%;
           min-height: 380px;
-          border-radius: 24px;
+          border-radius: 4px;
           overflow: hidden;
         }
 

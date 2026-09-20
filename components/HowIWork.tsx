@@ -678,7 +678,7 @@ export default function HowIWork() {
           display: grid;
           grid-template-columns: 280px 1fr;
           border: 1px solid var(--border);
-          border-radius: 24px;
+          border-radius: 4px;
           background: var(--surface);
           overflow: hidden;
         }
@@ -716,7 +716,7 @@ export default function HowIWork() {
           gap: 12px;
           width: 100%;
           padding: 12px 16px;
-          border-radius: 12px;
+          border-radius: 2px;
           background: transparent;
           border: 1px solid transparent;
           cursor: pointer;
@@ -765,7 +765,7 @@ export default function HowIWork() {
           align-items: center;
           justify-content: center;
           padding: 8px 6px;
-          border-radius: 8px;
+          border-radius: 2px;
           background: var(--surface-2);
           border: 1px solid var(--border);
         }
@@ -893,13 +893,13 @@ export default function HowIWork() {
           color: var(--text-muted);
           background: #080808;
           padding: 0 4px;
-          border-radius: 50%;
+          border-radius: 2px;
         }
 
         .node-box {
           width: 56px;
           height: 56px;
-          border-radius: 14px;
+          border-radius: 2px;
           background: var(--surface-2);
           border: 1px solid var(--border);
           display: flex;
@@ -1023,7 +1023,7 @@ export default function HowIWork() {
           .node-box {
             width: 36px;
             height: 36px;
-            border-radius: 8px;
+            border-radius: 2px;
           }
 
           .node-icon svg {
@@ -1054,7 +1054,7 @@ export default function HowIWork() {
           .disc-btn {
             padding: 8px 8px;
             gap: 6px;
-            border-radius: 8px;
+            border-radius: 2px;
           }
 
           .disc-name {
@@ -1119,7 +1119,7 @@ export default function HowIWork() {
           .node-box {
             width: 36px;
             height: 36px;
-            border-radius: 8px;
+            border-radius: 2px;
           }
 
           .node-icon svg {

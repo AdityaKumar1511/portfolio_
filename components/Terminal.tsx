@@ -298,7 +298,7 @@ export default function Terminal() {
           z-index: 1001;
           width: 44px;
           height: 44px;
-          border-radius: 10px;
+          border-radius: 2px;
           border: 1px solid rgba(212, 206, 199, 0.18);
           background: rgba(10, 10, 10, 0.7);
           color: #d4cec7;
@@ -339,7 +339,7 @@ export default function Terminal() {
           height: min(520px, 80vh);
           background: #0b0b0b;
           border: 1px solid #2a2a2a;
-          border-radius: 14px;
+          border-radius: 4px;
           overflow: hidden;
           display: flex;
           flex-direction: column;

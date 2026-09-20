@@ -496,7 +496,7 @@ export default function CP() {
           position: relative;
           background: #111111;
           border: 1px solid var(--border);
-          border-radius: 20px;
+          border-radius: 4px;
           overflow: hidden;
           transition: border-color 200ms ease;
         }
@@ -511,7 +511,7 @@ export default function CP() {
           left: 0;
           width: 3px;
           height: 100%;
-          border-radius: 20px 0 0 20px;
+          border-radius: 4px 0 0 4px;
         }
 
         .cp-card-inner {
@@ -537,7 +537,7 @@ export default function CP() {
         .cp-brand-icon {
           width: 36px;
           height: 36px;
-          border-radius: 10px;
+          border-radius: 2px;
           background: rgba(212, 206, 199, 0.05);
           border: 1px solid var(--border);
           display: flex;
@@ -577,7 +577,7 @@ export default function CP() {
           background: rgba(212, 206, 199, 0.04);
           border: 1px solid var(--border);
           padding: 5px 12px;
-          border-radius: 99px;
+          border-radius: 2px;
           white-space: nowrap;
         }
 
