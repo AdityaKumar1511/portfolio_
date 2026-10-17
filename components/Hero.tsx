@@ -116,6 +116,12 @@ export default function Hero() {
           { opacity: 1, y: 0, duration: 0.5 },
           '-=0.3'
         )
+        .fromTo(
+          '.hero-scroll',
+          { opacity: 0 },
+          { opacity: 1, duration: 0.6 },
+          '-=0.2'
+        )
     },
     { scope: scopeRef }
   )
@@ -174,6 +180,12 @@ export default function Hero() {
             )
           })}
         </div>
+      </div>
+
+      <div className="hero-scroll" aria-hidden="true">
+        <span className="hero-scroll-prompt">$</span>
+        <span className="hero-scroll-cmd">scroll --down</span>
+        <span className="hero-scroll-caret" />
       </div>
 
       <style>{`
@@ -337,6 +349,41 @@ export default function Hero() {
           color: #d4cec7;
         }
 
+        .hero-scroll {
+          position: absolute;
+          bottom: clamp(24px, 5vh, 40px);
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          align-items: center;
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 12px;
+          letter-spacing: 0.06em;
+          color: #d4cec7;
+          pointer-events: none;
+          user-select: none;
+          animation: scrollBob 2.4s ease-in-out infinite;
+        }
+
+        .hero-scroll-prompt {
+          color: #fa5f34;
+          font-weight: 700;
+          margin-right: 6px;
+        }
+
+        .hero-scroll-caret {
+          width: 2px;
+          height: 1.1em;
+          margin-left: 4px;
+          background: #fa5f34;
+          animation: caretBlink 1s steps(1) infinite;
+        }
+
+        @keyframes scrollBob {
+          0%, 100% { transform: translate(-50%, 0); }
+          50% { transform: translate(-50%, 6px); }
+        }
+
         @media (max-width: 768px) {
           .hero-name {
             white-space: normal;
@@ -349,6 +396,10 @@ export default function Hero() {
 
         @media (max-width: 640px) {
           .hero-stat { padding: 0 8px; }
+        }
+
+        @media (max-height: 560px) {
+          .hero-scroll { display: none; }
         }
       `}</style>
     </section>

@@ -4,7 +4,6 @@ import { GeistMono } from 'geist/font/mono'
 import CustomCursor from '@/components/CustomCursor'
 import Magnetic from '@/components/Magnetic'
 import Navbar from '@/components/Navbar'
-import Terminal from '@/components/Terminal'
 import SmoothScroll from '@/components/SmoothScroll'
 import meta from '@/data/meta.json'
 import 'lenis/dist/lenis.css'
@@ -29,7 +28,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         <SmoothScroll>
           {children}
-          <Terminal />
         </SmoothScroll>
       </body>
     </html>

@@ -1,14 +1,39 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { Menu, X } from 'lucide-react'
 import meta from '@/data/meta.json'
-import socials from '@/data/socials.json'
+
+const LINK_IDS = meta.sections.map((s) => s.id)
+const NAV_LINKS = meta.sections.filter((s) => s.id === 'about' || s.id === 'projects')
+
+function Logo() {
+  return (
+    <svg
+      className="nav-logo-svg"
+      viewBox="0 0 76 28"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="square"
+      strokeLinejoin="miter"
+      aria-hidden="true"
+    >
+      <path d="M2 24 L12 4 L22 24" />
+      <path d="M6.5 17 L17.5 17" />
+      <path d="M32 4 H40 L50 14 L40 24 H32 Z" />
+      <path d="M60 4 L72 4" />
+      <path d="M66 4 L66 24" />
+      <path d="M60 24 L72 24" />
+    </svg>
+  )
+}
 
 export default function Navbar() {
   const [active, setActive] = useState('hero')
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    const ids = meta.sections.map((s) => s.id)
-    const els = ids
+    const els = LINK_IDS
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => Boolean(el))
 
@@ -32,46 +57,54 @@ export default function Navbar() {
 
   return (
     <>
-      <header className={`chrome-top${active === 'about' ? ' chrome-top--on-about' : ''}`}>
-        <a className="chrome-brand" href="#hero">
-          ADI
+      <header className="nav-header">
+        <a className="nav-logo" href="#hero" data-magnetic-ignore>
+          <Logo />
         </a>
 
-        <nav className="chrome-links" aria-label="Sections">
-          {meta.sections.map((section) => (
+        <div className="nav-menu-wrap">
+          <nav
+            className={`nav-menu${open ? ' nav-menu--open' : ''}`}
+            aria-label="Sections"
+          >
+            <div className="nav-menu-links">
+              {NAV_LINKS.map((section) => (
+                <a
+                  key={section.id}
+                  href={`#${section.id}`}
+                  className={`nav-menu-link ${active === section.id ? 'is-active' : ''}`}
+                  data-magnetic-ignore
+                  onClick={() => setOpen(false)}
+                >
+                  {section.label}
+                </a>
+              ))}
+            </div>
+
             <a
-              key={section.id}
-              href={`#${section.id}`}
-              className={`chrome-link ${active === section.id ? 'is-active' : ''}`}
+              className="nav-cta"
+              href="#contact"
               data-magnetic-ignore
+              onClick={() => setOpen(false)}
             >
-              {section.label}
+              Contact
             </a>
-          ))}
-        </nav>
+          </nav>
+
+          <button
+            className="nav-toggle"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            data-magnetic-ignore
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
       </header>
 
-      <aside className="chrome-left" aria-label="Social links">
-        {socials.map((s) => (
-          <a
-            key={s.label}
-            className="chrome-social"
-            href={s.href}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={s.label}
-            title={s.label}
-            data-magnetic-ignore
-          >
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d={s.svgPath} />
-            </svg>
-          </a>
-        ))}
-      </aside>
-
       <style>{`
-        .chrome-top {
+        .nav-header {
           position: fixed;
           top: 0;
           left: 0;
@@ -79,161 +112,164 @@ export default function Navbar() {
           z-index: 1001;
           display: flex;
           justify-content: space-between;
-          align-items: flex-start;
+          align-items: center;
           gap: 16px;
           padding: var(--corner-y) var(--corner-x);
           pointer-events: none;
+          background: transparent;
         }
 
-        .chrome-top > * {
+        .nav-logo {
           pointer-events: auto;
-        }
-
-        .chrome-brand {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 13px;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.14em;
+          display: inline-flex;
+          align-items: center;
           color: #d4cec7;
           text-decoration: none;
-          white-space: nowrap;
           transition: color 0.2s ease;
         }
 
-        .chrome-brand:hover {
+        .nav-logo:hover {
           color: #fa5f34;
         }
 
-        .chrome-links {
+        .nav-logo-svg {
+          display: block;
+          height: 20px;
+          width: auto;
+        }
+
+        .nav-menu-wrap {
+          position: relative;
+          pointer-events: auto;
+        }
+
+        .nav-menu {
           display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          justify-content: flex-start;
+          align-items: center;
+          gap: 4px;
+          padding: 6px;
+          border-radius: 2px;
+          background: #e6e0d8;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        .nav-menu-links {
+          display: flex;
+          align-items: center;
           gap: 2px;
         }
 
-        .chrome-link {
-          position: relative;
+        .nav-menu-link {
           font-family: var(--font-geist-mono), monospace;
           font-size: 11px;
           text-transform: uppercase;
-          letter-spacing: 0.12em;
-          color: #d4cec7;
-          text-decoration: none;
-          padding: 4px 0;
-          transition: color 0.2s ease;
-        }
-
-        .chrome-link::after {
-          content: '';
-          position: absolute;
-          left: 0;
-          bottom: 0;
-          width: 100%;
-          height: 1px;
-          background: #fa5f34;
-          transform: scaleX(0);
-          transform-origin: left;
-          transition: transform 0.25s ease;
-        }
-
-        .chrome-link:hover {
-          color: #d4cec7;
-        }
-
-        .chrome-link:hover::after {
-          transform: scaleX(1);
-        }
-
-        .chrome-link.is-active {
-          color: #fa5f34;
-        }
-
-        .chrome-link.is-active::after {
-          transform: scaleX(1);
-        }
-
-        .chrome-top--on-about .chrome-link.is-active {
+          letter-spacing: 0.1em;
           color: #0a0a0a;
+          text-decoration: none;
+          padding: 8px 13px;
+          border-radius: 2px;
+          white-space: nowrap;
+          transition: background 0.2s ease, color 0.2s ease;
         }
 
-        .chrome-top--on-about .chrome-link.is-active::after {
+        .nav-menu-link:hover {
+          background: rgba(10, 10, 10, 0.08);
+        }
+
+        .nav-menu-link.is-active {
+          background: rgba(10, 10, 10, 0.12);
+        }
+
+        .nav-cta {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: #fa5f34;
           background: #0a0a0a;
+          text-decoration: none;
+          padding: 9px 18px;
+          border-radius: 2px;
+          white-space: nowrap;
+          margin-left: 2px;
+          box-shadow: 0 0 0 rgba(250, 95, 52, 0);
+          transition: transform 0.2s ease, box-shadow 0.25s ease;
         }
 
-        .chrome-top--on-about .chrome-link:hover::after {
-          background: #0a0a0a;
+        .nav-cta:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 0 18px rgba(250, 95, 52, 0.45);
         }
 
-        .chrome-left {
-          position: fixed;
-          left: var(--corner-x);
-          bottom: var(--corner-y);
-          z-index: 1001;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-          pointer-events: none;
-        }
-
-        .chrome-social {
+        .nav-toggle {
+          display: none;
           pointer-events: auto;
-          display: flex;
           align-items: center;
           justify-content: center;
+          width: 38px;
+          height: 38px;
+          border-radius: 2px;
+          border: 1px solid rgba(212, 206, 199, 0.18);
+          background: transparent;
           color: #d4cec7;
-          text-decoration: none;
-          padding: 4px;
-          transition: color 0.2s ease, transform 0.2s ease;
+          cursor: pointer;
+          transition: color 0.2s ease, border-color 0.2s ease;
         }
 
-        .chrome-social:hover {
+        .nav-toggle:hover {
           color: #fa5f34;
-          transform: translateY(-2px);
-        }
-
-        .chrome-social svg {
-          width: 16px;
-          height: 16px;
+          border-color: #fa5f34;
         }
 
         @media (max-width: 768px) {
-          .chrome-top {
-            padding: var(--corner-y) var(--corner-x);
-            gap: 10px;
+          .nav-logo-svg {
+            height: 18px;
           }
 
-          .chrome-brand {
-            font-size: 12px;
+          .nav-toggle {
+            display: flex;
           }
 
-          .chrome-links {
-            gap: 1px;
+          .nav-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 4px;
+            padding: 8px;
+            border-radius: 4px;
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
           }
 
-          .chrome-link {
-            font-size: 10px;
+          .nav-menu--open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
           }
 
-          .chrome-left {
-            display: none;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .chrome-top {
-            padding: var(--corner-y) var(--corner-x);
+          .nav-menu-links {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 2px;
           }
 
-          .chrome-brand {
-            font-size: 11px;
+          .nav-menu-link {
+            padding: 11px 14px;
+            border-radius: 2px;
           }
 
-          .chrome-link {
-            font-size: 9px;
-            letter-spacing: 0.08em;
-            padding: 2px 0;
+          .nav-cta {
+            text-align: center;
+            margin-left: 0;
+            margin-top: 4px;
+            padding: 12px 18px;
+            border-radius: 2px;
           }
         }
       `}</style>
