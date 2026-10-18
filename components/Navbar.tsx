@@ -58,7 +58,7 @@ export default function Navbar() {
   return (
     <>
       <header className="nav-header">
-        <a className="nav-logo" href="#hero" data-magnetic-ignore>
+        <a className="nav-logo" href="/#hero" data-magnetic-ignore>
           <Logo />
         </a>
 
@@ -71,7 +71,7 @@ export default function Navbar() {
               {NAV_LINKS.map((section) => (
                 <a
                   key={section.id}
-                  href={`#${section.id}`}
+                  href={`/#${section.id}`}
                   className={`nav-menu-link ${active === section.id ? 'is-active' : ''}`}
                   data-magnetic-ignore
                   onClick={() => setOpen(false)}
@@ -83,7 +83,7 @@ export default function Navbar() {
 
             <a
               className="nav-cta"
-              href="#contact"
+              href="/#contact"
               data-magnetic-ignore
               onClick={() => setOpen(false)}
             >

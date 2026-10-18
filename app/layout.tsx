@@ -3,7 +3,6 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import CustomCursor from '@/components/CustomCursor'
 import Magnetic from '@/components/Magnetic'
-import Navbar from '@/components/Navbar'
 import SmoothScroll from '@/components/SmoothScroll'
 import meta from '@/data/meta.json'
 import 'lenis/dist/lenis.css'
@@ -25,7 +24,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body style={{ fontFamily: 'var(--font-geist-sans), system-ui, sans-serif' }}>
         <CustomCursor />
         <Magnetic />
-        <Navbar />
         <SmoothScroll>
           {children}
         </SmoothScroll>

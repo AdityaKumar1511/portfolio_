@@ -1,7 +1,11 @@
 'use client'
+
+import React from 'react'
+import Link from 'next/link'
 import projectsData from '@/data/projects.json'
 import theme from '@/data/theme.json'
 import FadeIn from './FadeIn'
+import { MacBookMockup, IPhoneMockup, NonLiveProjectShowcase } from './DeviceMockups'
 
 const projects = projectsData.map(p => ({
   ...p,
@@ -15,19 +19,28 @@ const statusColors = theme.projectStatusColors as Record<ProjectStatus, { color:
 
 const NAV_OFFSET = 0
 
+// Dot colors corresponding to the reference image (Green, Orange, Cyan)
+const METRIC_DOT_COLORS = ['#4ade80', '#fa5f34', '#38bdf8']
+
 export default function Projects() {
   return (
     <section id="projects" className="projects-section">
       <FadeIn>
-      <div className="projects-label-container">
-        <span className="projects-label-line" />
-        <span className="projects-label-text">Selected projects</span>
-      </div>
+        <div className="projects-label-container">
+          <span className="projects-label-line" />
+          <span className="projects-label-text">Selected projects</span>
+        </div>
       </FadeIn>
 
       <div className="projects-stack">
         {projects.map((project, i) => {
           const sc = statusColors[project.status]
+          const metricStats = project.impactStats || [
+            { value: 'LIVE', label: 'STATUS' },
+            { value: project.year, label: 'YEAR' },
+            { value: '100%', label: 'QUALITY' }
+          ]
+
           return (
             <div
               key={project.slug}
@@ -37,6 +50,7 @@ export default function Projects() {
                 zIndex: i + 1,
               }}
             >
+              {/* Top Folder Tab Ear */}
               <div
                 className="project-tab-ear"
                 style={{
@@ -50,89 +64,142 @@ export default function Projects() {
                 <span className="ear-name">{project.name}</span>
               </div>
 
+              {/* Main Card Body */}
               <div
                 className="project-card-body"
                 style={{ background: cardBg[i] }}
               >
-                <FadeIn delay={i * 0.15}>
-                <div className="card-hero-row">
-                  <h3 className="card-hero-title">{project.name}</h3>
-                  <div className="card-hero-meta">
-                    <span className="card-hero-year">{project.year}</span>
-                    <span className="card-hero-category">{project.category}</span>
-                    <span
-                      className="card-status-badge"
-                      style={{
-                        color: sc.color,
-                        background: sc.bg,
-                        border: `1px solid ${sc.border}`,
-                      }}
-                    >
-                      {project.status === 'live' && '● '}
-                      {project.status === 'finalist' && '◎ '}
-                      {project.status === 'wip' && '○ '}
-                      {project.status === 'shipped' && '✓ '}
-                      {project.statusLabel}
-                    </span>
-                    <div className="card-hero-pills">
-                      {project.tech.map(t => (
-                        <span key={t} className="card-pill">{t}</span>
-                      ))}
+                {/* ── TOP HEADER ROW: Title & Metadata ── */}
+                <FadeIn delay={i * 0.1}>
+                  <div className="card-top-header">
+                    {/* Big Bold Condensed Title */}
+                    <h3 className="card-big-title">
+                      {project.name}
+                    </h3>
+
+                    {/* Right-Side Meta Block */}
+                    <div className="card-header-meta">
+                      {/* Year */}
+                      <div className="card-meta-year">
+                        {project.year}
+                      </div>
+
+                      {/* Sub-Category Breadcrumb */}
+                      <div className="card-meta-category">
+                        {project.category.toUpperCase()} / {metricStats[0]?.label.toUpperCase() || 'ENGINEERING'}
+                      </div>
+
+                      {/* Tech & Highlight Badges */}
+                      <div className="card-meta-pills">
+                        {project.tech.map((t) => (
+                          <span key={t} className="card-tech-pill">
+                            {t}
+                          </span>
+                        ))}
+                        {metricStats[0] && (
+                          <span className="card-tech-pill card-tech-pill--accent">
+                            {metricStats[0].value} {metricStats[0].label}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
                 </FadeIn>
 
-                <hr className="card-hr" />
+                {/* Subtle Dashed Separator Line */}
+                <div className="card-dashed-divider" />
 
-                <FadeIn delay={i * 0.15 + 0.1}>
-                <div className="card-showcase">
-                  <div className="card-showcase-left">
-                    <p className="card-desc">{project.description}</p>
-                    {project.impact && (
-                      <span className="card-impact">{project.impact}</span>
-                    )}
-                    {project.impactStats && (
-                      <div className="impact-stats-row">
-                        {project.impactStats.map((stat, si) => (
-                          <div key={si} className="impact-stat-item">
-                            <span className="impact-stat-value">{stat.value}</span>
-                            <span className="impact-stat-label">{stat.label}</span>
+                {/* ── 3-COLUMN SHOWCASE BODY ── */}
+                <FadeIn delay={i * 0.1 + 0.08}>
+                  <div className="card-content-grid">
+                    {/* 1. Left Column: Description, Metric Rows, Action Buttons */}
+                    <div className="col-left-info">
+                      {/* Description */}
+                      <p className="project-description-text">
+                        {project.description.toUpperCase()}
+                      </p>
+
+                      {/* Dot-Led Metric Rows */}
+                      <div className="metric-rows-container">
+                        {metricStats.slice(0, 3).map((stat, statIdx) => (
+                          <div key={statIdx} className="metric-row-item">
+                            <div className="metric-row-left">
+                              <span
+                                className="metric-dot"
+                                style={{ background: METRIC_DOT_COLORS[statIdx % METRIC_DOT_COLORS.length] }}
+                              />
+                              <span className="metric-label">
+                                {stat.label.toUpperCase()}
+                              </span>
+                            </div>
+                            <span className="metric-value-tag">
+                              {stat.value.toUpperCase()}
+                            </span>
                           </div>
                         ))}
                       </div>
-                    )}
-                    <div className="card-actions">
-                      {project.liveUrl && (
-                        <a href={project.liveUrl} target="_blank" rel="noreferrer"
-                          className="card-btn card-btn-primary">
-                          LIVE ↗
-                        </a>
-                      )}
-                      {project.repoUrl && (
-                        <a href={project.repoUrl} target="_blank" rel="noreferrer"
-                          className="card-btn card-btn-primary">
-                          REPO ↗
-                        </a>
-                      )}
-                    </div>
-                  </div>
 
-                  <div className="card-showcase-right">
-                    {project.thumbnail ? (
-                      <img
-                        src={project.thumbnail}
-                        alt={project.name}
-                        className="card-thumbnail-img"
-                      />
+                      {/* Action Buttons Row */}
+                      <div className="card-actions-row">
+                        {/* Live Site (or Primary Repo if no live URL) */}
+                        {project.liveUrl ? (
+                          <a
+                            href={project.liveUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="btn-live-pill"
+                          >
+                            LIVE SITE ↗
+                          </a>
+                        ) : project.repoUrl ? (
+                          <a
+                            href={project.repoUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="btn-live-pill"
+                          >
+                            GITHUB ↗
+                          </a>
+                        ) : null}
+
+                        {/* Case Study Link */}
+                        <Link
+                          href={`/projects/${project.slug}`}
+                          className="btn-case-study"
+                        >
+                          CASE STUDY →
+                        </Link>
+
+                        {/* Code Repo Link */}
+                        {project.repoUrl && project.liveUrl && (
+                          <a
+                            href={project.repoUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="btn-code-link"
+                          >
+                            CODE ↗
+                          </a>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* 2 & 3. Device Mockups (only if liveUrl exists) OR Non-Live Architecture Showcase */}
+                    {project.liveUrl ? (
+                      <>
+                        <div className="col-center-macbook">
+                          <MacBookMockup project={project} />
+                        </div>
+                        <div className="col-right-iphone">
+                          <IPhoneMockup project={project} />
+                        </div>
+                      </>
                     ) : (
-                      <div className="card-thumbnail-fallback">
-                        <span className="card-thumbnail-fallback-num">0{i + 1}</span>
-                        <span className="card-thumbnail-fallback-label">{project.name}</span>
+                      <div className="col-non-live-showcase">
+                        <NonLiveProjectShowcase project={project} />
                       </div>
                     )}
                   </div>
-                </div>
                 </FadeIn>
               </div>
             </div>
@@ -141,450 +208,452 @@ export default function Projects() {
       </div>
 
       <style>{`
+        .projects-section {
+          padding: clamp(4rem, 8vw, 7rem) var(--pad-x);
+          border-top: 1px solid var(--border);
+          max-width: 1800px;
+          margin: 0 auto;
+          width: 100%;
+          box-sizing: border-box;
+        }
 
-  .projects-section {
-    padding: clamp(4rem, 10vw, 8rem) var(--pad-x);
-    border-top: 1px solid var(--border);
-    max-width: 1800px;
-    margin: 0 auto;
-    width: 100%;
-    box-sizing: border-box;
-  }
+        .projects-label-container {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: clamp(2rem, 3.5vh, 2.75rem);
+          padding: 0;
+        }
 
-  .projects-label-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: clamp(2rem, 4vh, 3rem);
-    padding: 0;
-  }
+        .projects-label-line {
+          width: 24px;
+          height: 1px;
+          background: #fa5f34;
+        }
 
-  .projects-label-line {
-    width: 24px;
-    height: 1px;
-    background: #fa5f34;
-  }
+        .projects-label-text {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.15em;
+          color: #fa5f34;
+          font-weight: 700;
+        }
 
-  .projects-label-text {
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: #fa5f34;
-    font-weight: 700;
-  }
+        .projects-stack {
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          padding-bottom: clamp(60px, 10vh, 100px);
+        }
 
-  .projects-stack {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    padding-bottom: clamp(60px, 12vh, 120px);
-  }
+        .project-card-wrapper {
+          position: sticky;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          width: 100%;
+          margin-bottom: clamp(60px, 8vh, 90px);
+        }
 
-  .project-card-wrapper {
-    position: sticky;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    margin-bottom: clamp(60px, 10vh, 100px);
-  }
+        /* ── FOLDER TAB EAR ── */
+        .project-tab-ear {
+          height: 42px;
+          clip-path: polygon(0 0, 84% 0, 100% 100%, 0 100%);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 0 16px;
+          position: relative;
+          z-index: 2;
+          flex-shrink: 0;
+          transition: background 200ms ease;
+        }
 
-  /* ── TAB EAR ── */
-  .project-tab-ear {
-    height: 44px;
-    clip-path: polygon(0 0, 82% 0, 100% 100%, 0 100%);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 14px;
-    position: relative;
-    z-index: 2;
-    flex-shrink: 0;
-    transition: background 200ms ease;
-  }
+        .ear-number {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 10px;
+          font-weight: 700;
+          color: #fa5f34;
+          letter-spacing: 0.06em;
+          flex-shrink: 0;
+        }
 
-  .ear-number {
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 10px;
-    font-weight: 700;
-    color: #fa5f34;
-    letter-spacing: 0.06em;
-    flex-shrink: 0;
-  }
+        .ear-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
 
-  .ear-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
+        .ear-name {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          color: #d4cec7;
+          letter-spacing: 0.05em;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
 
-  .ear-name {
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 11px;
-    color: #d4cec7;
-    letter-spacing: 0.03em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: color 200ms ease;
-  }
+        /* ── CARD BODY CONTAINER ── */
+        .project-card-body {
+          width: 100%;
+          min-height: calc(100svh - 42px);
+          height: auto;
+          padding: clamp(1.5rem, 2.5vw, 2.5rem);
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          box-sizing: border-box;
+          position: relative;
+          z-index: 1;
+          box-shadow: 0 -16px 48px rgba(0, 0, 0, 0.7);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 4px;
+        }
 
-  .project-card-wrapper:hover .ear-name {
-    color: #d4cec7;
-  }
+        /* ── TOP HEADER ROW ── */
+        .card-top-header {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 2rem;
+          margin-bottom: clamp(1rem, 1.8vw, 1.5rem);
+          flex-wrap: wrap;
+        }
 
-  /* ── CARD BODY ── */
-  .project-card-body {
-    width: 100%;
-    height: calc(100svh - 44px);
-    overflow: hidden;
-    padding: clamp(1.25rem, 2.5vw, 2rem) clamp(1.5rem, 3vw, 2.5rem);
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 -16px 48px rgba(0, 0, 0, 0.6);
-  }
+        .card-big-title {
+          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
+          font-size: clamp(3.5rem, 8vw, 8rem);
+          font-weight: 900;
+          text-transform: uppercase;
+          color: #f3eee8;
+          margin: 0;
+          line-height: 0.88;
+          letter-spacing: -0.02em;
+          flex: 1;
+          min-width: 260px;
+        }
 
-  /* ── TOP ZONE: Hero Row ── */
-  .card-hero-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 2rem;
-    margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
-  }
+        .card-header-meta {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 8px;
+          flex-shrink: 0;
+          padding-bottom: 4px;
+        }
 
-  .card-hero-title {
-    font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
-    font-size: clamp(4rem, 10.5vw, 10rem);
-    font-weight: 900;
-    text-transform: uppercase;
-    color: #d4cec7;
-    margin: 0;
-    line-height: 0.9;
-    letter-spacing: -0.03em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1;
-    min-width: 0;
-  }
+        .card-meta-year {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 14px;
+          font-weight: 800;
+          color: #f3eee8;
+          letter-spacing: 0.08em;
+          line-height: 1;
+        }
 
-  .card-hero-meta {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;
-    flex-shrink: 0;
-    padding-top: 6px;
-  }
+        .card-meta-category {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.18em;
+          color: rgba(212, 206, 199, 0.55);
+          font-weight: 600;
+        }
 
-  .card-hero-year {
-    font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
-    font-weight: 900;
-    color: rgba(212, 206, 199, 0.9);
-    line-height: 1;
-  }
+        .card-meta-pills {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          justify-content: flex-end;
+          align-items: center;
+        }
 
-  .card-hero-category {
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: rgba(212, 206, 199, 0.5);
-  }
+        .card-tech-pill {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: rgba(212, 206, 199, 0.8);
+          background: rgba(20, 21, 25, 0.85);
+          border: 1px solid rgba(255, 255, 255, 0.09);
+          border-radius: 9999px;
+          padding: 3px 10px;
+          font-weight: 600;
+        }
 
-  .card-status-badge {
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 10px;
-    font-weight: 500;
-    padding: 4px 10px;
-    border-radius: 2px;
-    letter-spacing: 0.06em;
-  }
+        .card-tech-pill--accent {
+          color: #fa5f34;
+          border-color: rgba(250, 95, 52, 0.3);
+          background: rgba(250, 95, 52, 0.06);
+        }
 
-  .card-hero-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    justify-content: flex-end;
-    margin-top: 4px;
-  }
+        /* ── DASHED SEPARATOR LINE ── */
+        .card-dashed-divider {
+          width: 100%;
+          height: 1px;
+          border-top: 1px dashed rgba(212, 206, 199, 0.16);
+          margin-bottom: clamp(1.25rem, 2vw, 2rem);
+        }
 
-  .card-pill {
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: rgba(212, 206, 199, 0.7);
-    border: 1px solid rgba(212, 206, 199, 0.18);
-    border-radius: 3px;
-    padding: 4px 10px;
-    background: rgba(212, 206, 199, 0.04);
-  }
+        /* ── 3-COLUMN CONTENT GRID ── */
+        .card-content-grid {
+          display: grid;
+          grid-template-columns: 30fr 44fr 26fr;
+          gap: clamp(1.25rem, 2.5vw, 2.75rem);
+          align-items: flex-start;
+          width: 100%;
+        }
 
-  /* ── SEPARATOR ── */
-  .card-hr {
-    border: none;
-    border-top: 1px dashed rgba(212, 206, 199, 0.12);
-    margin: 0 0 clamp(0.75rem, 1.5vw, 1rem) 0;
-  }
+        /* ── Left Column ── */
+        .col-left-info {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          gap: 1.5rem;
+          padding-top: 4px;
+        }
 
-  /* ── BOTTOM ZONE: 2-Column Showcase ── */
-  .card-showcase {
-    display: grid;
-    grid-template-columns: 55fr 45fr;
-    gap: 16px;
-    min-height: 0;
-    flex: 1;
-  }
+        .project-description-text {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: clamp(12px, 0.95vw, 13.5px);
+          font-weight: 500;
+          line-height: 1.85;
+          letter-spacing: 0.03em;
+          color: rgba(212, 206, 199, 0.72);
+          margin: 0;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 6;
+          overflow: hidden;
+        }
 
-  .card-showcase-left {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 8px 0;
-  }
+        /* Metric Rows with Indicator Dots */
+        .metric-rows-container {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
 
-  .card-desc {
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 14px;
-    font-weight: 500;
-    text-transform: uppercase;
-    color: rgba(212, 206, 199, 0.65);
-    line-height: 1.8;
-    letter-spacing: 0.04em;
-    margin: 0 0 1.5rem 0;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
-    overflow: hidden;
-  }
+        .metric-row-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 6px 10px;
+          background: rgba(15, 16, 20, 0.5);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          border-radius: 4px;
+        }
 
-  .card-impact {
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: #fa5f34;
-    letter-spacing: 0.08em;
-    margin-bottom: 1.5rem;
-    display: block;
-  }
+        .metric-row-left {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          min-width: 0;
+        }
 
-  .impact-stats-row {
-    display: flex;
-    gap: clamp(1rem, 3vw, 2.5rem);
-    margin-bottom: 1.5rem;
-  }
+        .metric-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
 
-  .impact-stat-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
+        .metric-label {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          color: rgba(212, 206, 199, 0.75);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
 
-  .impact-stat-value {
-    font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
-    font-weight: 900;
-    color: #d4cec7;
-    line-height: 1;
-  }
+        .metric-value-tag {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          color: #f3eee8;
+          background: rgba(255, 255, 255, 0.06);
+          padding: 2px 8px;
+          border-radius: 3px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          white-space: nowrap;
+        }
 
-  .impact-stat-label {
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: rgba(212, 206, 199, 0.45);
-  }
+        /* Action Buttons Row */
+        .card-actions-row {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex-wrap: wrap;
+          padding-top: 6px;
+        }
 
-  .card-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
+        .btn-live-pill {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          text-decoration: none;
+          background: #fa5f34;
+          color: #0a0a0a;
+          padding: 8px 18px;
+          border-radius: 9999px;
+          box-shadow: 0 4px 14px rgba(250, 95, 52, 0.35);
+          transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          white-space: nowrap;
+        }
 
-  .card-btn {
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 2px;
-    transition: all 200ms ease;
-    border: 1px solid transparent;
-  }
+        .btn-live-pill:hover {
+          transform: translateY(-2px);
+          background: #ff7049;
+          box-shadow: 0 6px 20px rgba(250, 95, 52, 0.55);
+        }
 
-  .card-btn-primary {
-    background: #fa5f34;
-    color: #121212;
-    font-weight: 700;
-    border-color: transparent;
-  }
+        .btn-case-study {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          text-decoration: none;
+          color: #d4cec7;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          transition: color 180ms ease, transform 180ms ease;
+          white-space: nowrap;
+        }
 
-  .card-btn-primary:hover {
-    background: transparent;
-    border-color: #fa5f34;
-    color: #fa5f34;
-  }
+        .btn-case-study:hover {
+          color: #fa5f34;
+          transform: translateX(3px);
+        }
 
-  /* ── Right: Thumbnail ── */
-  .card-showcase-right {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 0;
-  }
+        .btn-code-link {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 11px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          text-decoration: none;
+          color: rgba(212, 206, 199, 0.6);
+          transition: color 180ms ease;
+          white-space: nowrap;
+        }
 
-  .card-thumbnail-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid rgba(212, 206, 199, 0.06);
-    display: block;
-  }
+        .btn-code-link:hover {
+          color: #ffffff;
+        }
 
-  .card-thumbnail-fallback {
-    width: 100%;
-    height: 100%;
-    border-radius: 4px;
-    border: 1px dashed rgba(212, 206, 199, 0.08);
-    background: #1a1a1a;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
+        /* ── Mockup Columns & Architecture Showcase ── */
+        .col-center-macbook {
+          width: 100%;
+          min-width: 0;
+        }
 
-  .card-thumbnail-fallback-num {
-    font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 900;
-    color: rgba(212, 206, 199, 0.08);
-  }
+        .col-right-iphone {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          min-width: 0;
+        }
 
-  .card-thumbnail-fallback-label {
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: rgba(212, 206, 199, 0.15);
-  }
+        .col-non-live-showcase {
+          grid-column: 2 / -1;
+          width: 100%;
+          min-width: 0;
+        }
 
-  /* ── MOBILE ── */
-  @media (max-width: 900px) {
-    .card-hero-row {
-      flex-direction: column;
-      gap: 1rem;
-    }
+        /* ── RESPONSIVE BREAKPOINTS ── */
+        @media (max-width: 1200px) {
+          .card-content-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+          }
 
-    .card-hero-title {
-      font-size: clamp(3rem, 10vw, 4.5rem);
-      white-space: normal;
-    }
+          .col-left-info {
+            grid-column: 1 / -1;
+          }
 
-    .card-hero-meta {
-      align-items: flex-start;
-    }
+          .col-center-macbook {
+            grid-column: 1 / 2;
+          }
 
-    .card-showcase {
-      grid-template-columns: 1fr;
-      gap: 16px;
-      min-height: auto;
-    }
+          .col-right-iphone {
+            grid-column: 2 / 3;
+          }
 
-    .card-showcase-right {
-      min-height: 180px;
-    }
+          .col-non-live-showcase {
+            grid-column: 1 / -1;
+          }
+        }
 
-    .impact-stats-row {
-      gap: 1.5rem;
-    }
-  }
+        @media (max-width: 860px) {
+          .card-top-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+          }
 
-  @media (max-width: 768px) {
-    .projects-stack {
-      padding-bottom: calc(100svh + 60px);
-    }
+          .card-header-meta {
+            align-items: flex-start;
+          }
 
-    .project-card-wrapper {
-      margin-bottom: 0;
-    }
+          .card-meta-pills {
+            justify-content: flex-start;
+          }
 
-    .project-tab-ear {
-      min-width: 60px;
-      height: 36px;
-      padding: 0 10px;
-    }
+          .card-content-grid {
+            grid-template-columns: 1fr;
+            gap: 1.75rem;
+          }
 
-    .ear-name {
-      display: none;
-    }
+          .col-left-info {
+            grid-column: auto;
+          }
 
-    .project-card-body {
-      min-height: 100svh;
-      height: auto;
-      padding: 1.5rem 1.25rem;
-    }
+          .col-center-macbook {
+            grid-column: auto;
+          }
 
-    .card-hero-title {
-      font-size: 2.5rem;
-    }
+          .col-right-iphone {
+            grid-column: auto;
+            max-width: 260px;
+            margin: 0 auto;
+          }
+        }
 
-    .card-actions {
-      flex-direction: column;
-      align-items: center;
-    }
+        @media (max-width: 600px) {
+          .project-card-body {
+            padding: 1.25rem 1rem;
+          }
 
-    .card-btn {
-      width: 100%;
-      text-align: center;
-    }
+          .card-big-title {
+            font-size: 2.75rem;
+          }
 
-    .card-showcase-right {
-      min-height: 140px;
-    }
+          .card-actions-row {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+          }
 
-    .card-showcase {
-      min-height: auto;
-    }
-
-    .impact-stats-row {
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .projects-section {
-      padding: 3rem var(--pad-x);
-    }
-
-    .projects-label-container {
-      padding: 0;
-    }
-
-    .project-card-body {
-      padding: 1.25rem 1rem;
-    }
-
-    .card-hero-title {
-      font-size: 2rem;
-    }
-  }
-
-`}</style>
+          .btn-live-pill {
+            text-align: center;
+          }
+        }
+      `}</style>
     </section>
   )
 }

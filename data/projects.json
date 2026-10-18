@@ -46,17 +46,17 @@
   {
     "slug": "skylens",
     "name": "SkyLens",
-    "status": "finalist",
-    "statusLabel": "ISRO Finalist",
+    "status": "shipped",
+    "statusLabel": "ML Pipeline",
     "category": "Machine Learning · Geospatial",
-    "description": "Satellite intelligence platform for ISRO BAH 2026 that ingests Sentinel-5P TROPOMI data to detect AQI anomalies across Indian geography, served via a FastAPI inference layer.",
-    "shortDescription": "Satellite AQI and pollution detection using Sentinel-5P TROPOMI data — ISRO BAH 2026 finalist.",
+    "description": "Satellite intelligence platform that ingests Sentinel-5P TROPOMI data to detect AQI anomalies across Indian geography, served via a FastAPI inference layer.",
+    "shortDescription": "Satellite AQI and pollution detection using Sentinel-5P TROPOMI data and XGBoost.",
     "year": "2025",
     "tech": ["Next.js", "FastAPI", "XGBoost", "Leaflet.js", "MongoDB", "Docker"],
-    "impact": "ISRO BAH 2026 finalist — Team CodeBlooded. Detects AQI anomalies across 10k+ sq km regions with 94% model accuracy",
+    "impact": "Team CodeBlooded. Detects AQI anomalies across 10k+ sq km regions with 94% model accuracy",
     "impactStats": [
       { "value": "94%", "label": "Model accuracy" },
-      { "value": "ISRO", "label": "BAH 2026 finalist" },
+      { "value": "FastAPI", "label": "ML Inference" },
       { "value": "10k+", "label": "sq km coverage" }
     ],
     "liveUrl": "",
