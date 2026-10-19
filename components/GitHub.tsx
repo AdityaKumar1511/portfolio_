@@ -1,322 +1,420 @@
 'use client'
-import { useEffect, useState } from 'react'
+
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import meta from '@/data/meta.json'
 import githubDefaults from '@/data/githubDefaults.json'
 import theme from '@/data/theme.json'
 import FadeIn from './FadeIn'
+import { GithubData, GithubDay } from '@/lib/githubTypes'
+import useCountUp from '@/hooks/useCountUp'
 
-const USERNAME = meta.githubUsername
+const USERNAME = meta.githubUsername || 'AdityaKumar1511'
 
-interface GitHubStats {
-  contributions: number
-  currentStreak: number
-  longestStreak: number
-  commits: number
-}
-
-interface CalendarDay {
+interface HeatmapDay {
   date: string
   count: number
+  weekday: number
   level: number
-  month: string
-  dayOfWeek: number
+  tooltip: string
 }
 
-export default function GitHub() {
-  const [stats, setStats] = useState<GitHubStats>({
-    contributions: githubDefaults.stats.contributions,
-    currentStreak: githubDefaults.stats.currentStreak,
-    longestStreak: githubDefaults.stats.longestStreak,
-    commits: githubDefaults.stats.commits,
-  })
-  const [calendarData, setCalendarData] = useState<CalendarDay[]>([])
-  const [syncedTime, setSyncedTime] = useState('20H AGO')
-  const [loading, setLoading] = useState(true)
+interface WeekColumn {
+  days: (HeatmapDay | null)[]
+}
 
+function useInView<T extends HTMLElement>(threshold = 0.16): [React.RefObject<T | null>, boolean] {
+  const ref = useRef<T>(null)
+  const [visible, setVisible] = useState(false)
   useEffect(() => {
-    // Generate mock calendar data first
-    const mockData = generateMockContributions()
-    setCalendarData(mockData)
-
-    // Set dynamic sync time
-    const now = new Date()
-    const hrs = now.getHours()
-    setSyncedTime(`${hrs === 0 ? 12 : hrs}H AGO`)
-
-    // Attempt to fetch real profile data
-    const profileCtrl = new AbortController()
-    const profileTimeout = setTimeout(() => profileCtrl.abort(), 8000)
-    fetch(`https://api.github.com/users/${USERNAME}`, { signal: profileCtrl.signal })
-      .then(r => r.json())
-      .then(profile => {
-        if (profile.public_repos) {
-          setStats(prev => ({
-            ...prev,
-            commits: (profile.public_repos * 12) + 120,
-          }))
+    const el = ref.current
+    if (!el) return
+    if (typeof IntersectionObserver === 'undefined') {
+      setVisible(true)
+      return
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true)
+          observer.disconnect()
         }
-      })
-      .catch(() => {})
-      .finally(() => clearTimeout(profileTimeout))
+      },
+      { threshold, rootMargin: '0px 0px -6% 0px' }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [threshold])
+  return [ref, visible]
+}
 
-    // Attempt to fetch real contributions from public deno API
-    const contribCtrl = new AbortController()
-    const contribTimeout = setTimeout(() => contribCtrl.abort(), 8000)
-    fetch(`https://github-contributions-api.deno.dev/${USERNAME}.json`, { signal: contribCtrl.signal })
-      .then(r => r.json())
-      .then(data => {
-        if (data.contributions && Array.isArray(data.contributions)) {
-          // Parse deno contributions response
-          const contributionMap: Record<string, number> = {}
-          let totalContributions = 0
-          
-          data.contributions.forEach((day: { date: string; count: number }) => {
-            contributionMap[day.date] = day.count
-            totalContributions += day.count
-          })
+export default function GitHub({ initialData }: { initialData?: GithubData | null }) {
+  const [data, setData] = useState<GithubData | null>(() => initialData ?? null)
+  const [isOfflineCopy, setIsOfflineCopy] = useState(false)
 
-          // Calculate streaks
-          const sortedDays = data.contributions
-            .slice()
-            .sort((a: { date: string }, b: { date: string }) => a.date.localeCompare(b.date))
-          
-          let currentStr = 0
-          let maxStr = 0
-          let runningStr = 0
-          const todayStr = new Date().toISOString().split('T')[0]
-
-          sortedDays.forEach((day: { date: string; count: number }) => {
-            if (day.count > 0) {
-              runningStr++
-              if (runningStr > maxStr) maxStr = runningStr
-            } else {
-              // Only reset streak if the day is before today
-              if (day.date < todayStr) {
-                runningStr = 0
-              }
-            }
-          })
-          currentStr = runningStr
-
-          setStats(prev => ({
-            ...prev,
-            contributions: totalContributions || prev.contributions,
-            currentStreak: currentStr || prev.currentStreak,
-            longestStreak: maxStr || prev.longestStreak,
-          }))
-
-          // Format calendar cells
-          const parsedCalendar = generateCalendarFromMap(contributionMap)
-          setCalendarData(parsedCalendar)
+  // Local storage caching safety net
+  useEffect(() => {
+    try {
+      if (initialData) {
+        setData(initialData)
+        setIsOfflineCopy(false)
+        localStorage.setItem('gh-last-good', JSON.stringify(initialData))
+      } else {
+        const saved = localStorage.getItem('gh-last-good')
+        if (saved) {
+          const parsed = JSON.parse(saved) as GithubData
+          if (parsed && Array.isArray(parsed.days) && parsed.days.length > 0) {
+            setData(parsed)
+            setIsOfflineCopy(true)
+          }
         }
-        setLoading(false)
-      })
-      .catch(() => {
-        setLoading(false)
-      })
-      .finally(() => clearTimeout(contribTimeout))
-  }, [])
+      }
+    } catch {
+      // Ignore localStorage failures
+    }
+  }, [initialData])
 
-  // Mock generator helper
-  function generateMockContributions() {
-    const data: CalendarDay[] = []
-    const today = new Date()
-    const startDate = new Date(today)
-    startDate.setDate(today.getDate() - 365)
-    
-    const startDay = startDate.getDay()
-    startDate.setDate(startDate.getDate() - startDay) // align grid
+  const [sectionRef, inView] = useInView<HTMLElement>(0.12)
 
-    const tempDate = new Date(startDate)
-    let seed = 12 // seed for realistic looking grid
-    const random = () => {
-      const x = Math.sin(seed++) * 10000
-      return x - Math.floor(x)
+  // Synced time label derived strictly from fetchedAt
+  const syncedTime = useMemo(() => {
+    if (!data?.fetchedAt) return null
+    const diffMinutes = Math.floor((Date.now() - data.fetchedAt) / (1000 * 60))
+    if (diffMinutes < 60) {
+      return `${Math.max(1, diffMinutes)}m`
+    }
+    const diffHours = Math.floor(diffMinutes / 60)
+    return `${diffHours}h`
+  }, [data?.fetchedAt])
+
+  // Count up animations reading from normalized data
+  const countContributions = useCountUp(data ? data.total : null, inView)
+  const countCurrentStreak = useCountUp(data ? data.currentStreak : null, inView)
+  const countLongestStreak = useCountUp(data ? data.longestStreak : null, inView)
+  const countCommits = useCountUp(data ? data.commits : null, inView)
+
+  // Formatted displays (single source of truth with toLocaleString)
+  const displayContributions = countContributions !== null
+    ? countContributions.toLocaleString('en-US')
+    : data
+    ? data.total.toLocaleString('en-US')
+    : '—'
+
+  const displayCurrentStreak = countCurrentStreak !== null
+    ? countCurrentStreak.toLocaleString('en-US')
+    : data
+    ? data.currentStreak.toLocaleString('en-US')
+    : '—'
+
+  const displayLongestStreak = countLongestStreak !== null
+    ? countLongestStreak.toLocaleString('en-US')
+    : data
+    ? data.longestStreak.toLocaleString('en-US')
+    : '—'
+
+  const displayCommits = countCommits !== null
+    ? countCommits.toLocaleString('en-US')
+    : data
+    ? data.commits.toLocaleString('en-US')
+    : '—'
+
+  // Heatmap calculation
+  const { weekColumns, monthLabels } = useMemo(() => {
+    if (!data || !data.days || data.days.length === 0) {
+      return { weekColumns: [], monthLabels: [] }
     }
 
-    while (tempDate <= today) {
-      const dateStr = tempDate.toISOString().split('T')[0]
-      const day = tempDate.getDay()
-      let count = 0
-      let level = 0
-      
-      const isWeekend = day === 0 || day === 6
-      const activeChance = isWeekend ? 0.12 : 0.38
-      
-      if (random() < activeChance) {
-        count = Math.floor(random() * 8) + 1
-        if (count <= 2) level = 1
-        else if (count <= 4) level = 2
-        else if (count <= 6) level = 3
-        else level = 4
+    // 1. Calculate quartiles of non-zero counts
+    const nonZero = data.days
+      .map((d) => d.contributionCount)
+      .filter((c) => c > 0)
+      .sort((a, b) => a - b)
+
+    let q1 = 1
+    let q2 = 2
+    let q3 = 3
+    if (nonZero.length > 0) {
+      q1 = nonZero[Math.floor(nonZero.length * 0.25)] || 1
+      q2 = nonZero[Math.floor(nonZero.length * 0.5)] || Math.max(q1 + 1, 2)
+      q3 = nonZero[Math.floor(nonZero.length * 0.75)] || Math.max(q2 + 1, 3)
+
+      if (q2 <= q1) q2 = q1 + 1
+      if (q3 <= q2) q3 = q2 + 1
+    }
+
+    const getLevel = (count: number): number => {
+      if (count <= 0) return 0
+      if (count <= q1) return 1
+      if (count <= q2) return 2
+      if (count <= q3) return 3
+      return 4
+    }
+
+    const formatTooltip = (count: number, dateStr: string): string => {
+      const [y, m, d] = dateStr.split('-').map(Number)
+      const dt = new Date(Date.UTC(y, m - 1, d))
+      const weekdayShort = dt.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' })
+      const monthShort = dt.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' })
+      const dayNum = dt.getUTCDate()
+      const year = dt.getUTCFullYear()
+      const word = count === 1 ? 'contribution' : 'contributions'
+      return `${count} ${word} on ${weekdayShort}, ${monthShort} ${dayNum}, ${year}`
+    }
+
+    // 2. Group into weeks, padding first week so row = weekday (Sun=0..Sat=6)
+    const columns: WeekColumn[] = []
+    let currentWeek: (HeatmapDay | null)[] = new Array(7).fill(null)
+
+    for (const day of data.days) {
+      const level = getLevel(day.contributionCount)
+      const heatmapDay: HeatmapDay = {
+        date: day.date,
+        count: day.contributionCount,
+        weekday: day.weekday,
+        level,
+        tooltip: formatTooltip(day.contributionCount, day.date),
       }
 
-      data.push({
-        date: dateStr,
-        count,
-        level,
-        month: tempDate.toLocaleString('default', { month: 'short' }),
-        dayOfWeek: day,
-      })
-      tempDate.setDate(tempDate.getDate() + 1)
+      currentWeek[day.weekday] = heatmapDay
+
+      if (day.weekday === 6) {
+        columns.push({ days: currentWeek })
+        currentWeek = new Array(7).fill(null)
+      }
     }
-    return data
-  }
 
-  // Parse contributions from loaded data
-  function generateCalendarFromMap(map: Record<string, number>) {
-    const data: CalendarDay[] = []
-    const today = new Date()
-    const startDate = new Date(today)
-    startDate.setDate(today.getDate() - 365)
-    
-    const startDay = startDate.getDay()
-    startDate.setDate(startDate.getDate() - startDay)
-
-    const tempDate = new Date(startDate)
-    while (tempDate <= today) {
-      const dateStr = tempDate.toISOString().split('T')[0]
-      const count = map[dateStr] ?? 0
-      let level = 0
-      if (count > 0 && count <= 2) level = 1
-      else if (count > 2 && count <= 4) level = 2
-      else if (count > 4 && count <= 7) level = 3
-      else if (count > 7) level = 4
-
-      data.push({
-        date: dateStr,
-        count,
-        level,
-        month: tempDate.toLocaleString('default', { month: 'short' }),
-        dayOfWeek: tempDate.getDay(),
-      })
-      tempDate.setDate(tempDate.getDate() + 1)
+    if (currentWeek.some((d) => d !== null)) {
+      columns.push({ days: currentWeek })
     }
-    return data
-  }
 
-  // Get color based on level (custom brown/orange theme from screenshot)
+    // 3. Month labels: placed over the first week column where the month starts
+    const labels: Array<{ weekIndex: number; label: string }> = []
+    let lastLabeledCol = -4
+    let currentMonthStr = ''
+
+    columns.forEach((week, colIdx) => {
+      for (const d of week.days) {
+        if (d) {
+          const [y, m] = d.date.split('-').map(Number)
+          const dt = new Date(Date.UTC(y, m - 1, 1))
+          const mStr = dt.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' })
+          if (mStr !== currentMonthStr) {
+            currentMonthStr = mStr
+            if (colIdx - lastLabeledCol >= 3 && colIdx <= columns.length - 2) {
+              labels.push({ weekIndex: colIdx, label: mStr })
+              lastLabeledCol = colIdx
+            }
+            break
+          }
+        }
+      }
+    })
+
+    return { weekColumns: columns, monthLabels: labels }
+  }, [data])
+
+  // Skeleton placeholders when data is unavailable
+  const skeletonWeeks = useMemo(() => {
+    return Array.from({ length: 53 }, (_, col) => col)
+  }, [])
+
   const getCellColor = (level: number) => {
     const hc = theme.heatmapColors
     switch (level) {
-      case 1: return hc.level1
-      case 2: return hc.level2
-      case 3: return hc.level3
-      case 4: return hc.level4
-      default: return hc.empty
+      case 1:
+        return hc.level1
+      case 2:
+        return hc.level2
+      case 3:
+        return hc.level3
+      case 4:
+        return hc.level4
+      default:
+        return hc.empty
     }
   }
 
   return (
-    <section id="github" className="github-redesign-section">
+    <section id="github" ref={sectionRef} className="github-redesign-section">
       {/* Upper header segment */}
       <FadeIn>
-      <div className="section-header">
-        <div className="section-label-container">
-          <span className="section-label-line" />
-          <span className="section-label-text">{githubDefaults.sectionLabel}</span>
-        </div>
-        
-        {/* Right-aligned meta details */}
-        <div className="header-meta">
-          <div className="meta-sync">
-            <span className="meta-sync-dot" />
-            <span>SYNCED {syncedTime}</span>
+        <div className="section-header">
+          <div className="section-label-container">
+            <span className="section-label-line" />
+            <span className="section-label-text">{githubDefaults.sectionLabel}</span>
           </div>
-          <a href={`https://github.com/${USERNAME}`} target="_blank" rel="noreferrer" className="meta-link">
-            @{USERNAME.toUpperCase()} ↗
-          </a>
+
+          {/* Right-aligned meta details */}
+          <div className="header-meta">
+            {data ? (
+              <div className="meta-sync">
+                <span className="meta-sync-dot" />
+                <span>SYNCED {syncedTime ? `${syncedTime.toUpperCase()} AGO` : 'RECENTLY'}</span>
+                {isOfflineCopy && <span className="meta-offline-tag">OFFLINE COPY</span>}
+              </div>
+            ) : (
+              <div className="meta-sync">
+                <span className="meta-unavailable-dot" />
+                <span className="meta-unavailable-tag">DATA UNAVAILABLE</span>
+              </div>
+            )}
+            <a
+              href={`https://github.com/${USERNAME}`}
+              target="_blank"
+              rel="noreferrer"
+              className="meta-link"
+            >
+              @{USERNAME.toUpperCase()} ↗
+            </a>
+          </div>
         </div>
-      </div>
       </FadeIn>
 
       {/* Main header title */}
       <FadeIn delay={0.1}>
-      <h2 className="main-heading">
-        {githubDefaults.sectionHeading}
-      </h2>
+        <h2 className="main-heading">{githubDefaults.sectionHeading}</h2>
       </FadeIn>
 
       {/* Content grid containing stats on left and heatmap on right */}
       <div className="github-content-grid">
         <FadeIn delay={0.2}>
-        <div className="stats-side">
-          <div className="stats-grid-2x2">
-            <div className="stat-col">
-              <span className="stat-val">{stats.contributions}</span>
-              <span className="stat-lbl">Contributions · 1y</span>
-            </div>
-            <div className="stat-col">
-              <span className="stat-val accent-val">{stats.currentStreak}</span>
-              <span className="stat-lbl">Current Streak</span>
-            </div>
-            <div className="stat-col">
-              <span className="stat-val">{stats.longestStreak}</span>
-              <span className="stat-lbl">Longest Streak</span>
-            </div>
-            <div className="stat-col">
-              <span className="stat-val">{stats.commits}</span>
-              <span className="stat-lbl">Commits · 1y</span>
+          <div className="stats-side">
+            <div className="stats-grid-2x2">
+              <div className="stat-col">
+                <span className="stat-val">{displayContributions}</span>
+                <span className="stat-lbl">Contributions · 1y</span>
+              </div>
+              <div className="stat-col">
+                <span className="stat-val accent-val">{displayCurrentStreak}</span>
+                <span className="stat-lbl">Current Streak</span>
+              </div>
+              <div className="stat-col">
+                <span className="stat-val">{displayLongestStreak}</span>
+                <span className="stat-lbl">Longest Streak</span>
+              </div>
+              <div className="stat-col">
+                <span className="stat-val">{displayCommits}</span>
+                <span
+                  className="stat-lbl"
+                  title="Direct commit contributions to default branches over the past 365 days"
+                >
+                  Commits · 1y (Default Branches)
+                </span>
+              </div>
             </div>
           </div>
-        </div>
         </FadeIn>
 
         <FadeIn delay={0.3}>
-        <div className="heatmap-side">
-          {/* Grid label */}
-          <div className="grid-summary-label">
-            {stats.contributions.toLocaleString()} Contributions · Last Year
-          </div>
-
-          {/* Heatmap Area */}
-          <div className="heatmap-container">
-            <div className="heatmap-y-axis">
-              <span>Mon</span>
-              <span>Wed</span>
-              <span>Fri</span>
+          <div className="heatmap-side">
+            {/* Grid label */}
+            <div className="grid-summary-label">
+              {data
+                ? `${data.total.toLocaleString('en-US')} Contributions · Last Year`
+                : 'Contributions · Last Year'}
             </div>
 
-            <div className="heatmap-scroller">
-              <div className="heatmap-inner">
-                {/* Month labels */}
-                <div className="heatmap-months">
-                  {githubDefaults.monthLabels.map((m, idx) => (
-                    <span key={idx}>{m}</span>
-                  ))}
-                </div>
+            {/* Heatmap Area */}
+            <div className="heatmap-container">
+              {/* Y-axis labels strictly placed on rows 1, 3, and 5 (gridRow 2, 4, 6) */}
+              <div className="heatmap-y-axis" aria-hidden="true">
+                <span className="y-axis-label" style={{ gridRow: 2 }}>
+                  Mon
+                </span>
+                <span className="y-axis-label" style={{ gridRow: 4 }}>
+                  Wed
+                </span>
+                <span className="y-axis-label" style={{ gridRow: 6 }}>
+                  Fri
+                </span>
+              </div>
 
-                {/* Grid grid-auto-flow: column */}
-                <div className="heatmap-grid">
-                  {calendarData.map((day, idx) => (
-                    <div
-                      key={idx}
-                      className="heatmap-cell"
-                      title={`${day.date}: ${day.count} contributions`}
-                      style={{
-                        background: getCellColor(day.level),
-                      }}
-                    />
-                  ))}
-                </div>
+              <div className="heatmap-scroller">
+                <div className="heatmap-inner">
+                  {/* Month labels */}
+                  <div
+                    className="heatmap-months"
+                    style={
+                      {
+                        '--col-count': weekColumns.length || 53,
+                      } as React.CSSProperties
+                    }
+                  >
+                    {monthLabels.map(({ weekIndex, label }) => (
+                      <span
+                        key={`${weekIndex}-${label}`}
+                        className="heatmap-month-label"
+                        style={{ gridColumnStart: weekIndex + 1 }}
+                      >
+                        {label}
+                      </span>
+                    ))}
+                  </div>
 
-                {/* Heatmap Footer: Scroll Indicator + Legend */}
-                <div className="heatmap-footer">
-                  <span className="heatmap-scroll-tip">Swipe/Scroll to view &rarr;</span>
-                  <div className="heatmap-legend">
-                    <span>Less</span>
-                    <span className="legend-cell" style={{ background: theme.heatmapColors.empty }} />
-                    <span className="legend-cell" style={{ background: theme.heatmapColors.level1 }} />
-                    <span className="legend-cell" style={{ background: theme.heatmapColors.level2 }} />
-                    <span className="legend-cell" style={{ background: theme.heatmapColors.level3 }} />
-                    <span className="legend-cell" style={{ background: theme.heatmapColors.level4 }} />
-                    <span>More</span>
+                  {/* Heatmap Grid */}
+                  <div
+                    className="heatmap-grid"
+                    role="grid"
+                    aria-label="GitHub Contributions Heatmap"
+                  >
+                    {weekColumns.length > 0 ? (
+                      weekColumns.map((col, colIdx) => (
+                        <div key={colIdx} className="heatmap-column" role="row">
+                          {col.days.map((day, rowIdx) =>
+                            day ? (
+                              <div
+                                key={`${colIdx}-${rowIdx}`}
+                                className="heatmap-cell"
+                                tabIndex={0}
+                                role="gridcell"
+                                aria-label={day.tooltip}
+                                title={day.tooltip}
+                                style={{
+                                  backgroundColor: getCellColor(day.level),
+                                }}
+                              />
+                            ) : (
+                              <div
+                                key={`${colIdx}-${rowIdx}`}
+                                className="heatmap-cell heatmap-cell-pad"
+                                aria-hidden="true"
+                              />
+                            )
+                          )}
+                        </div>
+                      ))
+                    ) : (
+                      /* Skeleton empty state */
+                      skeletonWeeks.map((colIdx) => (
+                        <div key={colIdx} className="heatmap-column">
+                          {Array.from({ length: 7 }, (_, rowIdx) => (
+                            <div
+                              key={rowIdx}
+                              className="heatmap-cell heatmap-cell-skeleton"
+                              style={{ backgroundColor: theme.heatmapColors.empty }}
+                            />
+                          ))}
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  {/* Heatmap Footer: Scroll Indicator + Legend */}
+                  <div className="heatmap-footer">
+                    <span className="heatmap-scroll-tip">Swipe/Scroll to view &rarr;</span>
+                    <div className="heatmap-legend" aria-hidden="true">
+                      <span>Less</span>
+                      <span className="legend-cell" style={{ background: theme.heatmapColors.empty }} />
+                      <span className="legend-cell" style={{ background: theme.heatmapColors.level1 }} />
+                      <span className="legend-cell" style={{ background: theme.heatmapColors.level2 }} />
+                      <span className="legend-cell" style={{ background: theme.heatmapColors.level3 }} />
+                      <span className="legend-cell" style={{ background: theme.heatmapColors.level4 }} />
+                      <span>More</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
         </FadeIn>
       </div>
 
@@ -382,6 +480,34 @@ export default function GitHub() {
           border-radius: 50%;
           background: #fa5f34;
           display: inline-block;
+          box-shadow: 0 0 8px rgba(250, 95, 52, 0.4);
+        }
+
+        .meta-unavailable-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #71717a;
+          display: inline-block;
+        }
+
+        .meta-offline-tag {
+          font-size: 9px;
+          letter-spacing: 0.08em;
+          color: #fa5f34;
+          border: 1px solid rgba(250, 95, 52, 0.4);
+          padding: 1px 5px;
+          border-radius: 2px;
+          margin-left: 4px;
+        }
+
+        .meta-unavailable-tag {
+          font-size: 9px;
+          letter-spacing: 0.08em;
+          color: #71717a;
+          border: 1px solid rgba(113, 113, 122, 0.4);
+          padding: 1px 5px;
+          border-radius: 2px;
         }
 
         .meta-link {
@@ -432,10 +558,11 @@ export default function GitHub() {
           font-weight: 600;
           color: var(--text);
           line-height: 1;
+          font-variant-numeric: tabular-nums;
         }
 
         .accent-val {
-          color: #fa5f34; /* Orange color accent */
+          color: #fa5f34;
         }
 
         .stat-lbl {
@@ -444,6 +571,7 @@ export default function GitHub() {
           text-transform: uppercase;
           letter-spacing: 0.1em;
           color: var(--text-muted);
+          line-height: 1.3;
         }
 
         .heatmap-side {
@@ -467,15 +595,21 @@ export default function GitHub() {
           min-width: 0;
         }
 
+        /* Y-axis labels strictly placed on rows 1, 3, 5 */
         .heatmap-y-axis {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          height: 82px;
+          display: grid;
+          grid-template-rows: repeat(7, 10px);
+          gap: 2.5px;
+          align-items: center;
           font-family: var(--font-geist-mono), monospace;
           font-size: 9px;
           color: var(--text-muted);
-          padding-top: 22px;
+          padding-top: 20px;
+        }
+
+        .y-axis-label {
+          line-height: 10px;
+          display: block;
         }
 
         .heatmap-scroller {
@@ -504,34 +638,54 @@ export default function GitHub() {
         }
 
         .heatmap-months {
-          display: flex;
-          justify-content: space-between;
+          display: grid;
+          grid-template-columns: repeat(var(--col-count, 53), 10px);
+          gap: 2.5px;
+          height: 14px;
+          margin-bottom: 6px;
           font-family: var(--font-geist-mono), monospace;
           font-size: 9px;
           color: var(--text-muted);
-          margin-bottom: 8px;
-          padding-left: 2px;
-          padding-right: 2px;
+        }
+
+        .heatmap-month-label {
+          white-space: nowrap;
+          line-height: 14px;
         }
 
         .heatmap-grid {
-          display: grid;
-          grid-template-rows: repeat(7, 10px);
-          grid-auto-flow: column;
+          display: flex;
           gap: 2.5px;
           margin-bottom: 12px;
           width: max-content;
+        }
+
+        .heatmap-column {
+          display: grid;
+          grid-template-rows: repeat(7, 10px);
+          gap: 2.5px;
         }
 
         .heatmap-cell {
           width: 10px;
           height: 10px;
           border-radius: 2px;
-          transition: transform 150ms;
+          outline: none;
+          transition: transform 140ms ease, box-shadow 140ms ease;
+          box-sizing: border-box;
         }
 
-        .heatmap-cell:hover {
-          transform: scale(1.2);
+        .heatmap-cell-pad {
+          background-color: transparent;
+          pointer-events: none;
+        }
+
+        .heatmap-cell:hover,
+        .heatmap-cell:focus-visible {
+          transform: scale(1.35);
+          z-index: 5;
+          box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+          border: 1px solid rgba(243, 238, 232, 0.4);
         }
 
         .heatmap-footer {
@@ -598,8 +752,27 @@ export default function GitHub() {
             height: 8px;
           }
 
+          .heatmap-months {
+            grid-template-columns: repeat(var(--col-count, 53), 8px);
+            gap: 2px;
+          }
+
+          .heatmap-column {
+            grid-template-rows: repeat(7, 8px);
+            gap: 2px;
+          }
+
           .heatmap-grid {
             gap: 2px;
+          }
+
+          .heatmap-y-axis {
+            grid-template-rows: repeat(7, 8px);
+            gap: 2px;
+          }
+
+          .y-axis-label {
+            line-height: 8px;
           }
 
           .github-redesign-section {

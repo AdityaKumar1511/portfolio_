@@ -299,12 +299,12 @@ export default function Projects() {
         /* ── CARD BODY CONTAINER ── */
         .project-card-body {
           width: 100%;
-          min-height: calc(100svh - 42px);
+          min-height: clamp(520px, 75vh, 680px);
           height: auto;
-          padding: clamp(1.5rem, 2.5vw, 2.5rem);
+          padding: clamp(1.5rem, 2.2vw, 2.25rem);
           display: flex;
           flex-direction: column;
-          justify-content: flex-start;
+          justify-content: space-between;
           box-sizing: border-box;
           position: relative;
           z-index: 1;
@@ -401,10 +401,11 @@ export default function Projects() {
         /* ── 3-COLUMN CONTENT GRID ── */
         .card-content-grid {
           display: grid;
-          grid-template-columns: 30fr 44fr 26fr;
-          gap: clamp(1.25rem, 2.5vw, 2.75rem);
-          align-items: flex-start;
+          grid-template-columns: 28fr 48fr 24fr;
+          gap: clamp(1.25rem, 2vw, 2.5rem);
+          align-items: stretch;
           width: 100%;
+          flex: 1;
         }
 
         /* ── Left Column ── */
@@ -412,7 +413,8 @@ export default function Projects() {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          gap: 1.5rem;
+          height: 100%;
+          gap: 1.25rem;
           padding-top: 4px;
         }
 
@@ -559,12 +561,18 @@ export default function Projects() {
         /* ── Mockup Columns & Architecture Showcase ── */
         .col-center-macbook {
           width: 100%;
+          height: 100%;
           min-width: 0;
+          display: flex;
+          flex-direction: column;
         }
 
         .col-right-iphone {
           width: 100%;
+          height: 100%;
           display: flex;
+          flex-direction: column;
+          align-items: center;
           justify-content: center;
           min-width: 0;
         }
@@ -572,7 +580,10 @@ export default function Projects() {
         .col-non-live-showcase {
           grid-column: 2 / -1;
           width: 100%;
+          height: 100%;
           min-width: 0;
+          display: flex;
+          flex-direction: column;
         }
 
         /* ── RESPONSIVE BREAKPOINTS ── */

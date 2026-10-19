@@ -650,17 +650,23 @@ export default async function CaseStudyPage({ params }: PageProps) {
           display: grid;
           grid-template-columns: 65fr 35fr;
           gap: 2.5rem;
-          align-items: center;
+          align-items: stretch;
         }
 
         .dual-device-macbook {
           width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
         }
 
         .dual-device-iphone {
           display: flex;
+          flex-direction: column;
+          align-items: center;
           justify-content: center;
           width: 100%;
+          height: 100%;
         }
 
         /* ── Content Container ── */

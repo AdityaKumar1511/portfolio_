@@ -10,10 +10,12 @@ import {
   Mail,
   ArrowUpRight,
   Sparkles,
-  Terminal,
-  Activity
+  Terminal
 } from 'lucide-react'
 import meta from '@/data/meta.json'
+import StackPlayground from '@/components/StackPlayground'
+import KineticMarquee from '@/components/KineticMarquee'
+import { useSolvedCounts } from '@/lib/cpStats'
 
 gsap.registerPlugin(useGSAP)
 
@@ -32,8 +34,25 @@ function GithubIcon({ size = 16, className = '' }: { size?: number; className?: 
   )
 }
 
+function CodeforcesIcon({ size = 18, className = '' }: { size?: number; className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.424 5.424 0 0 0 .349.987 5.317 5.317 0 0 0 1.163 1.612 6.174 6.174 0 0 0 1.484 1.016 5.602 5.602 0 0 0 1.466.506l.205.046a5.294 5.294 0 0 0 2.106-.054l.188-.044a3.93 3.93 0 0 0 1.113-.454l2.836-1.676a1.368 1.368 0 0 0-.213-2.406 1.363 1.363 0 0 0-.964-.048l-2.836 1.676a1.24 1.24 0 0 1-.358.133 2.458 2.458 0 0 1-1.14-.044l-.185-.042a2.874 2.874 0 0 1-.756-.264 3.335 3.335 0 0 1-.795-.544 2.6 2.6 0 0 1-.564-.782 2.698 2.698 0 0 1-.174-.494 2.755 2.755 0 0 1-.03-1.179 2.6 2.6 0 0 1 .59-1.04l3.854-4.126 5.406-5.788a.26.26 0 0 1 .38.012l2.72 2.913a.26.26 0 0 1-.013.38l-5.406 5.789a1.368 1.368 0 0 0 .998 2.314 1.363 1.363 0 0 0 1.003-.43l5.406-5.789a2.987 2.987 0 0 0 .089-4.182l-2.72-2.913A2.987 2.987 0 0 0 13.483 0z" />
+      <path d="M3.483 14.196a1.368 1.368 0 0 0-.194 1.926l2.72 3.462a2.987 2.987 0 0 0 4.183.361l6.676-5.25a1.374 1.374 0 1 0-1.7-2.158l-6.676 5.25a.26.26 0 0 1-.362-.031l-2.72-3.462a1.368 1.368 0 0 0-1.927-.098z" />
+    </svg>
+  )
+}
+
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const solvedCounts = useSolvedCounts()
 
   useGSAP(
     () => {
@@ -66,9 +85,6 @@ export default function Hero() {
     <section id="hero" className="hero-bento-section" ref={containerRef}>
       {/* ── MAIN BENTO POSTER CANVAS ── */}
       <div className="bento-poster">
-        {/* Subtle decorative grid lines layer */}
-        <div className="bento-bg-grid" />
-
         <div className="bento-grid-container">
           {/* ══════════════════════════════════════════════
               LEFT COLUMN: Title, Philosophy, Identity
@@ -143,7 +159,7 @@ export default function Hero() {
                       OPEN FOR INTERNSHIPS
                     </span>
                     <span className="action-pill-subtitle text-black/80">
-                      Available from Aug 2026
+                      Available now
                     </span>
                   </div>
                 </div>
@@ -155,22 +171,11 @@ export default function Hero() {
           </div>
 
           {/* ══════════════════════════════════════════════
-              CENTER COLUMN: Bio, Main Showcase, Cutout
+              CENTER COLUMN: Stack Playground, Main Showcase, Cutout
           ══════════════════════════════════════════════ */}
           <div className="bento-col bento-col-center">
-            {/* Card C1: Personal Narrative Bio */}
-            <div className="bento-card card-dark card-c1">
-              <div className="bio-header-row">
-                <span className="bio-header-badge">
-                  <span className="bio-dot-accent" />
-                  IDENTITY &amp; BACKGROUND
-                </span>
-                <span className="bio-header-tag">NIT PATNA // CSE</span>
-              </div>
-              <p className="bio-paragraph">
-                Hey there, I&apos;m <span className="bio-highlight">Aditya Kumar</span> — a 2nd year Computer Science student at <span className="bio-highlight">NIT Patna</span>. I architect resilient <span className="bio-highlight">full-stack systems</span>, satellite <span className="bio-highlight">ML pipelines</span>, and real-time distributed applications. With a focus on code correctness, algorithmic speed, and delightful interactions, I turn complex problems into scalable digital products.
-              </p>
-            </div>
+            {/* Card C1: Physics Tech-Stack Playground */}
+            <StackPlayground />
 
             {/* Card C2: The Vibrant Centerpiece Card (Orange Accent) */}
             <div className="bento-card card-orange-showcase">
@@ -253,63 +258,13 @@ export default function Hero() {
           </div>
 
           {/* ══════════════════════════════════════════════
-              RIGHT COLUMN: Telemetry, 4 Controls, Motto
+              RIGHT COLUMN: Kinetic Typography, 5 Controls, Motto
           ══════════════════════════════════════════════ */}
           <div className="bento-col bento-col-right">
-            {/* Card R1: Orange Gradient Equalizer / Telemetry Card */}
-            <div className="bento-card card-telemetry">
-              <div className="telemetry-header-row">
-                <div className="flex items-center gap-1.5">
-                  <Activity size={12} className="text-black" />
-                  <span className="text-[10px] font-mono font-extrabold text-black uppercase tracking-wider">
-                    TECHNICAL RIGOR
-                  </span>
-                </div>
-                <span className="text-[9px] font-mono font-bold text-black/80">
-                  METRICS //
-                </span>
-              </div>
+            {/* Card R1: Orange Kinetic-Typography Card */}
+            <KineticMarquee />
 
-              <h3 className="telemetry-title">
-                FULL-STACK &amp; <br />
-                ALGORITHMIC DEPTH
-              </h3>
-
-              {/* Metric Sliders / Equalizer Tracks */}
-              <div className="telemetry-tracks">
-                <div className="track-item">
-                  <div className="track-label-row">
-                    <span>LEETCODE SOLVED</span>
-                    <span className="font-bold">282+ PROBLEMS</span>
-                  </div>
-                  <div className="track-bar">
-                    <div className="track-fill w-[88%]" />
-                  </div>
-                </div>
-
-                <div className="track-item">
-                  <div className="track-label-row">
-                    <span>HACKARENA 2.0</span>
-                    <span className="font-bold">WINNER</span>
-                  </div>
-                  <div className="track-bar">
-                    <div className="track-fill w-[94%]" />
-                  </div>
-                </div>
-
-                <div className="track-item">
-                  <div className="track-label-row">
-                    <span>GITHUB REPOSITORIES</span>
-                    <span className="font-bold">40+ SHIPPED</span>
-                  </div>
-                  <div className="track-bar">
-                    <div className="track-fill w-[78%]" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Card R2: 2x2 Squircle Action Controls */}
+            {/* Card R2: 5-Tile Action Controls */}
             <div className="control-grid-2x2">
               {/* Button 1: LeetCode */}
               <a
@@ -321,7 +276,7 @@ export default function Hero() {
               >
                 <Code size={18} className="control-icon-orange group-hover:scale-110 transition-transform" />
                 <span className="control-label">LEETCODE</span>
-                <span className="control-sub">282+ Solved</span>
+                <span className="control-sub">{solvedCounts.leetcode}+ Solved</span>
               </a>
 
               {/* Button 2: GitHub */}
@@ -350,14 +305,29 @@ export default function Hero() {
                 <span className="control-sub">PDF ↗</span>
               </a>
 
-              {/* Button 4: Contact Mail */}
+              {/* Button 4: Codeforces */}
+              <a
+                href={`https://codeforces.com/profile/${meta.codeforcesUsername}`}
+                target="_blank"
+                rel="noreferrer"
+                className="control-box group"
+                title="Codeforces Profile"
+              >
+                <CodeforcesIcon size={18} className="control-icon-orange group-hover:scale-110 transition-transform" />
+                <span className="control-label">CODEFORCES</span>
+                <span className="control-sub">Pupil</span>
+              </a>
+
+              {/* Button 5: Contact Mail (full width) */}
               <a
                 href="#contact"
-                className="control-box group"
+                className="control-box control-span group"
                 title="Contact Aditya"
               >
-                <Mail size={18} className="control-icon-grey group-hover:scale-110 transition-transform" />
-                <span className="control-label">CONNECT</span>
+                <span className="control-span-left">
+                  <Mail size={18} className="control-icon-grey group-hover:scale-110 transition-transform" />
+                  <span className="control-label">CONNECT</span>
+                </span>
                 <span className="control-sub">&lt;24h reply</span>
               </a>
             </div>
@@ -400,28 +370,12 @@ export default function Hero() {
           color: inherit;
         }
 
-        /* ── OUTER POSTER CANVAS ── */
+        /* ── GRID CANVAS (cards sit directly on page background) ── */
         .bento-poster {
           position: relative;
           width: 100%;
           max-width: 1480px;
-          border-radius: clamp(24px, 3.5vw, 42px);
-          background: #111216;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          box-shadow: 0 30px 90px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-          padding: clamp(1rem, 2vw, 1.75rem);
-          overflow: hidden;
           box-sizing: border-box;
-        }
-
-        .bento-bg-grid {
-          position: absolute;
-          inset: 0;
-          background-image: 
-            radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-          background-size: 24px 24px, 100% 48px;
-          pointer-events: none;
         }
 
         /* ── 3-COLUMN BENTO GRID ── */
@@ -652,13 +606,11 @@ export default function Hero() {
           background: linear-gradient(135deg, #fa5f34 0%, #f75225 100%);
           border: 1px solid rgba(255, 255, 255, 0.2);
           color: #000000 !important;
-          box-shadow: 0 8px 24px rgba(250, 95, 52, 0.35);
         }
 
         .action-pill-orange:hover {
           background: #ff6e47;
           transform: translateY(-2px);
-          box-shadow: 0 12px 28px rgba(250, 95, 52, 0.5);
         }
 
         .action-pill-icon-orange {
@@ -675,74 +627,11 @@ export default function Hero() {
         }
 
         /* ── CENTER COLUMN CARDS ── */
-        .card-c1 {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .bio-header-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          text-decoration: none !important;
-          border-bottom: none !important;
-        }
-
-        .bio-header-badge {
-          display: flex;
-          align-items: center;
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 9.5px;
-          font-weight: 800;
-          color: #a8a29e;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          text-decoration: none !important;
-          border-bottom: none !important;
-        }
-
-        .bio-dot-accent {
-          width: 5px;
-          height: 5px;
-          border-radius: 50%;
-          background: #fa5f34;
-          margin-right: 6px;
-          display: inline-block;
-        }
-
-        .bio-header-tag {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 9.5px;
-          font-weight: 700;
-          color: #fa5f34;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          text-decoration: none !important;
-          border-bottom: none !important;
-        }
-
-        .bio-paragraph {
-          font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-          font-size: clamp(13px, 1.05vw, 15px);
-          line-height: 1.85;
-          letter-spacing: 0.015em;
-          color: #d4cec7;
-          margin: 0;
-          text-decoration: none !important;
-        }
-
-        .bio-highlight {
-          color: #ffffff;
-          font-weight: 700;
-        }
-
         /* The Vibrant Orange Centerpiece Card */
         .card-orange-showcase {
           position: relative;
           background: linear-gradient(145deg, #fa5f34 0%, #e84d22 100%);
           border: 1px solid rgba(255, 255, 255, 0.2);
-          box-shadow: 0 20px 60px rgba(250, 95, 52, 0.45);
           color: #0a0a0a;
           display: flex;
           flex-direction: column;
@@ -930,60 +819,6 @@ export default function Hero() {
           display: flex;
           flex-direction: column;
           gap: 10px;
-          box-shadow: 0 10px 30px rgba(250, 95, 52, 0.35);
-        }
-
-        .telemetry-header-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          text-decoration: none !important;
-          border-bottom: none !important;
-        }
-
-        .telemetry-title {
-          font-family: 'Impact', 'Arial Black', sans-serif;
-          font-size: clamp(1.2rem, 1.8vw, 1.6rem);
-          line-height: 1.05;
-          text-transform: uppercase;
-          color: #0a0a0a;
-          margin: 0;
-          text-decoration: none !important;
-        }
-
-        .telemetry-tracks {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          margin-top: 4px;
-        }
-
-        .track-item {
-          display: flex;
-          flex-direction: column;
-          gap: 3px;
-        }
-
-        .track-label-row {
-          display: flex;
-          justify-content: space-between;
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 8px;
-          color: rgba(10, 10, 10, 0.85);
-          letter-spacing: 0.05em;
-        }
-
-        .track-bar {
-          height: 5px;
-          background: rgba(0, 0, 0, 0.2);
-          border-radius: 9999px;
-          overflow: hidden;
-        }
-
-        .track-fill {
-          height: 100%;
-          background: #0a0a0a;
-          border-radius: 9999px;
         }
 
         /* 2x2 Squircle Action Controls */
@@ -1036,6 +871,26 @@ export default function Hero() {
           font-size: 8.5px;
           color: #a8a29e !important;
           text-decoration: none !important;
+        }
+
+        .control-box.control-span {
+          grid-column: 1 / -1;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          min-height: 64px;
+        }
+
+        .control-span-left {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          min-width: 0;
+        }
+
+        .control-box.control-span .control-label {
+          margin-top: 0;
         }
 
         /* Card R3: Motto */
@@ -1104,11 +959,6 @@ export default function Hero() {
         @media (max-width: 768px) {
           .hero-bento-section {
             padding: 1.5rem 1rem;
-          }
-
-          .bento-poster {
-            padding: 0.85rem;
-            border-radius: 24px;
           }
 
           .bento-grid-container {

@@ -8,8 +8,17 @@ import CP from '@/components/CP'
 import Experience from '@/components/Experience'
 import ConnectTicker from '@/components/ConnectTicker'
 import Contact from '@/components/Contact'
+import { getCPData } from '@/lib/cp'
+import { getGithubData } from '@/lib/github'
 
-export default function Page() {
+export const revalidate = 3600
+
+export default async function Page() {
+  const [cpData, githubData] = await Promise.all([
+    getCPData(),
+    getGithubData(),
+  ])
+
   return (
     <main>
       <Hero />
@@ -17,11 +26,11 @@ export default function Page() {
       <Ticker />
       <Projects />
       <Experience />
-      <GitHub />
-      <CP />
+      <GitHub initialData={githubData} />
+      <CP initialData={cpData} />
       <HowIWork />
       <ConnectTicker />
       <Contact />
     </main>
   )
-}
+}
