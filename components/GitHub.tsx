@@ -5,7 +5,7 @@ import meta from '@/data/meta.json'
 import githubDefaults from '@/data/githubDefaults.json'
 import theme from '@/data/theme.json'
 import FadeIn from './FadeIn'
-import { GithubData, GithubDay } from '@/lib/githubTypes'
+import { GithubData } from '@/lib/githubTypes'
 import useCountUp from '@/hooks/useCountUp'
 
 const USERNAME = meta.githubUsername || 'AdityaKumar1511'
@@ -29,8 +29,8 @@ function useInView<T extends HTMLElement>(threshold = 0.16): [React.RefObject<T 
     const el = ref.current
     if (!el) return
     if (typeof IntersectionObserver === 'undefined') {
-      setVisible(true)
-      return
+      const frame = requestAnimationFrame(() => setVisible(true))
+      return () => cancelAnimationFrame(frame)
     }
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -53,69 +53,74 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
 
   // Local storage caching safety net
   useEffect(() => {
+    let frame = 0
+
     try {
       if (initialData) {
-        setData(initialData)
-        setIsOfflineCopy(false)
         localStorage.setItem('gh-last-good', JSON.stringify(initialData))
+        frame = requestAnimationFrame(() => {
+          setData(initialData)
+          setIsOfflineCopy(false)
+        })
       } else {
         const saved = localStorage.getItem('gh-last-good')
         if (saved) {
           const parsed = JSON.parse(saved) as GithubData
           if (parsed && Array.isArray(parsed.days) && parsed.days.length > 0) {
-            setData(parsed)
-            setIsOfflineCopy(true)
+            frame = requestAnimationFrame(() => {
+              setData(parsed)
+              setIsOfflineCopy(true)
+            })
           }
         }
       }
     } catch {
       // Ignore localStorage failures
     }
+
+    return () => cancelAnimationFrame(frame)
   }, [initialData])
 
   const [sectionRef, inView] = useInView<HTMLElement>(0.12)
 
-  // Synced time label derived strictly from fetchedAt
-  const syncedTime = useMemo(() => {
-    if (!data?.fetchedAt) return null
-    const diffMinutes = Math.floor((Date.now() - data.fetchedAt) / (1000 * 60))
-    if (diffMinutes < 60) {
-      return `${Math.max(1, diffMinutes)}m`
+  // Synced time label derived strictly from fetchedAt, refreshed every minute
+  const [syncedTime, setSyncedTime] = useState<string | null>(null)
+  useEffect(() => {
+    if (!data?.fetchedAt) return
+
+    const update = () => {
+      const diffMinutes = Math.max(1, Math.floor((Date.now() - data.fetchedAt) / 60000))
+      setSyncedTime(diffMinutes < 60 ? `${diffMinutes}m` : `${Math.floor(diffMinutes / 60)}h`)
     }
-    const diffHours = Math.floor(diffMinutes / 60)
-    return `${diffHours}h`
+
+    const frame = requestAnimationFrame(update)
+    const interval = setInterval(update, 60000)
+    return () => {
+      cancelAnimationFrame(frame)
+      clearInterval(interval)
+    }
   }, [data?.fetchedAt])
 
-  // Count up animations reading from normalized data
-  const countContributions = useCountUp(data ? data.total : null, inView)
-  const countCurrentStreak = useCountUp(data ? data.currentStreak : null, inView)
-  const countLongestStreak = useCountUp(data ? data.longestStreak : null, inView)
-  const countCommits = useCountUp(data ? data.commits : null, inView)
+  const stats = data
+    ? {
+        contributions: data.total,
+        currentStreak: data.currentStreak,
+        longestStreak: data.longestStreak,
+        commits: data.commits,
+      }
+    : githubDefaults.stats
+
+  // Count up animations reading from normalized data, with saved totals as fallback
+  const countContributions = useCountUp(stats.contributions, inView)
+  const countCurrentStreak = useCountUp(stats.currentStreak, inView)
+  const countLongestStreak = useCountUp(stats.longestStreak, inView)
+  const countCommits = useCountUp(stats.commits, inView)
 
   // Formatted displays (single source of truth with toLocaleString)
-  const displayContributions = countContributions !== null
-    ? countContributions.toLocaleString('en-US')
-    : data
-    ? data.total.toLocaleString('en-US')
-    : '—'
-
-  const displayCurrentStreak = countCurrentStreak !== null
-    ? countCurrentStreak.toLocaleString('en-US')
-    : data
-    ? data.currentStreak.toLocaleString('en-US')
-    : '—'
-
-  const displayLongestStreak = countLongestStreak !== null
-    ? countLongestStreak.toLocaleString('en-US')
-    : data
-    ? data.longestStreak.toLocaleString('en-US')
-    : '—'
-
-  const displayCommits = countCommits !== null
-    ? countCommits.toLocaleString('en-US')
-    : data
-    ? data.commits.toLocaleString('en-US')
-    : '—'
+  const displayContributions = (countContributions ?? stats.contributions).toLocaleString('en-US')
+  const displayCurrentStreak = (countCurrentStreak ?? stats.currentStreak).toLocaleString('en-US')
+  const displayLongestStreak = (countLongestStreak ?? stats.longestStreak).toLocaleString('en-US')
+  const displayCommits = (countCommits ?? stats.commits).toLocaleString('en-US')
 
   // Heatmap calculation
   const { weekColumns, monthLabels } = useMemo(() => {
@@ -254,7 +259,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
             ) : (
               <div className="meta-sync">
                 <span className="meta-unavailable-dot" />
-                <span className="meta-unavailable-tag">DATA UNAVAILABLE</span>
+                <span className="meta-offline-tag">SAVED SNAPSHOT</span>
               </div>
             )}
             <a
@@ -281,7 +286,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
             <div className="stats-grid-2x2">
               <div className="stat-col">
                 <span className="stat-val">{displayContributions}</span>
-                <span className="stat-lbl">Contributions · 1y</span>
+                <span className="stat-lbl">Contributions · {data ? '1y' : 'snapshot'}</span>
               </div>
               <div className="stat-col">
                 <span className="stat-val accent-val">{displayCurrentStreak}</span>
@@ -297,7 +302,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
                   className="stat-lbl"
                   title="Direct commit contributions to default branches over the past 365 days"
                 >
-                  Commits · 1y (Default Branches)
+                  Commits · {data ? '1y' : 'snapshot'} (Default Branches)
                 </span>
               </div>
             </div>
@@ -310,7 +315,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
             <div className="grid-summary-label">
               {data
                 ? `${data.total.toLocaleString('en-US')} Contributions · Last Year`
-                : 'Contributions · Last Year'}
+                : `${stats.contributions.toLocaleString('en-US')} Contributions · Saved Snapshot`}
             </div>
 
             {/* Heatmap Area */}
@@ -400,7 +405,11 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
 
                   {/* Heatmap Footer: Scroll Indicator + Legend */}
                   <div className="heatmap-footer">
-                    <span className="heatmap-scroll-tip">Swipe/Scroll to view &rarr;</span>
+                    <span className="heatmap-scroll-tip">
+                      {data
+                        ? 'Swipe/Scroll to view →'
+                        : 'Calendar unavailable · totals from saved snapshot'}
+                    </span>
                     <div className="heatmap-legend" aria-hidden="true">
                       <span>Less</span>
                       <span className="legend-cell" style={{ background: theme.heatmapColors.empty }} />

@@ -14,8 +14,9 @@ const projects = projectsData.map(p => ({
 
 type ProjectStatus = 'live' | 'finalist' | 'wip' | 'shipped'
 
-const cardBg: string[] = theme.projectCardBg
+const cardBg: string[] = theme.projectCardBg.length > 0 ? theme.projectCardBg : ['#0e0e0e']
 const statusColors = theme.projectStatusColors as Record<ProjectStatus, { color: string; bg: string; border: string }>
+const fallbackStatus = statusColors.shipped
 
 const NAV_OFFSET = 0
 
@@ -34,7 +35,7 @@ export default function Projects() {
 
       <div className="projects-stack">
         {projects.map((project, i) => {
-          const sc = statusColors[project.status]
+          const sc = statusColors[project.status] ?? fallbackStatus
           const metricStats = project.impactStats || [
             { value: 'LIVE', label: 'STATUS' },
             { value: project.year, label: 'YEAR' },
@@ -56,7 +57,7 @@ export default function Projects() {
                 style={{
                   width: `calc(100% / ${projects.length})`,
                   marginLeft: `calc(100% / ${projects.length} * ${i})`,
-                  background: cardBg[i],
+                  background: cardBg[i % cardBg.length],
                 }}
               >
                 <span className="ear-number">0{i + 1}</span>
@@ -67,7 +68,7 @@ export default function Projects() {
               {/* Main Card Body */}
               <div
                 className="project-card-body"
-                style={{ background: cardBg[i] }}
+                style={{ background: cardBg[i % cardBg.length] }}
               >
                 {/* ── TOP HEADER ROW: Title & Metadata ── */}
                 <FadeIn delay={i * 0.1}>

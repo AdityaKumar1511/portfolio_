@@ -20,6 +20,13 @@ export interface CodeforcesData {
   history: CfHistoryEntry[]
 }
 
+export interface LeetCodeHistoryEntry {
+  contestName: string
+  rating: number
+  ranking: number
+  timestamp: number
+}
+
 export interface LeetCodeData {
   solved: number
   easy: number
@@ -31,6 +38,7 @@ export interface LeetCodeData {
   globalRank: number | null
   topPercent: number | null
   badge: string | null
+  history: LeetCodeHistoryEntry[]
 }
 
 export interface CPData {

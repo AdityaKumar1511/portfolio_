@@ -16,6 +16,7 @@ import meta from '@/data/meta.json'
 import StackPlayground from '@/components/StackPlayground'
 import KineticMarquee from '@/components/KineticMarquee'
 import { useSolvedCounts } from '@/lib/cpStats'
+import { computeCfTier } from '@/lib/cpTypes'
 
 gsap.registerPlugin(useGSAP)
 
@@ -53,6 +54,7 @@ function CodeforcesIcon({ size = 18, className = '' }: { size?: number; classNam
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null)
   const solvedCounts = useSolvedCounts()
+  const cfTier = computeCfTier(solvedCounts.codeforcesRating)
 
   useGSAP(
     () => {
@@ -136,7 +138,7 @@ export default function Hero() {
                       @{meta.githubUsername}
                     </span>
                     <span className="action-pill-subtitle">
-                      40+ Open Source Repos
+                      Open Source Repos
                     </span>
                   </div>
                 </div>
@@ -289,7 +291,7 @@ export default function Hero() {
               >
                 <GithubIcon size={18} className="control-icon-grey group-hover:scale-110 transition-transform" />
                 <span className="control-label">GITHUB</span>
-                <span className="control-sub">40+ Repos</span>
+                <span className="control-sub">Open Source</span>
               </a>
 
               {/* Button 3: Resume PDF */}
@@ -315,7 +317,7 @@ export default function Hero() {
               >
                 <CodeforcesIcon size={18} className="control-icon-orange group-hover:scale-110 transition-transform" />
                 <span className="control-label">CODEFORCES</span>
-                <span className="control-sub">Pupil</span>
+                <span className="control-sub">{cfTier.label}</span>
               </a>
 
               {/* Button 5: Contact Mail (full width) */}

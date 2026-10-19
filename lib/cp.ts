@@ -5,11 +5,12 @@ import {
   CfHistoryEntry,
   CodeforcesData,
   LeetCodeData,
+  LeetCodeHistoryEntry,
   CPData,
   computeCfTier,
 } from './cpTypes'
 
-export type { CfHistoryEntry, CodeforcesData, LeetCodeData, CPData }
+export type { CfHistoryEntry, CodeforcesData, LeetCodeData, LeetCodeHistoryEntry, CPData }
 export { computeCfTier }
 
 const CF_HANDLE = meta.codeforcesUsername
@@ -101,6 +102,15 @@ async function fetchLeetCodeRaw(): Promise<LeetCodeData> {
           name
         }
       }
+      userContestRankingHistory(username: $username) {
+        attended
+        rating
+        ranking
+        contest {
+          title
+          startTime
+        }
+      }
     }
   `
 
@@ -170,6 +180,36 @@ async function fetchLeetCodeRaw(): Promise<LeetCodeData> {
 
   const badge = ucr?.badge?.name ? String(ucr.badge.name) : null
 
+  // Only ranked contests (attended + a real ranking) produce meaningful rating points.
+  const rawHistory = Array.isArray(data.userContestRankingHistory)
+    ? (data.userContestRankingHistory as Array<{
+        attended?: boolean
+        rating?: number
+        ranking?: number
+        contest?: { title?: string; startTime?: number } | null
+      }>)
+    : []
+
+  const history: LeetCodeHistoryEntry[] = rawHistory
+    .filter(
+      (entry) =>
+        entry?.attended === true &&
+        typeof entry.rating === 'number' &&
+        Number.isFinite(entry.rating) &&
+        typeof entry.ranking === 'number' &&
+        Number.isFinite(entry.ranking) &&
+        entry.ranking > 0 &&
+        typeof entry.contest?.startTime === 'number' &&
+        Number.isFinite(entry.contest.startTime)
+    )
+    .map((entry) => ({
+      contestName: entry.contest?.title ? String(entry.contest.title) : 'Contest',
+      rating: Math.round(entry.rating as number),
+      ranking: entry.ranking as number,
+      timestamp: entry.contest?.startTime as number,
+    }))
+    .sort((a, b) => a.timestamp - b.timestamp)
+
   return {
     solved,
     easy,
@@ -181,6 +221,7 @@ async function fetchLeetCodeRaw(): Promise<LeetCodeData> {
     globalRank,
     topPercent,
     badge,
+    history,
   }
 }
 
@@ -193,7 +234,7 @@ const getCachedCodeforces = unstable_cache(
 
 const getCachedLeetCode = unstable_cache(
   async () => fetchLeetCodeRaw(),
-  ['cp-leetcode-data-v1'],
+  ['cp-leetcode-data-v2'],
   { revalidate: 3600 }
 )
 

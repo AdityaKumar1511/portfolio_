@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 
 import meta from '@/data/meta.json'
 import cpDefaults from '@/data/cpDefaults.json'
@@ -16,7 +16,6 @@ import {
   CodeforcesData,
   LeetCodeData,
   computeCfTier,
-  CfHistoryEntry,
 } from '@/lib/cpTypes'
 import useCountUp from '@/hooks/useCountUp'
 
@@ -49,6 +48,7 @@ const FALLBACK_LC: LeetCodeData = {
   globalRank: cpDefaults.leetcode.contestGlobalRanking,
   topPercent: cpDefaults.leetcode.topPercentage,
   badge: null,
+  history: cpDefaults.leetcode.contestHistory,
 }
 
 const FALLBACK_CF: CodeforcesData = {
@@ -58,6 +58,14 @@ const FALLBACK_CF: CodeforcesData = {
   solved: cpDefaults.codeforces.solvedCount,
   tier: computeCfTier(cpDefaults.codeforces.rating),
   history: [],
+}
+
+type DataSource = 'live' | 'cache' | 'fallback'
+
+function sourceLabel(source: DataSource): string {
+  if (source === 'live') return 'LIVE'
+  if (source === 'cache') return 'CACHED'
+  return 'OFFLINE'
 }
 
 function useMediaQuery(query: string, fallback = false): boolean {
@@ -146,119 +154,80 @@ function TickerStrip({ items, accent, entered }: { items: string[]; accent: stri
   )
 }
 
-/* ── LeetCode Concentric Multi-Ring Donut ── */
+/* ── LeetCode difficulty legend rings ── */
 const LC_RINGS = [
   { key: 'easy' as const, label: 'EASY', color: PAPER },
   { key: 'medium' as const, label: 'MED', color: AMBER },
   { key: 'hard' as const, label: 'HARD', color: ORANGE },
 ]
 
-function RingDonut({
-  easy,
-  medium,
-  hard,
-  total,
-  visible,
-  reduced,
-}: {
-  easy: number
-  medium: number
-  hard: number
-  total: number
-  visible: boolean
-  reduced: boolean
-}) {
-  const values = { easy, medium, hard }
-  const radii = [80, 62, 44]
-  const stroke = 9
-  const size = 220
-  const solvedTotal = Math.max(1, easy + medium + hard)
+/* ── Shared rating chart point ── */
+interface RatingPoint {
+  label: string
+  rating: number
+  rank: number | null
+  delta: number | null
+}
 
+/* ── LeetCode difficulty breakdown legend ── */
+function DifficultyLegend({ easy, medium, hard }: { easy: number; medium: number; hard: number }) {
+  const values = { easy, medium, hard }
   return (
-    <div className="cp-donut-wrap">
-      <div className="cp-donut-graphic">
-        <svg viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`LeetCode solved breakdown: ${easy} easy, ${medium} medium, ${hard} hard out of ${solvedTotal}`}>
-          <defs>
-            <filter id="cpRingGlow" x="-60%" y="-60%" width="220%" height="220%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-          {LC_RINGS.map((ring, index) => {
-            const radius = radii[index]
-            const circumference = 2 * Math.PI * radius
-            const ratio = Math.min(1, Math.max(0.012, values[ring.key] / solvedTotal))
-            const finalOffset = circumference * (1 - ratio)
-            return (
-              <g key={ring.key} transform={`rotate(-90 ${size / 2} ${size / 2})`}>
-                <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={PAPER} strokeOpacity="0.09" strokeWidth={stroke} />
-                <circle
-                  cx={size / 2}
-                  cy={size / 2}
-                  r={radius}
-                  fill="none"
-                  stroke={ring.color}
-                  strokeWidth={stroke}
-                  strokeDasharray={circumference}
-                  strokeDashoffset={reduced || visible ? finalOffset : circumference}
-                  className="cp-ring"
-                  style={{
-                    transitionDelay: reduced ? '0ms' : `${index * 130}ms`,
-                    filter: index === 1 ? 'url(#cpRingGlow)' : undefined,
-                  }}
-                />
-              </g>
-            )
-          })}
-        </svg>
-        <div className="cp-donut-center">
-          <span className="cp-donut-total">{total}</span>
-          <span className="cp-donut-cap">SOLVED</span>
-        </div>
-      </div>
-      <div className="cp-legend">
-        {LC_RINGS.map((ring, i) => (
-          <span className="cp-chip" key={ring.key}>
-            <span className="cp-chip-idx">0{i + 1}</span>
-            <i className="cp-chip-dot" style={{ background: ring.color }} />
-            <span className="cp-chip-label">{ring.label}</span>
-            <span className="cp-chip-val">{values[ring.key]}</span>
-          </span>
-        ))}
-      </div>
+    <div className="cp-legend cp-legend-inline">
+      {LC_RINGS.map((ring, i) => (
+        <span className="cp-chip" key={ring.key}>
+          <span className="cp-chip-idx">0{i + 1}</span>
+          <i className="cp-chip-dot" style={{ background: ring.color }} />
+          <span className="cp-chip-label">{ring.label}</span>
+          <span className="cp-chip-val">{values[ring.key]}</span>
+        </span>
+      ))}
     </div>
   )
 }
 
-/* ── Codeforces Rating History Chart ── */
+/* ── Rating history chart (shared by LeetCode + Codeforces) ── */
 function RatingChart({
-  history,
-  maxRating,
+  points,
+  accent,
+  referenceValue = null,
+  referenceLabel = 'MAX',
   visible,
   reduced,
   loading,
+  ariaLabel,
+  emptyTitle,
+  emptySub,
 }: {
-  history: CfHistoryEntry[]
-  maxRating: number
+  points: RatingPoint[]
+  accent: string
+  referenceValue?: number | null
+  referenceLabel?: string
   visible: boolean
   reduced: boolean
   loading: boolean
+  ariaLabel: string
+  emptyTitle: string
+  emptySub: string
 }) {
   const [hover, setHover] = useState<number | null>(null)
+  const uid = useId().replace(/[^a-zA-Z0-9]/g, '')
+  const fillId = `cpFill${uid}`
+  const strokeId = `cpStroke${uid}`
+  const glowId = `cpGlow${uid}`
+
   const width = 520
   const height = 190
   const pad = { top: 22, right: 68, bottom: 26, left: 38 }
 
-  const active = hover !== null && history[hover] ? history[hover] : null
+  const active = hover !== null && points[hover] ? points[hover] : null
+  const hasReference = referenceValue !== null
 
-  const ratings = history.map((entry) => entry.newRating)
-  const allVals = ratings.length > 0 ? ratings : [maxRating]
+  const ratings = points.map((entry) => entry.rating)
+  const domainVals = ratings.length > 0 ? ratings : hasReference ? [referenceValue as number] : [0]
 
-  const rawMin = Math.min(...allVals, maxRating)
-  const rawMax = Math.max(...allVals, maxRating)
+  const rawMin = Math.min(...domainVals, ...(hasReference ? [referenceValue as number] : []))
+  const rawMax = Math.max(...domainVals, ...(hasReference ? [referenceValue as number] : []))
 
   // Domain [min - 100, max + 100]
   const yDomainMin = Math.max(0, rawMin - 100)
@@ -275,36 +244,36 @@ function RatingChart({
   const innerH = height - pad.top - pad.bottom
 
   const geo = useMemo(() => {
-    if (history.length === 0) return null
-    const count = history.length
+    if (points.length === 0) return null
+    const count = points.length
     const x = (i: number) => pad.left + (count <= 1 ? innerW / 2 : (i / (count - 1)) * innerW)
     const y = (rating: number) =>
       pad.top + (1 - (rating - yDomainMin) / (yDomainMax - yDomainMin || 1)) * innerH
 
-    const pts = history.map((entry, index) => [x(index), y(entry.newRating)] as [number, number])
+    const pts = points.map((entry, index) => [x(index), y(entry.rating)] as [number, number])
     const line = pts.reduce((acc, [px, py], i) => (i === 0 ? `M ${px} ${py}` : `${acc} L ${px} ${py}`), '')
     const area = `${line} L ${x(count - 1)} ${pad.top + innerH} L ${x(0)} ${pad.top + innerH} Z`
     return { x, y, line, area, count, pts }
-  }, [history, yDomainMin, yDomainMax, innerW, innerH, pad.left, pad.top])
+  }, [points, yDomainMin, yDomainMax, innerW, innerH, pad.left, pad.top])
 
-  if (!geo || history.length === 0) {
+  if (!geo || points.length === 0) {
     return (
       <div className="cp-chart-empty">
         <span className="cp-chart-empty-mark">{loading ? '◌' : '⊘'}</span>
         <span className="cp-chart-empty-title">
-          {loading ? 'SYNCING RATING HISTORY' : 'NO RATING TELEMETRY FOUND'}
+          {loading ? 'SYNCING RATING HISTORY' : emptyTitle}
         </span>
         <span className="cp-chart-empty-sub">
-          {loading ? 'CF.API // AWAITING CONTEST DATA' : 'OFFLINE OR NO CONTEST HISTORY RETURNED'}
+          {loading ? 'AWAITING CONTEST DATA' : emptySub}
         </span>
         {!loading && <span className="cp-chart-empty-sub">LIVE STATS ABOVE ARE STILL SYNCED</span>}
       </div>
     )
   }
 
-  const maxY = geo.y(maxRating)
-  const lastX = geo.x(history.length - 1)
-  const lastY = geo.y(history[history.length - 1].newRating)
+  const maxY = hasReference ? geo.y(referenceValue as number) : 0
+  const lastX = geo.x(points.length - 1)
+  const lastY = geo.y(points[points.length - 1].rating)
 
   return (
     <div className="cp-chart-wrap">
@@ -313,20 +282,20 @@ function RatingChart({
         className="cp-chart"
         preserveAspectRatio="none"
         role="img"
-        aria-label="Codeforces rating trajectory"
+        aria-label={ariaLabel}
       >
         <defs>
-          <linearGradient id="cpChartFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={ELECTRIC} stopOpacity="0.32" />
-            <stop offset="65%" stopColor={ELECTRIC} stopOpacity="0.08" />
-            <stop offset="100%" stopColor={ELECTRIC} stopOpacity="0" />
+          <linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={accent} stopOpacity="0.32" />
+            <stop offset="65%" stopColor={accent} stopOpacity="0.08" />
+            <stop offset="100%" stopColor={accent} stopOpacity="0" />
           </linearGradient>
-          <linearGradient id="cpChartStroke" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor={ELECTRIC} stopOpacity="0.65" />
-            <stop offset="70%" stopColor={ELECTRIC} stopOpacity="1" />
+          <linearGradient id={strokeId} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor={accent} stopOpacity="0.65" />
+            <stop offset="70%" stopColor={accent} stopOpacity="1" />
             <stop offset="100%" stopColor={PAPER} stopOpacity="0.95" />
           </linearGradient>
-          <filter id="cpChartGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <filter id={glowId} x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="3.5" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
@@ -354,7 +323,7 @@ function RatingChart({
                 y={yPos + 3}
                 textAnchor="end"
                 fill={PAPER}
-                fillOpacity="0.35"
+                fillOpacity="0.6"
                 className="cp-chart-axis-lbl"
               >
                 {tickVal}
@@ -363,31 +332,35 @@ function RatingChart({
           )
         })}
 
-        {/* Max rating dashed line with right-padded MAX label */}
-        <line
-          x1={pad.left}
-          x2={pad.left + innerW}
-          y1={maxY}
-          y2={maxY}
-          stroke={ELECTRIC}
-          strokeOpacity="0.55"
-          strokeDasharray="4 4"
-        />
-        <text
-          x={width - 6}
-          y={maxY + 3}
-          textAnchor="end"
-          fill={ELECTRIC}
-          className="cp-chart-max"
-        >
-          MAX {maxRating}
-        </text>
+        {/* Optional peak/reference dashed line with right-padded label */}
+        {hasReference && (
+          <>
+            <line
+              x1={pad.left}
+              x2={pad.left + innerW}
+              y1={maxY}
+              y2={maxY}
+              stroke={accent}
+              strokeOpacity="0.55"
+              strokeDasharray="4 4"
+            />
+            <text
+              x={width - 6}
+              y={maxY + 3}
+              textAnchor="end"
+              fill={PAPER}
+              className="cp-chart-max"
+            >
+              {referenceLabel} {referenceValue}
+            </text>
+          </>
+        )}
 
-        <path d={geo.area} fill="url(#cpChartFill)" className="cp-chart-area" data-visible={visible || reduced} />
+        <path d={geo.area} fill={`url(#${fillId})`} className="cp-chart-area" data-visible={visible || reduced} />
         <path
           d={geo.line}
           fill="none"
-          stroke="url(#cpChartStroke)"
+          stroke={`url(#${strokeId})`}
           strokeWidth="2"
           strokeLinejoin="round"
           strokeLinecap="round"
@@ -404,9 +377,9 @@ function RatingChart({
           cx={lastX}
           cy={lastY}
           r={7}
-          fill={ELECTRIC}
+          fill={accent}
           fillOpacity="0.25"
-          filter="url(#cpChartGlow)"
+          filter={`url(#${glowId})`}
           className="cp-chart-halo"
         />
         <circle
@@ -414,7 +387,7 @@ function RatingChart({
           cy={lastY}
           r={3.5}
           fill={PAPER}
-          stroke={ELECTRIC}
+          stroke={accent}
           strokeWidth="2"
           className="cp-chart-dot"
         />
@@ -442,17 +415,19 @@ function RatingChart({
           className="cp-chart-tip"
           style={{
             left: `${Math.min(Math.max(geo.x(hover) / width, 0.14), 0.84) * 100}%`,
-            top: `${Math.max(6, (geo.y(active.newRating) / height) * 100 - 4)}%`,
+            top: `${Math.max(6, (geo.y(active.rating) / height) * 100 - 4)}%`,
           }}
         >
-          <span className="cp-chart-tip-name">{active.contestName}</span>
+          <span className="cp-chart-tip-name">{active.label}</span>
           <span className="cp-chart-tip-meta">
-            <b>{active.newRating}</b>
-            <i style={{ color: active.newRating >= active.oldRating ? PAPER : ORANGE }}>
-              {active.newRating >= active.oldRating ? '▲' : '▼'}
-              {Math.abs(active.newRating - active.oldRating)}
-            </i>
-            <em>#{active.rank}</em>
+            <b>{active.rating}</b>
+            {active.delta !== null && (
+              <i style={{ color: active.delta >= 0 ? PAPER : ORANGE }}>
+                {active.delta >= 0 ? '▲' : '▼'}
+                {Math.abs(active.delta)}
+              </i>
+            )}
+            {active.rank !== null && <em>#{active.rank}</em>}
           </span>
         </div>
       )}
@@ -515,11 +490,11 @@ function useCardMotion(enabled: boolean) {
   return attach
 }
 
-function StatCell({ index, value, label, accent }: { index: string; value: string; label: string; accent?: string }) {
+function StatCell({ index, value, label }: { index: string; value: string; label: string }) {
   return (
     <div className="cp-cell">
       <span className="cp-cell-idx">{index}</span>
-      <span className="cp-cell-value" style={accent ? { color: accent } : undefined}>{value}</span>
+      <span className="cp-cell-value">{value}</span>
       <span className="cp-cell-label">{label}</span>
     </div>
   )
@@ -543,7 +518,7 @@ function Stickers({
       <span className="cp-sticker cp-sticker-rank" style={rankColor ? { color: rankColor, borderColor: rankColor } : undefined}>
         {rank}
       </span>
-      <span className="cp-sticker cp-sticker-live">
+      <span className={`cp-sticker cp-sticker-live${live !== 'LIVE' ? ' is-offline' : ''}`}>
         <i className="cp-live-dot" />
         {live}
       </span>
@@ -573,8 +548,6 @@ function CardShell({
   bestValue,
   rankColor,
   rating,
-  ghostRating,
-  ratingColor,
   heroLabel,
   heroFoot,
   visual,
@@ -595,8 +568,6 @@ function CardShell({
   bestValue: string
   rankColor?: string
   rating: number | null
-  ghostRating?: number | string | null
-  ratingColor?: string
   heroLabel: string
   heroFoot: React.ReactNode
   visual: React.ReactNode
@@ -646,13 +617,10 @@ function CardShell({
             <span className="cp-anno cp-anno-bl">{number}</span>
             <span className="cp-anno cp-anno-br">@{handle}</span>
 
-            {/* Hero number with static ghost copy cleanly clipped inside .cp-hero */}
+            {/* Hero number */}
             <div className="cp-hero">
-              {ghostRating !== undefined && ghostRating !== null && (
-                <div className="cp-ghost" aria-hidden="true">{ghostRating}</div>
-              )}
               <span className="cp-hero-label">{heroLabel}</span>
-              <div className="cp-hero-number" style={ratingColor ? { color: ratingColor } : undefined}>
+              <div className="cp-hero-number">
                 {rating !== null ? (
                   <Odometer value={rating} visible={entered} reduced={reduced} />
                 ) : (
@@ -687,58 +655,116 @@ export default function CP({ initialData }: { initialData?: CPData }) {
   // Normalized data state initialized from server props or fallbacks
   const [lc, setLc] = useState<LeetCodeData>(() => initialData?.lc ?? FALLBACK_LC)
   const [cf, setCf] = useState<CodeforcesData>(() => initialData?.cf ?? FALLBACK_CF)
+  const [lcSource, setLcSource] = useState<DataSource>(() => (initialData?.lc ? 'live' : 'fallback'))
+  const [cfSource, setCfSource] = useState<DataSource>(() => (initialData?.cf ? 'live' : 'fallback'))
 
-  // Client-side offline cache safety net (never refetching from browser)
+  // Load the last known-good snapshot once when the server has no live data.
+  // cf/lc are intentionally NOT dependencies here: setting them must not re-run
+  // this effect (that caused an infinite render loop in the previous version).
   useEffect(() => {
-    let frame = 0
+    let cfFrame = 0
+    let lcFrame = 0
+
     try {
-      const saved = localStorage.getItem('cp-last-good')
-      if (saved) {
-        const parsed = JSON.parse(saved)
-        if (!initialData?.cf && parsed.cf) {
-          frame = requestAnimationFrame(() => setCf(parsed.cf))
-        }
-        if (!initialData?.lc && parsed.lc) {
-          frame = requestAnimationFrame(() => setLc(parsed.lc))
+      if (!initialData?.cf) {
+        const savedCf = localStorage.getItem('cp-last-good-cf')
+        if (savedCf) {
+          const parsed = JSON.parse(savedCf) as CodeforcesData
+          if (parsed && typeof parsed.rating === 'number' && Array.isArray(parsed.history)) {
+            cfFrame = requestAnimationFrame(() => {
+              setCf(parsed)
+              setCfSource('cache')
+            })
+          }
         }
       }
-      if (initialData?.cf || initialData?.lc) {
-        localStorage.setItem(
-          'cp-last-good',
-          JSON.stringify({
-            cf: initialData?.cf ?? cf,
-            lc: initialData?.lc ?? lc,
-            savedAt: Date.now(),
-          })
-        )
+
+      if (!initialData?.lc) {
+        const savedLc = localStorage.getItem('cp-last-good-lc')
+        if (savedLc) {
+          const parsed = JSON.parse(savedLc) as LeetCodeData
+          if (parsed && typeof parsed.solved === 'number' && Array.isArray(parsed.history)) {
+            lcFrame = requestAnimationFrame(() => {
+              setLc(parsed)
+              setLcSource('cache')
+            })
+          }
+        }
       }
     } catch {
       // Ignore localStorage access errors
     }
-    return () => cancelAnimationFrame(frame)
-  }, [initialData, cf, lc])
 
-  // Sync latest solved counts to shared external store
+    return () => {
+      cancelAnimationFrame(cfFrame)
+      cancelAnimationFrame(lcFrame)
+    }
+  }, [initialData])
+
+  // Persist only real API data, never fallback/cached values.
+  useEffect(() => {
+    try {
+      if (initialData?.cf) {
+        localStorage.setItem('cp-last-good-cf', JSON.stringify(initialData.cf))
+      }
+      if (initialData?.lc) {
+        localStorage.setItem('cp-last-good-lc', JSON.stringify(initialData.lc))
+      }
+    } catch {
+      // Ignore localStorage access errors
+    }
+  }, [initialData])
+
+  // Keep state in sync if a fresh server payload arrives after mount.
+  useEffect(() => {
+    if (!initialData) return
+
+    const frame = requestAnimationFrame(() => {
+      if (initialData.cf) {
+        setCf(initialData.cf)
+        setCfSource('live')
+      }
+      if (initialData.lc) {
+        setLc(initialData.lc)
+        setLcSource('live')
+      }
+    })
+
+    return () => cancelAnimationFrame(frame)
+  }, [initialData])
+
+  // Sync latest solved counts + Codeforces rating to the shared external store
   useEffect(() => {
     setSolvedCounts({
       leetcode: lc.solved,
       codeforces: cf.solved,
+      codeforcesRating: cf.rating,
     })
-  }, [lc.solved, cf.solved])
+  }, [lc.solved, cf.solved, cf.rating])
 
   const [syncedTime, setSyncedTime] = useState('JUST NOW')
 
   useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      if (initialData?.fetchedAt) {
-        const hours = Math.floor((Date.now() - initialData.fetchedAt) / (1000 * 60 * 60))
-        setSyncedTime(`${Math.max(1, hours)}H AGO`)
-        return
+    if (!initialData?.fetchedAt) return
+
+    const update = () => {
+      const minutes = Math.max(0, Math.floor((Date.now() - initialData.fetchedAt) / 60000))
+      if (minutes < 1) {
+        setSyncedTime('JUST NOW')
+      } else if (minutes < 60) {
+        setSyncedTime(`${minutes}M AGO`)
+      } else {
+        const hours = Math.floor(minutes / 60)
+        setSyncedTime(hours < 24 ? `${hours}H AGO` : `${Math.floor(hours / 24)}D AGO`)
       }
-      const hrs = new Date().getHours()
-      setSyncedTime(`${hrs === 0 ? 12 : hrs}H AGO`)
-    })
-    return () => cancelAnimationFrame(frame)
+    }
+
+    const frame = requestAnimationFrame(update)
+    const interval = setInterval(update, 60000)
+    return () => {
+      cancelAnimationFrame(frame)
+      clearInterval(interval)
+    }
   }, [initialData?.fetchedAt])
 
   const reduced = useMediaQuery(REDUCED_QUERY)
@@ -758,6 +784,29 @@ export default function CP({ initialData }: { initialData?: CPData }) {
   const cfSolved = useCountUp(cf.solved, cfVisible)
   const cfRating = useCountUp(cf.rating, cfVisible)
   const cfContests = useCountUp(cf.contests, cfVisible)
+
+  // Flatten both contest histories into a shared chart-ready shape
+  const lcPoints = useMemo<RatingPoint[]>(
+    () =>
+      lc.history.map((entry, i) => ({
+        label: entry.contestName,
+        rating: entry.rating,
+        rank: entry.ranking > 0 ? entry.ranking : null,
+        delta: i > 0 ? entry.rating - lc.history[i - 1].rating : null,
+      })),
+    [lc.history]
+  )
+
+  const cfPoints = useMemo<RatingPoint[]>(
+    () =>
+      cf.history.map((entry) => ({
+        label: entry.contestName,
+        rating: entry.newRating,
+        rank: entry.rank,
+        delta: entry.newRating - entry.oldRating,
+      })),
+    [cf.history]
+  )
 
   // LeetCode Ticker items reading from normalized object
   const lcTicker = [
@@ -784,6 +833,14 @@ export default function CP({ initialData }: { initialData?: CPData }) {
     ? `#${lc.ranking}`
     : '—'
 
+  const hasLive = lcSource === 'live' || cfSource === 'live'
+  const hasCache = lcSource === 'cache' || cfSource === 'cache'
+  const syncLabel = hasLive
+    ? `SYNCED ${syncedTime}`
+    : hasCache
+    ? 'CACHED DATA'
+    : 'OFFLINE SNAPSHOT'
+
   return (
     <section id="leetcode" className="cp-section">
       <FadeIn>
@@ -794,8 +851,8 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           </div>
           <div className="cp-header-meta">
             <div className="cp-sync">
-              <span className="cp-sync-dot" />
-              <span>SYNCED {syncedTime}</span>
+              <span className={`cp-sync-dot${hasLive ? '' : ' is-offline'}`} />
+              <span>{syncLabel}</span>
             </div>
           </div>
         </div>
@@ -804,7 +861,6 @@ export default function CP({ initialData }: { initialData?: CPData }) {
       <FadeIn delay={0.08}>
         <div className="cp-heading-row">
           <h2 className="cp-heading">{cpDefaults.sectionHeading}</h2>
-          <span className="cp-heading-mark" aria-hidden="true">[ 02 // 07 ]</span>
         </div>
       </FadeIn>
 
@@ -819,11 +875,10 @@ export default function CP({ initialData }: { initialData?: CPData }) {
             handle={LEETCODE_USERNAME.toUpperCase()}
             ticker={lcTicker}
             rank={lc.topPercent !== null ? `TOP ${lc.topPercent}%` : 'LEETCODE'}
-            live="LIVE"
+            live={sourceLabel(lcSource)}
             bestLabel="BEST RANK"
             bestValue={lcBestSticker}
             rating={lcRating}
-            ghostRating={lc.rating}
             heroLabel="CONTEST RATING // LC"
             heroFoot={
               <>
@@ -836,15 +891,23 @@ export default function CP({ initialData }: { initialData?: CPData }) {
             visual={
               <>
                 <div className="cp-chart-head">
-                  <span>SOLVE TELEMETRY // BREAKDOWN</span>
+                  <span>RATING HISTORY // {pluralize(lc.history.length || (lc.contests ?? 0), 'CONTEST', 'CONTESTS')}</span>
+                  {lc.rating !== null && <span className="cp-chart-head-live">LAST {lc.rating}</span>}
                 </div>
-                <RingDonut
+                <RatingChart
+                  points={lcPoints}
+                  accent={AMBER}
+                  visible={lcVisible}
+                  reduced={reduced}
+                  loading={false}
+                  ariaLabel="LeetCode contest rating trajectory"
+                  emptyTitle="NO CONTEST HISTORY"
+                  emptySub="OFFLINE OR NO RATED CONTESTS RETURNED"
+                />
+                <DifficultyLegend
                   easy={lcEasy ?? lc.easy}
                   medium={lcMedium ?? lc.medium}
                   hard={lcHard ?? lc.hard}
-                  total={lcTotal ?? lc.solved}
-                  visible={lcVisible}
-                  reduced={reduced}
                 />
               </>
             }
@@ -871,7 +934,6 @@ export default function CP({ initialData }: { initialData?: CPData }) {
                   index="04"
                   value={lc.topPercent !== null ? `${lc.topPercent}%` : '—'}
                   label="TOP PERCENT"
-                  accent={AMBER}
                 />
               </>
             }
@@ -892,16 +954,14 @@ export default function CP({ initialData }: { initialData?: CPData }) {
             ticker={cfTicker}
             rank={cf.tier.label}
             rankColor={cf.tier.color}
-            live="LIVE"
+            live={sourceLabel(cfSource)}
             bestLabel="MAX"
             bestValue={String(cf.maxRating)}
             rating={cfRating ?? cf.rating}
-            ghostRating={cf.rating}
-            ratingColor={cf.tier.color}
             heroLabel="CONTEST RATING // CF"
             heroFoot={
               <>
-                <span className="cp-hero-delta" style={{ color: cf.tier.color }}>
+                <span className="cp-hero-delta">
                   MAX {cf.maxRating} · {cf.tier.label}
                 </span>
                 <span className="cp-hero-sub">{cf.tier.label} TIER</span>
@@ -914,11 +974,16 @@ export default function CP({ initialData }: { initialData?: CPData }) {
                   <span className="cp-chart-head-live">LAST {cf.rating}</span>
                 </div>
                 <RatingChart
-                  history={cf.history}
-                  maxRating={cf.maxRating}
+                  points={cfPoints}
+                  accent={ELECTRIC}
+                  referenceValue={cf.maxRating}
+                  referenceLabel="MAX"
                   visible={cfVisible}
                   reduced={reduced}
                   loading={false}
+                  ariaLabel="Codeforces rating trajectory"
+                  emptyTitle="NO RATING TELEMETRY FOUND"
+                  emptySub="OFFLINE OR NO CONTEST HISTORY RETURNED"
                 />
               </>
             }
@@ -934,13 +999,11 @@ export default function CP({ initialData }: { initialData?: CPData }) {
                   index="03"
                   value={cf.maxRating > 0 ? String(cf.maxRating) : '—'}
                   label="MAX RATING"
-                  accent={ELECTRIC}
                 />
                 <StatCell
                   index="04"
                   value={cf.tier.label}
                   label="CURRENT TIER"
-                  accent={cf.tier.color}
                 />
               </>
             }
@@ -1017,6 +1080,11 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           animation: cpPulse 2s ease-out infinite;
         }
 
+        .cp-sync-dot.is-offline {
+          background: #71717a;
+          animation: none;
+        }
+
         @keyframes cpPulse {
           0% { box-shadow: 0 0 0 0 rgba(250, 95, 52, 0.55); opacity: 1; }
           70% { box-shadow: 0 0 0 7px rgba(250, 95, 52, 0); opacity: 0.5; }
@@ -1034,25 +1102,13 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         }
 
         .cp-heading {
-          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
-          font-size: clamp(2.3rem, 6vw, 5rem);
-          font-weight: 900;
-          letter-spacing: -0.025em;
+          font-size: clamp(2rem, 4.5vw, 3.5rem);
+          font-weight: 500;
+          letter-spacing: -0.03em;
           color: var(--cp-paper);
-          line-height: 0.88;
+          line-height: 1.1;
           margin: 0;
-          text-transform: uppercase;
           text-wrap: balance;
-        }
-
-        .cp-heading-mark {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: clamp(9px, 0.78vw, 11px);
-          letter-spacing: 0.18em;
-          color: var(--cp-paper);
-          opacity: 0.38;
-          white-space: nowrap;
-          padding-bottom: 4px;
         }
 
         /* ── EQUAL HEIGHT GRID WITH ALIGN-ITEMS: STRETCH ── */
@@ -1236,6 +1292,12 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           animation: cpBlink 1.4s steps(2, end) infinite;
         }
 
+        .cp-sticker-live.is-offline .cp-live-dot {
+          background: #71717a;
+          box-shadow: none;
+          animation: none;
+        }
+
         @keyframes cpBlink {
           0%, 45% { opacity: 1; }
           50%, 95% { opacity: 0.15; }
@@ -1365,7 +1427,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           font-size: clamp(7px, 0.58vw, 8.5px);
           letter-spacing: 0.16em;
           color: var(--cp-paper);
-          opacity: 0.4;
+          opacity: 0.72;
           text-transform: uppercase;
           white-space: nowrap;
           pointer-events: none;
@@ -1375,7 +1437,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         .cp-anno-bl { bottom: clamp(1.15rem, 2vw, 1.7rem); left: clamp(1.35rem, 2.5vw, 2rem); }
         .cp-anno-br { bottom: clamp(1.15rem, 2vw, 1.7rem); right: clamp(1.35rem, 2.5vw, 2rem); }
 
-        /* ── HERO NUMBER: overflow hidden clips ghost cleanly inside card ── */
+        /* ── HERO NUMBER ── */
         .cp-hero {
           position: relative;
           overflow: hidden;
@@ -1396,24 +1458,6 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           margin-bottom: clamp(2px, 0.4vw, 5px);
         }
 
-        .cp-ghost {
-          position: absolute;
-          z-index: 0;
-          left: clamp(-14px, -1.2vw, -6px);
-          top: clamp(0.3rem, 1.2vw, 0.9rem);
-          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
-          font-size: clamp(4.8rem, 9.8vw, 8.8rem);
-          font-weight: 900;
-          line-height: 0.72;
-          letter-spacing: -0.045em;
-          color: transparent;
-          -webkit-text-stroke: 1.3px rgba(243, 238, 232, 0.22);
-          opacity: 0.5;
-          pointer-events: none;
-          user-select: none;
-          white-space: nowrap;
-        }
-
         .cp-hero-number {
           position: relative;
           z-index: 2;
@@ -1425,7 +1469,6 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           letter-spacing: -0.035em;
           font-variant-numeric: tabular-nums;
           color: var(--cp-paper);
-          text-shadow: 0 0 42px color-mix(in srgb, var(--accent) 24%, transparent);
         }
 
         .cp-odo { display: inline-flex; }
@@ -1494,10 +1537,10 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           letter-spacing: 0.13em;
           text-transform: uppercase;
           color: var(--cp-paper);
-          opacity: 0.55;
+          opacity: 0.82;
         }
 
-        .cp-chart-head-live { color: var(--cp-blue); opacity: 1; font-weight: 700; }
+        .cp-chart-head-live { color: var(--cp-paper); opacity: 1; font-weight: 700; }
 
         .cp-chart-wrap { position: relative; width: 100%; }
         .cp-chart { display: block; overflow: visible; }
@@ -1565,9 +1608,9 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           font-family: var(--font-geist-mono), monospace;
           font-size: 8.5px;
         }
-        .cp-chart-tip-meta b { font-size: 11px; color: var(--cp-blue); }
+        .cp-chart-tip-meta b { font-size: 11px; color: var(--cp-paper); }
         .cp-chart-tip-meta i { font-style: normal; font-size: 7.5px; }
-        .cp-chart-tip-meta em { font-style: normal; font-size: 7.5px; color: var(--cp-paper); opacity: 0.5; }
+        .cp-chart-tip-meta em { font-style: normal; font-size: 7.5px; color: var(--cp-paper); opacity: 0.72; }
 
         .cp-chart-empty {
           min-height: clamp(140px, 18vw, 180px);
@@ -1588,54 +1631,21 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         }
         .cp-chart-empty-sub {
           font-family: var(--font-geist-mono), monospace;
-          font-size: 7px; letter-spacing: 0.12em; color: var(--cp-paper); opacity: 0.4;
+          font-size: 7px; letter-spacing: 0.12em; color: var(--cp-paper); opacity: 0.72;
         }
 
-        /* ── DONUT ── */
-        .cp-donut-wrap {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: clamp(0.7rem, 1.3vw, 1rem);
-          padding: clamp(0.2rem, 0.6vw, 0.5rem) 0;
-        }
-
-        .cp-donut-graphic { position: relative; width: clamp(150px, 20vw, 200px); aspect-ratio: 1; }
-        .cp-donut-graphic svg { width: 100%; height: 100%; display: block; }
-        .cp-ring { transition: stroke-dashoffset 1400ms cubic-bezier(0.16, 1, 0.3, 1); }
-
-        .cp-donut-center {
-          position: absolute;
-          inset: 0;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 1px;
-          pointer-events: none;
-        }
-
-        .cp-donut-total {
-          font-family: 'Impact', 'Arial Black', sans-serif;
-          font-size: clamp(1.9rem, 3.4vw, 2.6rem);
-          line-height: 0.9;
-          color: var(--cp-paper);
-        }
-
-        .cp-donut-cap {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: clamp(6.5px, 0.55vw, 8px);
-          font-weight: 800;
-          letter-spacing: 0.22em;
-          color: var(--cp-orange);
-        }
-
+        /* ── DIFFICULTY LEGEND ── */
         .cp-legend {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
           gap: clamp(5px, 0.8vw, 9px);
           width: 100%;
+        }
+
+        .cp-legend-inline {
+          justify-content: flex-start;
+          margin-top: clamp(8px, 1.2vw, 12px);
         }
 
         .cp-chip {
@@ -1649,9 +1659,9 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           font-size: clamp(7px, 0.6vw, 8.5px);
           letter-spacing: 0.08em;
         }
-        .cp-chip-idx { color: var(--cp-paper); opacity: 0.35; font-size: 0.85em; }
+        .cp-chip-idx { color: var(--cp-paper); opacity: 0.65; font-size: 0.85em; }
         .cp-chip-dot { width: 5px; height: 5px; }
-        .cp-chip-label { color: var(--cp-paper); opacity: 0.6; }
+        .cp-chip-label { color: var(--cp-paper); opacity: 0.82; }
         .cp-chip-val { color: var(--cp-paper); font-weight: 800; }
 
         /* ── STATS MATRIX ── */
@@ -1684,7 +1694,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           font-weight: 700;
           letter-spacing: 0.06em;
           color: var(--cp-paper);
-          opacity: 0.28;
+          opacity: 0.6;
         }
 
         .cp-cell-value {
@@ -1704,7 +1714,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           letter-spacing: 0.1em;
           text-transform: uppercase;
           color: var(--cp-paper);
-          opacity: 0.5;
+          opacity: 0.8;
         }
 
         /* ── FOOTER: inside .card-inner, pinned to bottom ── */
@@ -1768,7 +1778,6 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         /* ── RESPONSIVE ── */
         @media (max-width: 1024px) {
           .cp-grid { grid-template-columns: minmax(0, 1fr); }
-          .cp-ghost { font-size: clamp(4.5rem, 14vw, 8rem); }
         }
 
         @media (max-width: 640px) {
@@ -1777,8 +1786,6 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           .cp-cell:nth-child(-n + 2) { border-bottom: 1px solid rgba(243, 238, 232, 0.14); }
           .cp-anno-tr, .cp-anno-br { display: none; }
           .cp-stickers { top: 2.8rem; right: -4px; max-width: 50%; }
-          .cp-heading-mark { display: none; }
-          .cp-ghost { opacity: 0.32; }
           .cp-chart-tip { max-width: 150px; }
         }
 
@@ -1810,7 +1817,6 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           .card-frame[data-entered='true'] .cp-sticker-live { transform: rotate(4deg) !important; }
           .card-frame[data-entered='true'] .cp-sticker-best { transform: rotate(-2deg) !important; }
           .cp-odo-strip { transition: none !important; }
-          .cp-ring { transition: none !important; }
           .cp-chart-line { transition: none !important; }
           .cp-chart-area, .cp-chart-dot, .cp-chart-halo {
             opacity: 1 !important;

@@ -29,7 +29,7 @@ export default function Contact() {
       <a href={`mailto:${email}`} className="contact-email-link">
         {email} ↗
       </a>
-      <p className="contact-response-time" dangerouslySetInnerHTML={{ __html: contactData.responseTime }} />
+      <p className="contact-response-time">{contactData.responseTime}</p>
       </FadeIn>
 
       <FadeIn delay={0.3}>

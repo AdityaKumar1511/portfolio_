@@ -19,9 +19,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const study = caseStudies[slug]
   if (!study) return { title: 'Project Case Study' }
 
+  const title = `${study.title} — Case Study | Aditya Kumar`
+
   return {
-    title: `${study.title} — Case Study | Aditya Kumar`,
+    title,
     description: study.subtitle,
+    alternates: {
+      // The /case-study/[slug] route re-exports this page, so both URL shapes
+      // intentionally point search engines at the canonical /projects URL.
+      canonical: `/projects/${slug}`,
+    },
+    openGraph: {
+      type: 'article',
+      title,
+      description: study.subtitle,
+      url: `/projects/${slug}`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: study.subtitle,
+    },
   }
 }
 
@@ -52,7 +70,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
   }
 
   return (
-    <div className="case-study-root">
+    <div className="case-study-root" id="main-content">
       {/* ── TOP NAV BAR ── */}
       <nav className="case-study-nav">
         <div className="nav-container">

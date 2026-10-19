@@ -8,7 +8,7 @@ export default function Ticker() {
   const marqueeItems = [...items, ...items, ...items, ...items]
 
   return (
-    <div className="ticker-wrapper">
+    <div className="ticker-wrapper" aria-hidden="true">
       <div className="ticker-container">
         <div className="animate-marquee ticker-track">
           {marqueeItems.map((item, idx) => (

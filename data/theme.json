@@ -6,16 +6,6 @@
     "wip": { "color": "#d4cec7", "bg": "rgba(212,206,199,0.08)", "border": "rgba(212,206,199,0.2)" },
     "shipped": { "color": "#aed8e6", "bg": "rgba(174,216,230,0.08)", "border": "rgba(174,216,230,0.2)" }
   },
-  "cfRankColors": {
-    "newbie": "#d4cec7",
-    "pupil": "#c2ebd4",
-    "specialist": "#aed8e6",
-    "expert": "#adcaff",
-    "candidate master": "#e8b4e8",
-    "master": "#ffd2a1",
-    "grandmaster": "#f9b6c3",
-    "default": "#d4cec7"
-  },
   "heatmapColors": {
     "level1": "#3d231d",
     "level2": "#6b372a",

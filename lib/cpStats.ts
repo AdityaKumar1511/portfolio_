@@ -6,6 +6,7 @@ import cpDefaults from '@/data/cpDefaults.json'
 export interface CpSolvedCounts {
   leetcode: number
   codeforces: number
+  codeforcesRating: number
 }
 
 /**
@@ -18,6 +19,7 @@ export const CP_DEFAULTS = cpDefaults
 export const DEFAULT_SOLVED_COUNTS: CpSolvedCounts = {
   leetcode: cpDefaults.leetcode.totalSolved,
   codeforces: cpDefaults.codeforces.solvedCount,
+  codeforcesRating: cpDefaults.codeforces.rating,
 }
 
 let solvedCounts: CpSolvedCounts = { ...DEFAULT_SOLVED_COUNTS }
@@ -29,7 +31,11 @@ export function getSolvedCounts(): CpSolvedCounts {
 
 export function setSolvedCounts(patch: Partial<CpSolvedCounts>): void {
   const next = { ...solvedCounts, ...patch }
-  if (next.leetcode === solvedCounts.leetcode && next.codeforces === solvedCounts.codeforces) return
+  if (
+    next.leetcode === solvedCounts.leetcode &&
+    next.codeforces === solvedCounts.codeforces &&
+    next.codeforcesRating === solvedCounts.codeforcesRating
+  ) return
   solvedCounts = next
   listeners.forEach((listener) => listener())
 }

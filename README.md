@@ -3,17 +3,13 @@
 Personal developer portfolio built with Next.js 16 and a dark, cinematic editorial aesthetic. Live at **[adityakumar15.vercel.app](https://adityakumar15.vercel.app)**.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Next.js](https://img.shields.io/badge/Next.js-16.2.10-black)
+![Next.js](https://img.shields.io/badge/Next.js-16.4.2-black)
 ![React](https://img.shields.io/badge/React-19.2.4-61DAFB)
 
 ## Description
 
-This is the source for my personal portfolio site — a single-page, section-based site that presents my projects, competitive programming stats, GitHub activity, and experience to recruiters and fellow developers. It's built to double as a live demonstration of front-end craft: custom cursor, scroll-driven interactions (GSAP), and a terminal-style "how I work" section, all on top of a dark, minimal visual system.
+This is the source for my personal portfolio site — a single-page, section-based site that presents my projects, competitive programming stats, GitHub activity, and experience to recruiters and fellow developers. It's built to double as a live demonstration of front-end craft: custom cursor, scroll-driven interactions (GSAP), and an interactive discipline/node-graph "how I work" section, all on top of a dark, minimal visual system.
 
-<!-- TODO: drop a screenshot or screen-recording GIF of the live site here -->
-```
-![Portfolio preview](./public/preview.gif)
-```
 **Live demo:** [adityakumar15.vercel.app](https://adityakumar15.vercel.app)
 
 ## Table of Contents
@@ -35,13 +31,12 @@ This is the source for my personal portfolio site — a single-page, section-bas
 
 ## Features
 
-- **Live GitHub stats** — contribution calendar, streaks, and commit counts pulled client-side for `AdityaKumar1511`
-- **Live competitive programming stats** — LeetCode (`Adi_2007`) and Codeforces (`aditya.kumar00706`) solve counts, ranks, and contest ratings
-- **Interactive terminal panel** — a scripted `whoami` / `ls projects` / `cat <project>` style command list driven by `data/terminal.json`
+- **Live GitHub stats** — contribution calendar, streaks, and commit counts fetched server-side for `AdityaKumar1511`, with a saved snapshot fallback
+- **Live competitive programming stats** — LeetCode (`Adi_2007`) and Codeforces (`aditya.kumar00706`) solve counts, ranks, and contest ratings, with offline/cached labels
 - **Custom cursor** and GSAP-powered scroll interactions throughout
 - **Section-based single-page layout** — Hero, About, Experience, Projects, GitHub, LeetCode, How I Work, Contact
-- **Content-as-data** — projects, skills, achievements, and terminal copy are all driven by JSON files in `data/`, not hardcoded in components
-- **Resume download** served directly from `/public/resume.pdf`
+- **Content-as-data** — projects, bio, workflow, and fallback stats are driven by JSON files in `data/`
+- **Resume download** served at `/resume.pdf` (from `public/resume.pdf`)
 - Fully responsive, dark editorial theme with a consistent CSS custom-property color system
 
 ## Tech Stack
@@ -53,15 +48,13 @@ This is the source for my personal portfolio site — a single-page, section-bas
 | Language | TypeScript |
 | Styling | Tailwind CSS 4, custom CSS variables |
 | Animation | [GSAP](https://gsap.com/) + `@gsap/react`, Framer Motion |
-| 3D | `@splinetool/react-spline` |
 | Icons | lucide-react |
 | Fonts | Geist Sans / Geist Mono |
-| Analytics | Vercel Analytics |
 | Hosting | Vercel |
 
 ## Architecture
 
-This is a single Next.js App Router app — no separate backend. Dynamic content (GitHub, LeetCode, Codeforces stats) is fetched client-side directly from public third-party APIs inside the respective components, with sensible fallback/mock values shown while loading.
+This is a single Next.js App Router app — no separate backend. Dynamic content (GitHub, LeetCode, Codeforces stats) is fetched **server-side** in `lib/github.ts` and `lib/cp.ts` and cached for one hour. The GitHub request uses a server-only `GITHUB_TOKEN`; CP requests use the public APIs and fall back to saved snapshot values if a request fails.
 
 ```mermaid
 flowchart LR
@@ -70,23 +63,23 @@ flowchart LR
     A --> D[Experience]
     A --> E[Projects]
     A --> F[GitHub]
-    A --> G[LeetCode]
+    A --> G[CP]
     A --> H[HowIWork]
     A --> I[Contact]
 
     E -.reads.-> J[(data/projects.json)]
-    D -.reads.-> K[(data/achievements.json)]
-    H -.reads.-> L[(data/terminal.json)]
+    D -.reads.-> K[(data/experience.json)]
+    H -.reads.-> L[(data/howIWork.json)]
 
-    F -->|client fetch| M[(GitHub API)]
-    G -->|client fetch| N[(LeetCode / Codeforces APIs)]
+    F -->|server fetch| M[(GitHub GraphQL API)]
+    G -->|server fetch| N[(LeetCode / Codeforces APIs)]
 ```
 
-Key decisions: content that's likely to change often (projects, skills, achievements, terminal copy) lives in `data/*.json` rather than JSX, so updates don't require touching component code. Third-party stats are fetched client-side (`'use client'` components) rather than server-side, trading a brief loading flash for zero server/API-key management.
+Key decisions: content that changes often (projects, experience, workflow, fallback stats) lives in `data/*.json` rather than JSX. Third-party stats are fetched server-side and cached with `unstable_cache`, keeping API tokens private and avoiding a loading flash. The browser only reads a localStorage snapshot when the server has no live data.
 
 ## Prerequisites
 
-- Node.js **18.18+** (required by Next.js 16)
+- Node.js **20.9+** (required by Next.js 16)
 - npm (or yarn / pnpm / bun — any Node package manager works)
 
 ## Installation
@@ -99,15 +92,21 @@ npm install
 
 ## Configuration
 
-No environment variables or API keys are required. GitHub, LeetCode, and Codeforces stats are pulled from public, unauthenticated endpoints at runtime in the browser.
+Create a `.env.local` file (or set the variable in Vercel) with a GitHub token:
 
-If you fork this for your own use, update the hardcoded usernames before deploying:
+```bash
+GITHUB_TOKEN=ghp_your_token_here
+```
+
+The token only needs `read:user` access. It is read exclusively on the server in `lib/github.ts`. Without it, the GitHub section shows the saved snapshot from `data/githubDefaults.json`.
+
+If you fork this for your own use, update the usernames in one place:
 
 | File | Variable | Purpose |
 |---|---|---|
-| `components/GitHub.tsx` | `USERNAME` | GitHub username for contribution stats |
-| `components/LeetCode.tsx` | `LEETCODE_USERNAME` | LeetCode username for solve/contest stats |
-| `components/LeetCode.tsx` | `CODEFORCES_USERNAME` | Codeforces handle for rating/rank stats |
+| `data/meta.json` | `githubUsername` | GitHub username for contribution stats |
+| `data/meta.json` | `leetcodeUsername` | LeetCode username for solve/contest stats |
+| `data/meta.json` | `codeforcesUsername` | Codeforces handle for rating/rank stats |
 | `data/meta.json` | — | Name, tagline, role, socials, resume path shown across the site |
 
 ## Usage
@@ -135,32 +134,35 @@ portfolio_/
 ├── components/
 │   ├── Hero.tsx            # Landing section
 │   ├── About.tsx           # Bio section
-│   ├── Experience.tsx      # Experience timeline
+│   ├── Experience.tsx      # Achievements/experience list
 │   ├── Projects.tsx        # Project cards, reads data/projects.json
-│   ├── GitHub.tsx          # Live GitHub contribution stats
-│   ├── LeetCode.tsx        # Live LeetCode + Codeforces stats
-│   ├── HowIWork.tsx         # Terminal-style workflow section
+│   ├── GitHub.tsx          # GitHub contribution stats + snapshot fallback
+│   ├── CP.tsx              # LeetCode + Codeforces stats
+│   ├── HowIWork.tsx        # Discipline/node workflow section
 │   ├── Contact.tsx          # Contact section
-│   ├── Navbar.tsx / Footer.tsx / Ticker.tsx / CustomCursor.tsx
+│   ├── Ticker.tsx / CustomCursor.tsx
 ├── data/
-│   ├── meta.json            # Name, tagline, socials, resume path
+│   ├── meta.json            # Name, tagline, socials, resume path, usernames
 │   ├── projects.json        # Project list (name, tech, links, impact)
-│   ├── skills.json          # Skills grouped by category
-│   ├── achievements.json    # Hackathons, competitive programming, open source
-│   └── terminal.json        # Commands/output for the terminal section
-├── lib/utils.ts             # Shared utilities (className merging, etc.)
-├── types/index.ts           # Shared TypeScript types
+│   ├── cpDefaults.json      # Saved CP snapshot used when APIs fail
+│   ├── githubDefaults.json  # Saved GitHub snapshot and section copy
+│   ├── experience.json      # Achievements/experience rows
+│   └── howIWork.json        # Discipline/node workflow content
+├── lib/
+│   ├── github.ts            # Server-only GitHub GraphQL fetch + validation
+│   └── cp.ts                # Server-only LeetCode/Codeforces fetch
 └── public/                  # Static assets (resume.pdf, profile.png, robots.txt)
 ```
 
 ## Content Management
 
 To update the site's content without touching component code, edit:
-- **Projects** → `data/projects.json` (add/remove entries; `featured: true` controls prominent placement)
-- **Skills** → `data/skills.json`
-- **Achievements / hackathons / CP stats** → `data/achievements.json`
-- **Terminal commands** → `data/terminal.json`
-- **Bio / socials / resume link** → `data/meta.json`
+- **Projects** → `data/projects.json` (order controls display order)
+- **Experience / achievements rows** → `data/experience.json`
+- **How I Work disciplines** → `data/howIWork.json`
+- **Fallback CP stats** → `data/cpDefaults.json`
+- **Fallback GitHub stats** → `data/githubDefaults.json`
+- **Bio / socials / resume link / usernames** → `data/meta.json`
 
 ## Deployment
 
@@ -171,14 +173,13 @@ npm i -g vercel
 vercel
 ```
 
-Or connect the repo directly at [vercel.com/new](https://vercel.com/new) — no environment variables are required for a default deploy.
+Or connect the repo directly at [vercel.com/new](https://vercel.com/new). Add `GITHUB_TOKEN` to the project's environment variables for live GitHub data; otherwise the saved snapshot is used.
 
 ## Roadmap
 
-<!-- TODO: fill in from your own backlog -->
-- [ ] Fix `og:url` / `og:image` metadata for link previews
-- [ ] Run `depcheck` and remove unused dependencies
-- [ ] Add `robots.ts` and `sitemap.ts`
+- [x] Add `og:image`, canonical metadata, and `sitemap.ts`
+- [x] Add custom `not-found`, `error`, and `loading` pages
+- [x] Remove unused dependencies and dead utility components
 - [ ] Move to a custom domain
 
 ## License
@@ -189,7 +190,6 @@ MIT — see [LICENSE](./LICENSE).
 
 - [Next.js](https://nextjs.org) — application framework
 - [GSAP](https://gsap.com/) — scroll and motion animation
-- [Spline](https://spline.design/) — 3D visuals
 - [Geist](https://vercel.com/font) — typography
 - [Tailwind CSS](https://tailwindcss.com/) — styling
 

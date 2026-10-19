@@ -4,22 +4,19 @@ import { useEffect, useRef, useState } from 'react'
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null)
   const [hovered, setHovered] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
     const hasPointer = window.matchMedia('(pointer: fine)').matches
     if (!hasPointer) return
 
-    setMounted(true)
     document.body.classList.add('has-custom-cursor')
 
     const onMove = (e: MouseEvent) => {
       if (cursorRef.current) {
         cursorRef.current.style.left = `${e.clientX}px`
         cursorRef.current.style.top = `${e.clientY}px`
+        cursorRef.current.style.opacity = '1'
       }
-      if (!visible) setVisible(true)
     }
 
     const onOver = (e: MouseEvent) => {
@@ -36,8 +33,12 @@ export default function CustomCursor() {
       setHovered(isInteractive || isText)
     }
 
-    const onLeave = () => setVisible(false)
-    const onEnter = () => setVisible(true)
+    const onLeave = () => {
+      if (cursorRef.current) cursorRef.current.style.opacity = '0'
+    }
+    const onEnter = () => {
+      if (cursorRef.current) cursorRef.current.style.opacity = '1'
+    }
 
     window.addEventListener('mousemove', onMove)
     document.addEventListener('mouseover', onOver)
@@ -51,19 +52,7 @@ export default function CustomCursor() {
       document.removeEventListener('mouseleave', onLeave)
       document.removeEventListener('mouseenter', onEnter)
     }
-  }, [visible])
+  }, [])
 
-  if (!mounted) return null
-
-  return (
-    <div
-      ref={cursorRef}
-      className={`custom-cursor ${hovered ? 'cursor-hovered' : ''}`}
-      style={{
-        opacity: visible ? 1 : 0,
-        left: '-100px',
-        top: '-100px',
-      }}
-    />
-  )
+  return <div ref={cursorRef} className={`custom-cursor ${hovered ? 'cursor-hovered' : ''}`} />
 }

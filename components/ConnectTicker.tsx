@@ -6,7 +6,7 @@ export default function ConnectTicker() {
   const items = Array.from({ length: 16 }, (_, i) => i)
 
   return (
-    <div className="connect-ticker-wrapper">
+    <div className="connect-ticker-wrapper" aria-hidden="true">
       <div className="connect-ticker-container">
         <div className="animate-marquee connect-ticker-track">
           {items.map((_, idx) => (

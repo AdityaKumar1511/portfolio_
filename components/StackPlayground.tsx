@@ -343,6 +343,7 @@ export default function StackPlayground() {
   const containerRef = useRef<HTMLDivElement>(null)
   const chipRefs = useRef<{ [id: string]: HTMLDivElement | null }>({})
   const bodiesRef = useRef<PhysicsPill[]>([])
+  const startRef = useRef<() => void>(() => {})
   const [isReady, setIsReady] = useState(false)
 
   // Initialize and run physics
@@ -633,6 +634,14 @@ export default function StackPlayground() {
       }
 
       render()
+
+      // Stop the RAF loop once every pill is at rest. Without this the loop
+      // kept running forever after the first drag.
+      if (bodies.length > 0 && bodies.every((b) => b.asleep)) {
+        running = false
+        cancelAnimationFrame(rafId)
+        rafId = 0
+      }
     }
 
     const start = () => {
@@ -642,6 +651,8 @@ export default function StackPlayground() {
       accumulator = 0
       rafId = requestAnimationFrame(loop)
     }
+
+    startRef.current = start
 
     const stop = () => {
       if (!running) return
@@ -727,6 +738,7 @@ export default function StackPlayground() {
 
     return () => {
       stop()
+      startRef.current = () => {}
       ro.disconnect()
       container.removeEventListener('pointerdown', onPointerDown)
       window.removeEventListener('pointermove', onPointerMove)
@@ -749,12 +761,9 @@ export default function StackPlayground() {
       b.omega = (Math.random() - 0.5) * 9
     })
 
-    // Dispatch a subtle tactile event to wake up the animation loop
-    const container = containerRef.current
-    if (container) {
-      container.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: 0, clientY: 0 }))
-      window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }))
-    }
+    // Wake the physics loop directly. Dispatching a synthetic pointerdown
+    // targeted the container, so onPointerDown returned early and never started.
+    startRef.current()
   }, [])
 
   return (
@@ -806,7 +815,7 @@ export default function StackPlayground() {
           overflow: hidden;
           box-sizing: border-box;
           user-select: none;
-          touch-action: none;
+          touch-action: pan-y;
         }
 
         /* Faint dark square grid background */

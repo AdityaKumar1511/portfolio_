@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Hero from '@/components/Hero'
 import About from '@/components/About'
 import Ticker from '@/components/Ticker'
@@ -13,6 +14,12 @@ import { getGithubData } from '@/lib/github'
 
 export const revalidate = 3600
 
+export const metadata: Metadata = {
+  alternates: {
+    canonical: '/',
+  },
+}
+
 export default async function Page() {
   const [cpData, githubData] = await Promise.all([
     getCPData(),
@@ -20,7 +27,7 @@ export default async function Page() {
   ])
 
   return (
-    <main>
+    <main id="main-content">
       <Hero />
       <About />
       <Ticker />

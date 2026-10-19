@@ -780,7 +780,7 @@ function NexusForceDesktopView() {
         <div className="preview-brand">
           <span className="brand-badge" style={{ background: '#6366f1', color: '#fff' }}>🛡️</span>
           <span className="brand-name">
-            NexusForce <span className="brand-ver" style={{ color: '#818cf8' }}>// ESCROW DAO</span>
+            NexusForce <span className="brand-ver" style={{ color: '#818cf8' }}>{'// ESCROW DAO'}</span>
           </span>
         </div>
 
@@ -1155,16 +1155,98 @@ function GenericMobileView({ project }: { project: ProjectProps }) {
    Non-Live Project Showcase: Architectural Blueprint & Telemetry
 ───────────────────────────────────────────────────────────── */
 
+const SHOWCASE_STYLES = `
+  .showcase-2col-card {
+    position: relative;
+    flex: 1;
+    min-height: 360px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #080d13;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.95);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    font-family: var(--font-geist-mono), monospace;
+  }
+
+  @media (max-width: 768px) {
+    .showcase-2col-card {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+  }
+
+  .showcase-col {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .showcase-col:last-child {
+    border-right: none;
+  }
+
+  .showcase-col-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 8px;
+  }
+
+  .showcase-col-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 8px;
+    font-size: 8px;
+    color: #888;
+  }
+
+  .telemetry-bar-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .showcase-col {
+      border-right: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .showcase-col:last-child {
+      border-bottom: none;
+    }
+  }
+`
+
+function ShowcaseStyles() {
+  return <style>{SHOWCASE_STYLES}</style>
+}
+
 export function NonLiveProjectShowcase({ project }: { project: ProjectProps }) {
-  if (project.slug === 'skylens') {
-    return <SkyLensArchitectureShowcase />
-  }
-
-  if (project.slug === 'cipherkit') {
-    return <CipherKitArchitectureShowcase />
-  }
-
-  return <GenericArchitectureShowcase project={project} />
+  return (
+    <>
+      <ShowcaseStyles />
+      {project.slug === 'skylens' ? (
+        <SkyLensArchitectureShowcase />
+      ) : project.slug === 'cipherkit' ? (
+        <CipherKitArchitectureShowcase />
+      ) : (
+        <GenericArchitectureShowcase project={project} />
+      )}
+    </>
+  )
 }
 
 function SkyLensArchitectureShowcase() {
@@ -1359,70 +1441,6 @@ function GenericArchitectureShowcase({ project }: { project: ProjectProps }) {
           CATEGORY: {project.category.toUpperCase()}
         </div>
       </div>
-
-      <style>{`
-        .showcase-2col-card {
-          position: relative;
-          flex: 1;
-          min-height: 360px;
-          border-radius: 14px;
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          background: #080d13;
-          box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.95);
-          overflow: hidden;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          font-family: var(--font-geist-mono), monospace;
-        }
-
-        @media (max-width: 768px) {
-          .showcase-2col-card {
-            grid-template-columns: 1fr;
-            min-height: auto;
-          }
-        }
-
-        .showcase-col {
-          padding: 16px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          border-right: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .showcase-col:last-child {
-          border-right: none;
-        }
-
-        .showcase-col-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-          padding-bottom: 8px;
-        }
-
-        .showcase-col-footer {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
-          padding-top: 8px;
-          font-size: 8px;
-          color: #888;
-        }
-
-        .telemetry-bar-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 6px 10px;
-          border-radius: 4px;
-          background: rgba(0, 0, 0, 0.5);
-          border: 1px solid rgba(255, 255, 255, 0.06);
-          font-size: 8px;
-        }
-      `}</style>
     </div>
   )
 }

@@ -1,22 +1,30 @@
 {
   "leetcode": {
-    "totalSolved": 282,
-    "easySolved": 120,
-    "mediumSolved": 140,
-    "hardSolved": 22,
-    "ranking": "3,054,682",
-    "contestRating": 1542,
-    "contestGlobalRanking": 84320,
-    "topPercentage": 12.5,
-    "contestAttendance": 8
+    "totalSolved": 434,
+    "easySolved": 243,
+    "mediumSolved": 182,
+    "hardSolved": 9,
+    "ranking": "285,005",
+    "contestRating": 1485,
+    "contestGlobalRanking": 435643,
+    "topPercentage": 49.5,
+    "contestAttendance": 1,
+    "contestHistory": [
+      {
+        "contestName": "Biweekly Contest 191",
+        "rating": 1485,
+        "ranking": 8117,
+        "timestamp": 1789223400
+      }
+    ]
   },
   "codeforces": {
-    "rating": 1204,
-    "maxRating": 1250,
-    "rank": "pupil",
-    "maxRank": "pupil",
-    "solvedCount": 145,
-    "contestsCount": 15,
+    "rating": 1027,
+    "maxRating": 1027,
+    "rank": "newbie",
+    "maxRank": "newbie",
+    "solvedCount": 68,
+    "contestsCount": 8,
     "contribution": 0,
     "friendOfCount": 12,
     "avatar": "https://userpic.codeforces.org/no-avatar.jpg"
