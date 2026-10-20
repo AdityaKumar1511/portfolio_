@@ -3,15 +3,13 @@ import meta from '@/data/meta.json'
 import contactData from '@/data/contact.json'
 import socialsData from '@/data/socials.json'
 import FadeIn from './FadeIn'
+import { ArrowUpRight } from './ArrowIcon'
 
 export default function Contact() {
   const { email } = meta
 
   return (
     <section id="contact" className="contact-section">
-      {/* Ambient glow orbs */}
-      <div className="contact-glow contact-glow-2" />
-
       <div className="contact-label-container">
         <FadeIn>
         <span className="contact-label-text">{contactData.label}</span>
@@ -27,7 +25,7 @@ export default function Contact() {
 
       <FadeIn delay={0.2}>
       <a href={`mailto:${email}`} className="contact-email-link">
-        {email} ↗
+        {email} <ArrowUpRight size={14} />
       </a>
       <p className="contact-response-time">{contactData.responseTime}</p>
       </FadeIn>
@@ -60,29 +58,11 @@ export default function Contact() {
           box-sizing: border-box;
           position: relative;
           overflow: hidden;
-        }
-
-        /* Ambient glow orbs */
-        .contact-glow {
-          position: absolute;
-          border-radius: 50%;
-          pointer-events: none;
-          z-index: 0;
-        }
-
-        .contact-glow-2 {
-          width: 400px;
-          height: 400px;
-          bottom: -80px;
-          right: -60px;
-          background: radial-gradient(circle, rgba(174, 216, 230, 0.08) 0%, transparent 70%);
-          filter: blur(70px);
-          animation: contactGlow2 10s ease-in-out infinite alternate;
-        }
-
-        @keyframes contactGlow2 {
-          0% { opacity: 0.4; transform: scale(1); }
-          100% { opacity: 0.8; transform: scale(1.12); }
+          background-image: repeating-linear-gradient(
+            135deg,
+            rgba(212, 206, 199, 0.035) 0 1px,
+            transparent 1px 10px
+          );
         }
 
         .contact-label-container {
@@ -96,17 +76,19 @@ export default function Contact() {
         }
 
         .contact-label-text {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           text-transform: uppercase;
-          letter-spacing: 0.15em;
+          letter-spacing: 0.12em;
           color: #fa5f34;
-          font-weight: 700;
+          font-weight: 500;
         }
 
         .contact-heading {
+          font-family: var(--font-display), sans-serif;
           font-size: clamp(2.5rem, 7vw, 5rem);
-          font-weight: 600;
+          font-weight: 700;
+          font-stretch: 90%;
           letter-spacing: -0.04em;
           line-height: 0.92;
           color: var(--text);
@@ -117,11 +99,13 @@ export default function Contact() {
         }
 
         .contact-email-link {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(0.85rem, 1.8vw, 1.1rem);
           color: #fa5f34;
           text-decoration: none;
-          display: inline-block;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
           margin-bottom: 0.5rem;
           position: relative;
           z-index: 1;
@@ -133,7 +117,7 @@ export default function Contact() {
         }
 
         .contact-response-time {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           text-transform: uppercase;
           letter-spacing: 0.1em;

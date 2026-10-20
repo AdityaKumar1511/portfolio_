@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, type ReactNode } from 'react'
+import { ArrowRight } from '@/components/ArrowIcon'
 
 export default function GlobalError({
   error,
@@ -29,7 +30,7 @@ export default function GlobalError({
     >
       <span
         style={{
-          fontFamily: 'var(--font-geist-mono), monospace',
+          fontFamily: 'var(--font-mono), monospace',
           fontSize: '12px',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
@@ -57,7 +58,10 @@ export default function GlobalError({
         onClick={reset}
         style={{
           alignSelf: 'flex-start',
-          fontFamily: 'var(--font-geist-mono), monospace',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '8px',
+          fontFamily: 'var(--font-mono), monospace',
           fontSize: '12px',
           letterSpacing: '0.12em',
           textTransform: 'uppercase',
@@ -68,7 +72,7 @@ export default function GlobalError({
           cursor: 'pointer',
         }}
       >
-        Try again →
+        Try again <ArrowRight size={14} />
       </button>
     </main>
   )

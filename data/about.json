@@ -1,8 +1,9 @@
 {
-  "serial": "Developer — 01",
-  "heading": "Where Code\nMeets Craft",
-  "bio": "I am a <span class=\"highlight\">full-stack engineer</span> shipping fast, resilient systems — from the data layer to the last pixel. I specialize in designing and building <span class=\"highlight\">scalable architectures</span>, type-safe APIs, and <span class=\"highlight\">highly performant web frontends</span>. With a focus on code correctness, performance, and long-term maintainability, I build digital experiences that solve complex problems with <span class=\"highlight\">elegant, clean solutions</span>.",
+  "serial": "About — 02",
+  "heading": "Reliable systems,\nnot clever ones.",
+  "bio": "I am a second-year CSE student at <span class=\"highlight\">NIT Patna</span>, working across the stack. I build with <span class=\"highlight\">TypeScript, React, Go, and Postgres</span>, and I care about the parts that are easy to skip: error paths, latency, and code that stays readable after launch.",
   "fallbackInitials": "AK",
-  "githubBtnLabel": "View GitHub ↗",
-  "resumeBtnLabel": "View Resume ↗"
+  "githubBtnLabel": "GitHub",
+  "resumeBtnLabel": "Resume",
+  "principle": "Build small, reliable systems. Keep the interface quiet. Let the work hold up under real use."
 }

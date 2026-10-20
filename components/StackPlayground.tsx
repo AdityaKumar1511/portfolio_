@@ -855,7 +855,7 @@ export default function StackPlayground() {
           background: #141517;
           border: 1px solid rgba(255, 255, 255, 0.12);
           border-radius: 9999px;
-          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+          box-shadow: 2px 2px 0 #000;
           white-space: nowrap;
           cursor: grab;
           will-change: transform;
@@ -868,7 +868,7 @@ export default function StackPlayground() {
           z-index: 50;
           border-color: #fa5f34;
           background: #191b20;
-          box-shadow: 0 8px 24px rgba(250, 95, 52, 0.25);
+          box-shadow: 4px 4px 0 #fa5f34;
         }
 
         .stack-pill:hover {
@@ -884,7 +884,7 @@ export default function StackPlayground() {
         }
 
         .pill-name {
-          font-family: var(--font-geist-sans), system-ui, sans-serif;
+          font-family: var(--font-sans), system-ui, sans-serif;
           font-size: 12.5px;
           font-weight: 600;
           letter-spacing: -0.01em;
@@ -892,7 +892,7 @@ export default function StackPlayground() {
           line-height: 1;
         }
 
-        /* Frosted Glass "PLAY WITH ME" Button */
+        /* "PLAY WITH ME" Button */
         .play-with-me-btn {
           position: absolute;
           left: 50%;
@@ -904,14 +904,10 @@ export default function StackPlayground() {
           justify-content: center;
           padding: 7px 22px;
           border-radius: 9999px;
-          background: rgba(45, 48, 55, 0.78);
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-          border: 1px solid rgba(255, 255, 255, 0.24);
-          box-shadow: 
-            inset 0 1px 1px rgba(255, 255, 255, 0.25),
-            0 8px 24px rgba(0, 0, 0, 0.6);
-          font-family: var(--font-geist-mono), monospace;
+          background: #2d3037;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          box-shadow: 3px 3px 0 #000;
+          font-family: var(--font-mono), monospace;
           font-size: 11.5px;
           font-weight: 700;
           letter-spacing: 0.12em;
@@ -923,9 +919,10 @@ export default function StackPlayground() {
         }
 
         .play-with-me-btn:hover {
-          transform: translateX(-50%) scale(1.05);
-          background: rgba(60, 64, 73, 0.9);
+          transform: translateX(-50%) translate(-1px, -1px);
+          background: #3c4049;
           border-color: rgba(255, 255, 255, 0.38);
+          box-shadow: 4px 4px 0 #000;
         }
 
         .play-with-me-btn:active {

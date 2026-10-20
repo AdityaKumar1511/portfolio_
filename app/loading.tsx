@@ -8,7 +8,7 @@ export default function Loading() {
         alignItems: 'center',
         justifyContent: 'center',
         gap: '12px',
-        fontFamily: 'var(--font-geist-mono), monospace',
+        fontFamily: 'var(--font-mono), monospace',
         fontSize: '12px',
         letterSpacing: '0.18em',
         textTransform: 'uppercase',

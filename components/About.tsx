@@ -1,321 +1,331 @@
-'use client'
-import { useState } from 'react'
-import Image from 'next/image'
 import meta from '@/data/meta.json'
 import aboutData from '@/data/about.json'
 import FadeIn from './FadeIn'
+import { ArrowUpRight } from './ArrowIcon'
 
 export default function About() {
-  const [imgErr, setImgErr] = useState(false)
-
-  const { name, github, resumeUrl, profileImage } = meta
-  const { serial, heading, bio, fallbackInitials, githubBtnLabel, resumeBtnLabel } = aboutData
+  const { github, resumeUrl } = meta
+  const { serial, heading, bio, githubBtnLabel, resumeBtnLabel, principle } = aboutData
 
   return (
-    <section id="about" className="about-section-outer">
+    <section id="about" className="about-section">
       <FadeIn>
-      <div className="about-card-container">
-        {/* Header inside rust card */}
-        <div className="about-card-header">
-          <span className="card-brand">{name}</span>
-          <span className="card-label">About Me</span>
-          <span className="card-serial">{serial}</span>
-        </div>
+        <div className="about-shell">
+          <div className="about-top">
+            <span className="about-label">
+              <span className="about-label-line" />
+              About / 02
+            </span>
+            <span className="about-serial">{serial}</span>
+          </div>
 
-        {/* 2-column layout */}
-        <div className="about-card-grid">
-          
-          {/* Left Column: Heading + Bio + Buttons */}
-          <div className="about-col-left">
-            <h2 className="about-card-heading" style={{ whiteSpace: 'pre-line' }}>
-              {heading}
-            </h2>
-            <p className="about-card-bio" dangerouslySetInnerHTML={{ __html: bio }} />
-            
-            <div className="about-buttons-row">
-              <a href={github} target="_blank" rel="noreferrer" className="github-pill-btn">
-                {githubBtnLabel}
-              </a>
-              <a href={resumeUrl} target="_blank" rel="noreferrer" className="github-pill-btn">
-                {resumeBtnLabel}
-              </a>
+          <div className="about-grid">
+            <div className="about-heading-col">
+              <h2 className="about-heading" style={{ whiteSpace: 'pre-line' }}>
+                {heading}
+              </h2>
+              <span className="about-rule" aria-hidden="true" />
+            </div>
+
+            <div className="about-copy-col">
+              <p
+                className="about-bio"
+                dangerouslySetInnerHTML={{ __html: bio }}
+              />
+
+              <div className="about-actions">
+                <a
+                  href={github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="about-action-primary"
+                >
+                  {githubBtnLabel} <ArrowUpRight size={12} />
+                </a>
+                <a
+                  href={resumeUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="about-action-link"
+                >
+                  {resumeBtnLabel} <ArrowUpRight size={12} />
+                </a>
+              </div>
             </div>
           </div>
 
-          {/* Right Column: Profile Image Frame (stretched to fill card height) */}
-          <div className="about-col-right">
-            <div className="profile-image-wrapper">
-              {!imgErr ? (
-                <Image
-                  src={profileImage}
-                  alt={name}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 500px"
-                  style={{ objectFit: 'contain' }}
-                  onError={() => setImgErr(true)}
-                  priority
-                />
-              ) : (
-                <div className="profile-fallback">
-                  <span className="fallback-initials">{fallbackInitials}</span>
-                </div>
-              )}
-            </div>
+          <div className="about-principle">
+            <span className="about-principle-label">Principle /</span>
+            <p>{principle}</p>
           </div>
-
         </div>
-      </div>
       </FadeIn>
 
-      <div className="wave wave-bottom" aria-hidden="true">
-        <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
-          <path d="M0,0 C180,40 340,80 520,60 C700,40 820,-10 1000,30 C1180,70 1320,40 1440,20 L1440,100 L0,100 Z" fill="#0a0a0a" />
-        </svg>
-      </div>
-
       <style>{`
-        .about-section-outer {
-          padding: 24px 0;
-          background: #fa5f34;
-          width: 100%;
-          box-sizing: border-box;
+        .about-section {
           position: relative;
+          padding: clamp(4.5rem, 10vh, 8rem) var(--pad-x);
+          border-top: 1px solid var(--rule);
+          background: transparent;
         }
 
-        .wave {
+        .about-section::before {
+          content: "";
           position: absolute;
-          left: 0;
-          width: 100%;
-          height: clamp(60px, 10vw, 110px);
-          z-index: 0;
+          top: clamp(12px, 2vw, 24px);
+          left: var(--pad-x);
+          width: 14px;
+          height: 14px;
+          border-top: 1px solid rgba(212, 206, 199, 0.32);
+          border-left: 1px solid rgba(212, 206, 199, 0.32);
           pointer-events: none;
         }
 
-        .wave svg {
-          display: block;
+        .about-section::after {
+          content: "";
+          position: absolute;
+          bottom: clamp(12px, 2vw, 24px);
+          right: var(--pad-x);
+          width: 14px;
+          height: 14px;
+          border-bottom: 1px solid rgba(212, 206, 199, 0.32);
+          border-right: 1px solid rgba(212, 206, 199, 0.32);
+          pointer-events: none;
+        }
+
+        .about-shell {
           width: 100%;
-          height: 100%;
+          max-width: 1480px;
+          margin: 0 auto;
         }
 
-        .wave-bottom {
-          bottom: 0;
-        }
-
-        .about-card-container {
-          position: relative;
-          z-index: 1;
-        }
-
-        @media (min-width: 1025px) {
-          .about-section-outer {
-            height: 100vh;
-            max-height: 100vh;
-            display: flex;
-            align-items: stretch;
-            justify-content: center;
-            overflow: hidden;
-            padding: 24px 0 0 0;
-          }
-
-          .about-card-container {
-            height: 100%;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-sizing: border-box;
-            padding: calc(24px + clamp(1.5rem, 3.5vh, 4.5rem)) clamp(2rem, 5vw, 4.5rem) 0 !important;
-          }
-
-          .about-card-header {
-            margin-bottom: 0 !important;
-          }
-
-          .about-card-grid {
-            flex: 1;
-            align-items: stretch !important;
-          }
-
-          .about-col-left {
-            margin-top: clamp(1rem, 2.5vh, 2.5rem);
-          }
-        }
-
-        .about-card-container {
-          padding: clamp(2rem, 5vw, 4.5rem);
-          color: #d4cec7;
-        }
-
-        .about-card-header {
+        .about-top {
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 11px;
+          justify-content: space-between;
+          gap: 1.5rem;
+          padding-bottom: 16px;
+          border-bottom: 1px solid var(--rule);
+          font-family: var(--font-mono), monospace;
+          font-size: 10px;
+          font-weight: 600;
           text-transform: uppercase;
-          letter-spacing: 0.15em;
-          color: rgba(212, 206, 199, 0.7);
-          border-bottom: 1px solid rgba(212, 206, 199, 0.15);
-          padding-bottom: 1.5rem;
-          margin-bottom: 3rem;
+          letter-spacing: 0.14em;
         }
 
-        .card-brand {
-          color: #0d0d0d;
+        .about-label {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          color: #fa5f34;
+          font-weight: 700;
         }
 
-        .card-serial {
-          color: #0d0d0d;
+        .about-label-line {
+          width: 28px;
+          height: 1px;
+          background: #fa5f34;
+          flex-shrink: 0;
         }
 
-        .about-card-grid {
+        .about-serial {
+          color: rgba(212, 206, 199, 0.46);
+        }
+
+        .about-grid {
           display: grid;
-          grid-template-columns: 1.3fr 1fr;
-          gap: clamp(2rem, 5vw, 4.5rem);
-          align-items: stretch;
+          grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+          gap: clamp(3rem, 7vw, 8rem);
+          align-items: start;
+          padding-block: clamp(3rem, 7vh, 6rem);
         }
 
-        /* Left Column */
-        .about-col-left {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          justify-content: center;
+        .about-heading {
+          margin: 0;
+          font-family: var(--font-display), sans-serif;
+          font-size: clamp(2.4rem, 5.4vw, 5.75rem);
+          font-weight: 800;
+          font-stretch: 88%;
+          line-height: 0.94;
+          letter-spacing: -0.045em;
+          color: #f3eee8;
         }
 
-        .about-card-heading {
-          font-size: clamp(2rem, 4.5vw, 3.25rem);
-          font-weight: 500;
-          line-height: 1.05;
-          letter-spacing: -0.03em;
-          color: #d4cec7;
-          margin: 0 0 2rem 0;
+        .about-rule {
+          display: block;
+          width: clamp(80px, 11vw, 150px);
+          height: 3px;
+          margin-top: clamp(1.5rem, 3.5vh, 2.5rem);
+          background: #fa5f34;
         }
 
-        .about-card-bio {
-          font-size: clamp(14px, 1.8vw, 15px);
-          line-height: 1.7;
-          color: rgba(212, 206, 199, 0.9);
-          margin: 0 0 2.5rem 0;
-          max-width: 540px;
+        .about-copy-col {
+          padding-left: clamp(2rem, 4vw, 4rem);
+          border-left: 1px solid var(--rule);
         }
 
-        .highlight {
-          color: #0d0d0d; /* Charcoal brand accent highlight */
+        .about-bio {
+          margin: 0;
+          max-width: 54ch;
+          font-family: var(--font-sans), sans-serif;
+          font-size: clamp(1rem, 1.3vw, 1.1rem);
+          line-height: 1.75;
+          color: rgba(212, 206, 199, 0.78);
+        }
+
+        .about-bio .highlight {
+          color: #fa5f34;
           font-weight: 600;
         }
 
-        .about-buttons-row {
-          display: flex;
-          gap: 12px;
-          margin-bottom: 1rem;
-          flex-wrap: wrap;
-        }
-
-        .github-pill-btn {
-          background: #d4cec7;
-          color: #fa5f34;
-          font-size: 13px;
-          font-weight: 500;
-          padding: 12px 28px;
-          border-radius: 2px;
-          text-decoration: none;
-          display: inline-block;
-          transition: all 250ms ease;
-          border: 1px solid transparent;
-        }
-
-        .github-pill-btn:hover {
-          background: transparent;
-          border-color: #d4cec7;
-          color: #d4cec7;
-        }
-
-        /* Right Column: Profile Image Frame */
-        .about-col-right {
-          display: flex;
-          justify-content: center;
-          align-items: stretch;
-          height: 100%;
-        }
-
-        .profile-image-wrapper {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          min-height: 380px;
-          border-radius: 4px;
-          overflow: hidden;
-        }
-
-        .profile-fallback {
-          width: 100%;
-          height: 100%;
+        .about-actions {
           display: flex;
           align-items: center;
+          flex-wrap: wrap;
+          gap: 14px 22px;
+          margin-top: clamp(2rem, 4vh, 2.75rem);
+        }
+
+        .about-action-primary {
+          display: inline-flex;
+          align-items: center;
           justify-content: center;
-          background: rgba(212, 206, 199, 0.15);
+          gap: 7px;
+          padding: 11px 18px;
+          background: #fa5f34;
+          color: #0a0a0a;
+          border: 1px solid #fa5f34;
+          border-radius: 2px;
+          box-shadow: 4px 4px 0 #000;
+          font-family: var(--font-mono), monospace;
+          font-size: 10px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          text-decoration: none;
+          white-space: nowrap;
+          transition:
+            transform 180ms ease,
+            box-shadow 180ms ease,
+            background 180ms ease;
         }
 
-        .fallback-initials {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 4rem;
-          color: #d4cec7;
-          font-weight: 300;
+        .about-action-primary:hover {
+          background: #ff7049;
+          transform: translate(-2px, -2px);
+          box-shadow: 6px 6px 0 #000;
         }
 
-        @media (max-width: 1024px) {
-          .about-card-grid {
+        .about-action-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding-bottom: 3px;
+          color: rgba(212, 206, 199, 0.78);
+          border-bottom: 1px solid rgba(212, 206, 199, 0.28);
+          font-family: var(--font-mono), monospace;
+          font-size: 10px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          text-decoration: none;
+          white-space: nowrap;
+          transition: color 180ms ease, border-color 180ms ease;
+        }
+
+        .about-action-link:hover {
+          color: #fa5f34;
+          border-color: #fa5f34;
+        }
+
+        .about-principle {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: clamp(1.5rem, 5vw, 5rem);
+          padding-top: 18px;
+          border-top: 1px solid var(--rule);
+        }
+
+        .about-principle-label {
+          font-family: var(--font-mono), monospace;
+          font-size: 10px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.14em;
+          color: #fa5f34;
+          white-space: nowrap;
+        }
+
+        .about-principle p {
+          margin: 0;
+          max-width: 68ch;
+          font-family: var(--font-sans), sans-serif;
+          font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+          line-height: 1.6;
+          color: rgba(212, 206, 199, 0.62);
+          text-align: right;
+        }
+
+        @media (max-width: 900px) {
+          .about-grid {
             grid-template-columns: 1fr;
-            gap: 3rem;
-            align-items: start;
-          }
-          
-          .about-col-right {
-            order: -1;
-            height: auto;
+            gap: clamp(2.25rem, 5vh, 3rem);
+            padding-block: clamp(2.75rem, 6vh, 4rem);
           }
 
-          .profile-image-wrapper {
-            aspect-ratio: 0.85;
-            min-height: 280px;
-          }
-        }
-
-        @media (max-width: 640px) {
-          .wave {
-            height: 48px;
+          .about-copy-col {
+            padding-left: 0;
+            border-left: 0;
           }
 
-          .about-card-container {
-            padding: clamp(1.5rem, 5vw, 2rem);
+          .about-bio {
+            max-width: 62ch;
           }
 
-          .about-card-header {
-            flex-wrap: wrap;
-            gap: 8px;
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
-          }
-
-          .profile-image-wrapper {
-            min-height: 240px;
-          }
-
-          .about-buttons-row {
+          .about-principle {
+            align-items: flex-start;
             flex-direction: column;
-            width: 100%;
+            gap: 10px;
           }
 
-          .github-pill-btn {
-            width: 100%;
-            text-align: center;
+          .about-principle p {
+            text-align: left;
           }
         }
 
-        @media (max-width: 480px) {
-          .about-section-outer {
-            padding: 16px;
+        @media (max-width: 600px) {
+          .about-section {
+            padding-block: clamp(3.5rem, 8vh, 5rem);
+          }
+
+          .about-top {
+            font-size: 9px;
+          }
+
+          .about-heading {
+            font-size: clamp(2.4rem, 9vw, 3.25rem);
+          }
+
+          .about-rule {
+            margin-top: 1.5rem;
+          }
+
+          .about-actions {
+            flex-direction: column;
+            align-items: stretch;
+            width: 100%;
+          }
+
+          .about-action-primary,
+          .about-action-link {
+            justify-content: center;
+            width: 100%;
+          }
+
+          .about-action-link {
+            padding-bottom: 0;
+            border-bottom: 0;
           }
         }
       `}</style>

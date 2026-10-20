@@ -5,6 +5,7 @@ import meta from '@/data/meta.json'
 import githubDefaults from '@/data/githubDefaults.json'
 import theme from '@/data/theme.json'
 import FadeIn from './FadeIn'
+import { ArrowUpRight, ArrowRight } from './ArrowIcon'
 import { GithubData } from '@/lib/githubTypes'
 import useCountUp from '@/hooks/useCountUp'
 
@@ -268,7 +269,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
               rel="noreferrer"
               className="meta-link"
             >
-              @{USERNAME.toUpperCase()} ↗
+              @{USERNAME.toUpperCase()} <ArrowUpRight size={12} />
             </a>
           </div>
         </div>
@@ -407,7 +408,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
                   <div className="heatmap-footer">
                     <span className="heatmap-scroll-tip">
                       {data
-                        ? 'Swipe/Scroll to view →'
+                        ? (<>Swipe/Scroll to view <ArrowRight size={9} /></>)
                         : 'Calendar unavailable · totals from saved snapshot'}
                     </span>
                     <div className="heatmap-legend" aria-hidden="true">
@@ -443,6 +444,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
+          gap: 1rem;
           margin-bottom: 1.5rem;
         }
 
@@ -459,7 +461,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
         }
 
         .section-label-text {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.15em;
@@ -478,7 +480,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
           display: flex;
           align-items: center;
           gap: 6px;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           color: var(--text-muted);
         }
@@ -489,7 +491,6 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
           border-radius: 50%;
           background: #fa5f34;
           display: inline-block;
-          box-shadow: 0 0 8px rgba(250, 95, 52, 0.4);
         }
 
         .meta-unavailable-dot {
@@ -520,20 +521,36 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
         }
 
         .meta-link {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
-          color: var(--text-muted);
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: #fa5f34;
+          color: #0a0a0a;
           text-decoration: none;
-          transition: color 150ms;
+          padding: 8px 18px;
+          border-radius: 9999px;
+          box-shadow: 3px 3px 0 #000;
+          white-space: nowrap;
+          transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
         }
 
         .meta-link:hover {
-          color: var(--text);
+          background: #ff7049;
+          color: #0a0a0a;
+          transform: translate(-2px, -2px);
+          box-shadow: 5px 5px 0 #000;
         }
 
         .main-heading {
+          font-family: var(--font-display), sans-serif;
           font-size: clamp(2rem, 5vw, 4rem);
-          font-weight: 500;
+          font-weight: 700;
+          font-stretch: 92%;
           letter-spacing: -0.03em;
           color: var(--text);
           line-height: 1.1;
@@ -542,29 +559,81 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
 
         .github-content-grid {
           display: grid;
-          grid-template-columns: 350px 1fr;
-          gap: clamp(3rem, 10vw, 14rem);
-          align-items: flex-start;
+          grid-template-columns: minmax(300px, 0.85fr) minmax(0, 1.65fr);
+          gap: clamp(1.5rem, 4vw, 4rem);
+          align-items: stretch;
           margin-bottom: 2rem;
           min-width: 0;
         }
 
+        .github-content-grid > .fade-in {
+          min-width: 0;
+          height: 100%;
+        }
+
+        .stats-side {
+          height: 100%;
+        }
+
+        .heatmap-side {
+          position: relative;
+          height: 100%;
+          padding: 1.25rem;
+          border: 1px solid var(--rule);
+          background: rgba(255, 255, 255, 0.015);
+          box-shadow:
+            inset 0 0 0 1px rgba(0, 0, 0, 0.45),
+            4px 4px 0 #000;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 1.25rem;
+          box-sizing: border-box;
+        }
+
+        .heatmap-side::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background-image: repeating-linear-gradient(
+            135deg,
+            rgba(212, 206, 199, 0.055) 0 1px,
+            transparent 1px 9px
+          );
+          opacity: 0.4;
+        }
+
+        .heatmap-side > * {
+          position: relative;
+          z-index: 1;
+        }
+
         .stats-grid-2x2 {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 2rem;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-auto-rows: 1fr;
+          gap: 12px;
+          height: 100%;
         }
 
         .stat-col {
           display: flex;
           flex-direction: column;
           gap: 8px;
+          padding: 1.15rem;
+          border: 1px solid var(--rule);
+          background: rgba(255, 255, 255, 0.015);
+          box-shadow: 3px 3px 0 #000;
+          min-width: 0;
+          box-sizing: border-box;
         }
 
         .stat-val {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-display), sans-serif;
           font-size: clamp(2rem, 4vw, 3.5rem);
-          font-weight: 600;
+          font-weight: 800;
+          font-stretch: 90%;
           color: var(--text);
           line-height: 1;
           font-variant-numeric: tabular-nums;
@@ -575,7 +644,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
         }
 
         .stat-lbl {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           text-transform: uppercase;
           letter-spacing: 0.1em;
@@ -588,12 +657,12 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
         }
 
         .grid-summary-label {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.08em;
           color: var(--text-muted);
-          margin-bottom: 1.5rem;
+          margin-bottom: 0;
         }
 
         .heatmap-container {
@@ -610,7 +679,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
           grid-template-rows: repeat(7, 10px);
           gap: 2.5px;
           align-items: center;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 9px;
           color: var(--text-muted);
           padding-top: 20px;
@@ -652,7 +721,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
           gap: 2.5px;
           height: 14px;
           margin-bottom: 6px;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 9px;
           color: var(--text-muted);
         }
@@ -693,7 +762,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
         .heatmap-cell:focus-visible {
           transform: scale(1.35);
           z-index: 5;
-          box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+          box-shadow: 2px 2px 0 #000;
           border: 1px solid rgba(243, 238, 232, 0.4);
         }
 
@@ -706,7 +775,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
         }
 
         .heatmap-scroll-tip {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 9px;
           color: var(--text-muted);
           display: none;
@@ -717,7 +786,7 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
           align-items: center;
           justify-content: flex-end;
           gap: 6px;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 9px;
           color: var(--text-muted);
         }
@@ -748,8 +817,22 @@ export default function GitHub({ initialData }: { initialData?: GithubData | nul
         }
 
         @media (max-width: 480px) {
+          .section-header {
+            gap: 0.75rem;
+          }
+
+          .meta-link {
+            font-size: 10px;
+            padding: 7px 14px;
+            letter-spacing: 0.08em;
+          }
+
           .stats-grid-2x2 {
-            gap: 1.5rem;
+            gap: 10px;
+          }
+
+          .stat-col {
+            padding: 0.9rem;
           }
 
           .stat-val {

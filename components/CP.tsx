@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useId, useMemo, useRef, useState, useSyn
 import meta from '@/data/meta.json'
 import cpDefaults from '@/data/cpDefaults.json'
 import FadeIn from './FadeIn'
+import { ArrowUpRight } from './ArrowIcon'
 import {
   setSolvedCounts,
   useSolvedCounts,
@@ -31,7 +32,6 @@ const PAPER = '#f3eee8'
 const INK = '#070708'
 
 const REDUCED_QUERY = '(prefers-reduced-motion: reduce)'
-const FINE_POINTER_QUERY = '(hover: hover) and (pointer: fine)'
 
 function pluralize(count: number, singular: string, plural: string): string {
   return `${count} ${count === 1 ? singular : plural}`
@@ -112,48 +112,6 @@ function useInView<T extends HTMLElement>(threshold = 0.16): [React.RefObject<T 
   return [ref, visible]
 }
 
-/* ── Odometer ── */
-function Odometer({ value, visible, reduced }: { value: number; visible: boolean; reduced: boolean }) {
-  const digits = String(Math.max(0, Math.round(value))).split('')
-
-  return (
-    <span className="cp-odo" aria-label={String(value)}>
-      {digits.map((digit, i) => {
-        const target = Number(digit)
-        const rolled = reduced || visible ? target : 0
-        return (
-          <span className="cp-odo-slot" key={`${digits.length}-${i}`} aria-hidden="true">
-            <span
-              className="cp-odo-strip"
-              style={{
-                transform: `translate3d(0, -${rolled * 10}%, 0)`,
-                transitionDelay: reduced ? '0ms' : `${i * 85}ms`,
-              }}
-            >
-              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
-                <span className="cp-odo-cell" key={n}>{n}</span>
-              ))}
-            </span>
-          </span>
-        )
-      })}
-    </span>
-  )
-}
-
-/* ── Ticker strip ── */
-function TickerStrip({ items, accent, entered }: { items: string[]; accent: string; entered: boolean }) {
-  const line = items.filter(Boolean).join('  ★  ')
-  return (
-    <div className="cp-ticker" data-entered={entered} style={{ background: accent }}>
-      <div className="cp-ticker-track">
-        <span className="cp-ticker-text">{line} ★ </span>
-        <span className="cp-ticker-text" aria-hidden="true">{line} ★ </span>
-      </div>
-    </div>
-  )
-}
-
 /* ── LeetCode difficulty legend rings ── */
 const LC_RINGS = [
   { key: 'easy' as const, label: 'EASY', color: PAPER },
@@ -169,19 +127,21 @@ interface RatingPoint {
   delta: number | null
 }
 
-/* ── LeetCode difficulty breakdown legend ── */
-function DifficultyLegend({ easy, medium, hard }: { easy: number; medium: number; hard: number }) {
+/* ── LeetCode difficulty breakdown plate ── */
+function DifficultyPlate({ easy, medium, hard }: { easy: number; medium: number; hard: number }) {
   const values = { easy, medium, hard }
   return (
-    <div className="cp-legend cp-legend-inline">
-      {LC_RINGS.map((ring, i) => (
-        <span className="cp-chip" key={ring.key}>
-          <span className="cp-chip-idx">0{i + 1}</span>
-          <i className="cp-chip-dot" style={{ background: ring.color }} />
-          <span className="cp-chip-label">{ring.label}</span>
-          <span className="cp-chip-val">{values[ring.key]}</span>
-        </span>
-      ))}
+    <div className="cp-difficulty-plate">
+      <span className="cp-stat-plate-label">Difficulty</span>
+      <div className="cp-difficulty-rows">
+        {LC_RINGS.map((ring) => (
+          <span className="cp-difficulty-row" key={ring.key}>
+            <i className="cp-difficulty-dot" style={{ background: ring.color }} />
+            <span className="cp-difficulty-name">{ring.label}</span>
+            <span className="cp-difficulty-value">{values[ring.key]}</span>
+          </span>
+        ))}
+      </div>
     </div>
   )
 }
@@ -214,7 +174,6 @@ function RatingChart({
   const uid = useId().replace(/[^a-zA-Z0-9]/g, '')
   const fillId = `cpFill${uid}`
   const strokeId = `cpStroke${uid}`
-  const glowId = `cpGlow${uid}`
 
   const width = 520
   const height = 190
@@ -295,13 +254,6 @@ function RatingChart({
             <stop offset="70%" stopColor={accent} stopOpacity="1" />
             <stop offset="100%" stopColor={PAPER} stopOpacity="0.95" />
           </linearGradient>
-          <filter id={glowId} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3.5" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
         </defs>
 
         {/* Horizontal grid lines for ticks */}
@@ -376,10 +328,9 @@ function RatingChart({
         <circle
           cx={lastX}
           cy={lastY}
-          r={7}
+          r={5}
           fill={accent}
-          fillOpacity="0.25"
-          filter={`url(#${glowId})`}
+          fillOpacity="0.2"
           className="cp-chart-halo"
         />
         <circle
@@ -435,215 +386,111 @@ function RatingChart({
   )
 }
 
-function useCardMotion(enabled: boolean) {
-  const cleanup = useRef<(() => void) | null>(null)
-
-  const attach = (el: HTMLElement | null) => {
-    cleanup.current?.()
-    cleanup.current = null
-    if (!el || !enabled) return
-
-    let frame = 0
-    let targetX = 0
-    let targetY = 0
-
-    const apply = () => {
-      frame = 0
-      el.style.setProperty('--tilt-x', `${targetY * 4}deg`)
-      el.style.setProperty('--tilt-y', `${-targetX * 4}deg`)
-      el.style.setProperty('--shift-x', `${targetX * 6}px`)
-      el.style.setProperty('--shift-y', `${targetY * 6}px`)
-    }
-
-    const onMove = (event: PointerEvent) => {
-      const rect = el.getBoundingClientRect()
-      const x = event.clientX - rect.left
-      const y = event.clientY - rect.top
-      el.style.setProperty('--mx', `${x}px`)
-      el.style.setProperty('--my', `${y}px`)
-      targetX = (x / rect.width - 0.5) * 2
-      targetY = (y / rect.height - 0.5) * 2
-      if (!frame) frame = requestAnimationFrame(apply)
-    }
-
-    const onLeave = () => {
-      targetX = 0
-      targetY = 0
-      el.style.setProperty('--tilt-x', '0deg')
-      el.style.setProperty('--tilt-y', '0deg')
-      el.style.setProperty('--shift-x', '0px')
-      el.style.setProperty('--shift-y', '0px')
-      el.style.setProperty('--mx', '50%')
-      el.style.setProperty('--my', '50%')
-    }
-
-    el.addEventListener('pointermove', onMove)
-    el.addEventListener('pointerleave', onLeave)
-    cleanup.current = () => {
-      el.removeEventListener('pointermove', onMove)
-      el.removeEventListener('pointerleave', onLeave)
-      if (frame) cancelAnimationFrame(frame)
-    }
-  }
-
-  useEffect(() => () => cleanup.current?.(), [])
-  return attach
-}
-
-function StatCell({ index, value, label }: { index: string; value: string; label: string }) {
-  return (
-    <div className="cp-cell">
-      <span className="cp-cell-idx">{index}</span>
-      <span className="cp-cell-value">{value}</span>
-      <span className="cp-cell-label">{label}</span>
-    </div>
-  )
-}
-
-function Stickers({
-  rank,
-  live,
-  bestLabel,
-  bestValue,
-  rankColor,
+function StatPlate({
+  value,
+  label,
+  accent,
 }: {
-  rank: string
-  live: string
-  bestLabel: string
-  bestValue: string
-  rankColor?: string
+  value: string
+  label: string
+  accent?: string
 }) {
   return (
-    <div className="cp-stickers" aria-hidden="true">
-      <span className="cp-sticker cp-sticker-rank" style={rankColor ? { color: rankColor, borderColor: rankColor } : undefined}>
-        {rank}
+    <div className="cp-stat-plate">
+      <span className="cp-stat-plate-value" style={accent ? { color: accent } : undefined}>
+        {value}
       </span>
-      <span className={`cp-sticker cp-sticker-live${live !== 'LIVE' ? ' is-offline' : ''}`}>
-        <i className="cp-live-dot" />
-        {live}
-      </span>
-      <span className="cp-sticker cp-sticker-best">
-        <small>{bestLabel}</small>
-        <b>{bestValue}</b>
-      </span>
+      <span className="cp-stat-plate-label">{label}</span>
     </div>
   )
 }
 
-/* ─────────────────────────────────────────────────────────
-   CardShell: Restructured into .card-frame > .card-inner
-   Strict uniform --gap, off-white crop marks, hard shadow on .card-frame only,
-   content & tickers inside .card-inner, footer pinned to bottom
-   ───────────────────────────────────────────────────────── */
-function CardShell({
+type PlatformStat =
+  | { value: string; label: string; accent?: boolean }
+  | { node: React.ReactNode }
+
+/* ── GitHub-style platform row: stat plates left, rating chart right ── */
+function PlatformRow({
   accent,
   fig,
-  sys,
-  number,
+  platform,
   handle,
-  ticker,
-  rank,
-  live,
-  bestLabel,
-  bestValue,
-  rankColor,
-  rating,
-  heroLabel,
-  heroFoot,
-  visual,
+  href,
+  status,
   stats,
-  profileHref,
-  reduced,
-  finePointer,
+  chartLabel,
+  chartMeta,
+  chart,
+  chartFoot,
+  rowRef,
 }: {
   accent: string
   fig: string
-  sys: string
-  number: string
+  platform: string
   handle: string
-  ticker: string[]
-  rank: string
-  live: string
-  bestLabel: string
-  bestValue: string
-  rankColor?: string
-  rating: number | null
-  heroLabel: string
-  heroFoot: React.ReactNode
-  visual: React.ReactNode
-  stats: React.ReactNode
-  profileHref: string
-  reduced: boolean
-  finePointer: boolean
+  href: string
+  status: string
+  stats: PlatformStat[]
+  chartLabel: string
+  chartMeta: string
+  chart: React.ReactNode
+  chartFoot?: React.ReactNode
+  rowRef: React.RefObject<HTMLDivElement | null>
 }) {
-  const [cardRef, entered] = useInView<HTMLElement>(0.12)
-  const attachMotion = useCardMotion(finePointer && !reduced)
-
   return (
-    <div className="cp-stage">
-      <article
-        ref={(node) => {
-          cardRef.current = node
-          attachMotion(node)
-        }}
-        className="card-frame"
-        data-entered={entered}
-        style={{ '--accent': accent } as React.CSSProperties}
-      >
-        {/* 4 L-shaped crop marks: 12px, 2px stroke, in off-white 2px from frame corners */}
-        <div className="card-crop-marks" aria-hidden="true">
-          <span className="crop-mark crop-tl" />
-          <span className="crop-mark crop-tr" />
-          <span className="crop-mark crop-bl" />
-          <span className="crop-mark crop-br" />
-        </div>
-
-        {/* Stickers are children of .card-frame so they can overlap the edge */}
-        <Stickers rank={rank} live={live} bestLabel={bestLabel} bestValue={bestValue} rankColor={rankColor} />
-
-        {/* Inner Card Frame */}
-        <div className="card-inner">
-          <div className="cp-noise" aria-hidden="true" />
-          <div className="cp-halftone" aria-hidden="true" />
-          <div className="cp-spotlight" aria-hidden="true" />
-
-          {/* Ticker strip inside .card-inner */}
-          <TickerStrip items={ticker} accent={accent} entered={entered} />
-
-          {/* Content panel */}
-          <div className="cp-body">
-            <span className="cp-anno cp-anno-tl">{fig}</span>
-            <span className="cp-anno cp-anno-tr">{sys}</span>
-            <span className="cp-anno cp-anno-bl">{number}</span>
-            <span className="cp-anno cp-anno-br">@{handle}</span>
-
-            {/* Hero number */}
-            <div className="cp-hero">
-              <span className="cp-hero-label">{heroLabel}</span>
-              <div className="cp-hero-number">
-                {rating !== null ? (
-                  <Odometer value={rating} visible={entered} reduced={reduced} />
-                ) : (
-                  <span>—</span>
-                )}
-              </div>
-              <div className="cp-hero-foot">{heroFoot}</div>
-            </div>
-
-            {/* Visuals: Donut / Chart */}
-            <div className="cp-visual">{visual}</div>
-
-            {/* 4-cell stats grid */}
-            <div className="cp-stats">{stats}</div>
+    <div
+      ref={rowRef}
+      className="cp-platform"
+      style={{ '--row-accent': accent } as React.CSSProperties}
+    >
+      <FadeIn>
+        <div className="cp-platform-head">
+          <div className="cp-platform-ident">
+            <span className="cp-platform-line" />
+            <span className="cp-platform-fig">{fig}</span>
+            <span className="cp-platform-name">{platform}</span>
+            <span className={`cp-platform-status${status === 'LIVE' ? '' : ' is-offline'}`}>
+              <i className="cp-platform-status-dot" />
+              {status}
+            </span>
           </div>
-
-          {/* Footer pinned to bottom of .card-inner */}
-          <a className="cp-footer" href={profileHref} target="_blank" rel="noreferrer">
-            <span className="cp-footer-label">VIEW PROFILE</span>
-            <span className="cp-footer-arrow" aria-hidden="true">↗</span>
+          <a className="cp-platform-link" href={href} target="_blank" rel="noreferrer">
+            @{handle} <ArrowUpRight size={12} />
           </a>
         </div>
-      </article>
+      </FadeIn>
+
+      <div className="cp-platform-grid">
+        <FadeIn delay={0.08}>
+          <div className="cp-platform-stats">
+            {stats.map((stat, index) =>
+              'node' in stat ? (
+                <div className="cp-stat-plate" key={`custom-${index}`}>
+                  {stat.node}
+                </div>
+              ) : (
+                <StatPlate
+                  key={`${stat.label}-${index}`}
+                  value={stat.value}
+                  label={stat.label}
+                  accent={stat.accent ? accent : undefined}
+                />
+              )
+            )}
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={0.14}>
+          <div className="cp-platform-chart">
+            <div className="cp-chart-head">
+              <span>{chartLabel}</span>
+              <span className="cp-chart-head-live" style={{ color: accent }}>{chartMeta}</span>
+            </div>
+            <div className="cp-platform-chart-body">{chart}</div>
+            {chartFoot ? <div className="cp-platform-chart-foot">{chartFoot}</div> : null}
+          </div>
+        </FadeIn>
+      </div>
     </div>
   )
 }
@@ -768,7 +615,6 @@ export default function CP({ initialData }: { initialData?: CPData }) {
   }, [initialData?.fetchedAt])
 
   const reduced = useMediaQuery(REDUCED_QUERY)
-  const finePointer = useMediaQuery(FINE_POINTER_QUERY, false)
 
   const [lcSectionRef, lcVisible] = useInView<HTMLDivElement>(0.12)
   const [cfSectionRef, cfVisible] = useInView<HTMLDivElement>(0.12)
@@ -778,11 +624,9 @@ export default function CP({ initialData }: { initialData?: CPData }) {
   const lcEasy = useCountUp(lc.easy, lcVisible)
   const lcMedium = useCountUp(lc.medium, lcVisible)
   const lcHard = useCountUp(lc.hard, lcVisible)
-  const lcRating = useCountUp(lc.rating, lcVisible)
   const lcContests = useCountUp(lc.contests, lcVisible)
 
   const cfSolved = useCountUp(cf.solved, cfVisible)
-  const cfRating = useCountUp(cf.rating, cfVisible)
   const cfContests = useCountUp(cf.contests, cfVisible)
 
   // Flatten both contest histories into a shared chart-ready shape
@@ -807,31 +651,6 @@ export default function CP({ initialData }: { initialData?: CPData }) {
       })),
     [cf.history]
   )
-
-  // LeetCode Ticker items reading from normalized object
-  const lcTicker = [
-    `${lc.solved} SOLVED`,
-    lc.topPercent !== null ? `TOP ${lc.topPercent}%` : '',
-    lc.contests !== null ? pluralize(lc.contests, 'CONTEST', 'CONTESTS') : '',
-    lc.rating !== null ? `${lc.rating} RATING` : '',
-    'KEEP SOLVING',
-  ].filter(Boolean)
-
-  // Codeforces Ticker items reading from normalized object
-  const cfTicker = [
-    `${cf.rating} ★ ${cf.tier.label}`,
-    pluralize(cf.contests, 'CONTEST', 'CONTESTS'),
-    `${cf.solved} SOLVED`,
-    `MAX ${cf.maxRating}`,
-    'KEEP SOLVING',
-  ].filter(Boolean)
-
-  // LeetCode Best Rank sticker value
-  const lcBestSticker = lc.globalRank !== null
-    ? `#${lc.globalRank.toLocaleString()}`
-    : lc.ranking
-    ? `#${lc.ranking}`
-    : '—'
 
   const hasLive = lcSource === 'live' || cfSource === 'live'
   const hasCache = lcSource === 'cache' || cfSource === 'cache'
@@ -864,155 +683,87 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         </div>
       </FadeIn>
 
-      <div className="cp-grid">
-        {/* ── CARD 01: LEETCODE ── */}
-        <div ref={lcSectionRef} className="cp-col">
-          <CardShell
+      <PlatformRow
+        rowRef={lcSectionRef}
+        accent={AMBER}
+        fig="FIG. 01"
+        platform="LEETCODE"
+        handle={LEETCODE_USERNAME.toUpperCase()}
+        href={`https://leetcode.com/u/${LEETCODE_USERNAME}/`}
+        status={sourceLabel(lcSource)}
+        stats={[
+          { value: String(lcTotal ?? lc.solved), label: 'Solved' },
+          {
+            value: lcContests !== null ? String(lcContests) : lc.contests !== null ? String(lc.contests) : '—',
+            label: lc.contests === 1 ? 'Contest' : 'Contests',
+          },
+          {
+            node: (
+              <DifficultyPlate
+                easy={lcEasy ?? lc.easy}
+                medium={lcMedium ?? lc.medium}
+                hard={lcHard ?? lc.hard}
+              />
+            ),
+          },
+          { value: lc.topPercent !== null ? `${lc.topPercent}%` : '—', label: 'Top Percent', accent: true },
+        ]}
+        chartLabel={`RATING HISTORY // ${pluralize(lc.history.length || (lc.contests ?? 0), 'CONTEST', 'CONTESTS')}`}
+        chartMeta={lc.rating !== null ? `LAST ${lc.rating}` : 'NO RATING'}
+        chart={
+          <RatingChart
+            points={lcPoints}
             accent={AMBER}
-            fig="FIG. 01"
-            sys="SYS.LC // 2026"
-            number="N°001"
-            handle={LEETCODE_USERNAME.toUpperCase()}
-            ticker={lcTicker}
-            rank={lc.topPercent !== null ? `TOP ${lc.topPercent}%` : 'LEETCODE'}
-            live={sourceLabel(lcSource)}
-            bestLabel="BEST RANK"
-            bestValue={lcBestSticker}
-            rating={lcRating}
-            heroLabel="CONTEST RATING // LC"
-            heroFoot={
-              <>
-                <span className="cp-hero-delta">
-                  {pluralize(lc.contests ?? 0, 'CONTEST', 'CONTESTS')} ATTENDED
-                </span>
-                {lc.badge && <span className="cp-hero-sub">{lc.badge.toUpperCase()}</span>}
-              </>
-            }
-            visual={
-              <>
-                <div className="cp-chart-head">
-                  <span>RATING HISTORY // {pluralize(lc.history.length || (lc.contests ?? 0), 'CONTEST', 'CONTESTS')}</span>
-                  {lc.rating !== null && <span className="cp-chart-head-live">LAST {lc.rating}</span>}
-                </div>
-                <RatingChart
-                  points={lcPoints}
-                  accent={AMBER}
-                  visible={lcVisible}
-                  reduced={reduced}
-                  loading={false}
-                  ariaLabel="LeetCode contest rating trajectory"
-                  emptyTitle="NO CONTEST HISTORY"
-                  emptySub="OFFLINE OR NO RATED CONTESTS RETURNED"
-                />
-                <DifficultyLegend
-                  easy={lcEasy ?? lc.easy}
-                  medium={lcMedium ?? lc.medium}
-                  hard={lcHard ?? lc.hard}
-                />
-              </>
-            }
-            stats={
-              <>
-                <StatCell index="01" value={String(lcTotal ?? lc.solved)} label="SOLVED" />
-                <StatCell
-                  index="02"
-                  value={lcContests !== null ? String(lcContests) : lc.contests !== null ? String(lc.contests) : '—'}
-                  label={lc.contests === 1 ? 'CONTEST' : 'CONTESTS'}
-                />
-                <StatCell
-                  index="03"
-                  value={
-                    lc.globalRank !== null
-                      ? `#${lc.globalRank.toLocaleString()}`
-                      : lc.ranking
-                      ? `#${lc.ranking}`
-                      : '—'
-                  }
-                  label="GLOBAL RANK"
-                />
-                <StatCell
-                  index="04"
-                  value={lc.topPercent !== null ? `${lc.topPercent}%` : '—'}
-                  label="TOP PERCENT"
-                />
-              </>
-            }
-            profileHref={`https://leetcode.com/u/${LEETCODE_USERNAME}/`}
+            visible={lcVisible}
             reduced={reduced}
-            finePointer={finePointer}
+            loading={false}
+            ariaLabel="LeetCode contest rating trajectory"
+            emptyTitle="NO CONTEST HISTORY"
+            emptySub="OFFLINE OR NO RATED CONTESTS RETURNED"
           />
-        </div>
+        }
+      />
 
-        {/* ── CARD 02: CODEFORCES ── */}
-        <div ref={cfSectionRef} className="cp-col">
-          <CardShell
+      <PlatformRow
+        rowRef={cfSectionRef}
+        accent={ELECTRIC}
+        fig="FIG. 02"
+        platform="CODEFORCES"
+        handle={CODEFORCES_USERNAME.toUpperCase()}
+        href={`https://codeforces.com/profile/${CODEFORCES_USERNAME}`}
+        status={sourceLabel(cfSource)}
+        stats={[
+          { value: String(cfSolved ?? cf.solved), label: 'Solved' },
+          {
+            value: cfContests !== null ? String(cfContests) : String(cf.contests),
+            label: cf.contests === 1 ? 'Contest' : 'Contests',
+          },
+          { value: cf.maxRating > 0 ? String(cf.maxRating) : '—', label: 'Max Rating', accent: true },
+          { value: cf.tier.label, label: 'Current Tier' },
+        ]}
+        chartLabel={`RATING HISTORY // ${pluralize(cf.history.length || cf.contests, 'CONTEST', 'CONTESTS')}`}
+        chartMeta={cf.rating > 0 ? `LAST ${cf.rating}` : 'NO RATING'}
+        chart={
+          <RatingChart
+            points={cfPoints}
             accent={ELECTRIC}
-            fig="FIG. 02"
-            sys="SYS.CF // 2026"
-            number="N°002"
-            handle={CODEFORCES_USERNAME.toUpperCase()}
-            ticker={cfTicker}
-            rank={cf.tier.label}
-            rankColor={cf.tier.color}
-            live={sourceLabel(cfSource)}
-            bestLabel="MAX"
-            bestValue={String(cf.maxRating)}
-            rating={cfRating ?? cf.rating}
-            heroLabel="CONTEST RATING // CF"
-            heroFoot={
-              <>
-                <span className="cp-hero-delta">
-                  MAX {cf.maxRating} · {cf.tier.label}
-                </span>
-                <span className="cp-hero-sub">{cf.tier.label} TIER</span>
-              </>
-            }
-            visual={
-              <>
-                <div className="cp-chart-head">
-                  <span>RATING HISTORY // {pluralize(cf.history.length || cf.contests, 'CONTEST', 'CONTESTS')}</span>
-                  <span className="cp-chart-head-live">LAST {cf.rating}</span>
-                </div>
-                <RatingChart
-                  points={cfPoints}
-                  accent={ELECTRIC}
-                  referenceValue={cf.maxRating}
-                  referenceLabel="MAX"
-                  visible={cfVisible}
-                  reduced={reduced}
-                  loading={false}
-                  ariaLabel="Codeforces rating trajectory"
-                  emptyTitle="NO RATING TELEMETRY FOUND"
-                  emptySub="OFFLINE OR NO CONTEST HISTORY RETURNED"
-                />
-              </>
-            }
-            stats={
-              <>
-                <StatCell index="01" value={String(cfSolved ?? cf.solved)} label="SOLVED" />
-                <StatCell
-                  index="02"
-                  value={String(cfContests ?? cf.contests)}
-                  label={cf.contests === 1 ? 'CONTEST' : 'CONTESTS'}
-                />
-                <StatCell
-                  index="03"
-                  value={cf.maxRating > 0 ? String(cf.maxRating) : '—'}
-                  label="MAX RATING"
-                />
-                <StatCell
-                  index="04"
-                  value={cf.tier.label}
-                  label="CURRENT TIER"
-                />
-              </>
-            }
-            profileHref={`https://codeforces.com/profile/${CODEFORCES_USERNAME}`}
+            referenceValue={cf.maxRating}
+            referenceLabel="MAX"
+            visible={cfVisible}
             reduced={reduced}
-            finePointer={finePointer}
+            loading={false}
+            ariaLabel="Codeforces rating trajectory"
+            emptyTitle="NO RATING TELEMETRY FOUND"
+            emptySub="OFFLINE OR NO CONTEST HISTORY RETURNED"
           />
-        </div>
-      </div>
+        }
+        chartFoot={
+          <>
+            <span className="cp-platform-tier" style={{ color: cf.tier.color }}>{cf.tier.label} TIER</span>
+            <span className="cp-platform-foot-note">MAX {cf.maxRating}</span>
+          </>
+        }
+      />
 
       <style>{`
         .cp-section {
@@ -1045,11 +796,10 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           width: clamp(18px, 3.5vw, 32px);
           height: 2px;
           background: var(--cp-orange);
-          box-shadow: 0 0 12px rgba(250, 95, 52, 0.55);
         }
 
         .cp-label-text {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(9px, 0.72vw, 11px);
           text-transform: uppercase;
           letter-spacing: 0.2em;
@@ -1063,7 +813,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           display: flex;
           align-items: center;
           gap: 7px;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(9px, 0.7vw, 10.5px);
           letter-spacing: 0.12em;
           color: var(--cp-paper);
@@ -1086,9 +836,9 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         }
 
         @keyframes cpPulse {
-          0% { box-shadow: 0 0 0 0 rgba(250, 95, 52, 0.55); opacity: 1; }
-          70% { box-shadow: 0 0 0 7px rgba(250, 95, 52, 0); opacity: 0.5; }
-          100% { box-shadow: 0 0 0 0 rgba(250, 95, 52, 0); opacity: 1; }
+          0% { opacity: 1; }
+          70% { opacity: 0.35; }
+          100% { opacity: 1; }
         }
 
         .cp-heading-row {
@@ -1102,8 +852,10 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         }
 
         .cp-heading {
+          font-family: var(--font-display), sans-serif;
           font-size: clamp(2rem, 4.5vw, 3.5rem);
-          font-weight: 500;
+          font-weight: 700;
+          font-stretch: 92%;
           letter-spacing: -0.03em;
           color: var(--cp-paper);
           line-height: 1.1;
@@ -1230,7 +982,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           display: inline-flex;
           align-items: center;
           gap: 5px;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(7.5px, 0.65vw, 9.5px);
           font-weight: 800;
           letter-spacing: 0.12em;
@@ -1288,7 +1040,6 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           height: 5px;
           border-radius: 50%;
           background: var(--accent);
-          box-shadow: 0 0 8px var(--accent);
           animation: cpBlink 1.4s steps(2, end) infinite;
         }
 
@@ -1315,34 +1066,9 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           box-sizing: border-box;
           border: 1px solid rgba(243, 238, 232, 0.16);
           border-radius: 1px;
-          background:
-            radial-gradient(120% 85% at 12% 0%, rgba(255, 255, 255, 0.05), transparent 58%),
-            linear-gradient(168deg, #111116 0%, #0a0a0c 48%, #070708 100%);
+          background: linear-gradient(168deg, #111116 0%, #0a0a0c 48%, #070708 100%);
           overflow: hidden;
         }
-
-        /* Spotlight traces the inner card */
-        .cp-spotlight {
-          position: absolute;
-          inset: 0;
-          border-radius: 1px;
-          padding: 1px;
-          background: radial-gradient(
-            260px circle at var(--mx, 50%) var(--my, 50%),
-            var(--accent),
-            transparent 65%
-          );
-          -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-          -webkit-mask-composite: xor;
-          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-          mask-composite: exclude;
-          opacity: 0;
-          transition: opacity 240ms ease;
-          pointer-events: none;
-          z-index: 9;
-        }
-
-        .card-frame:hover .cp-spotlight { opacity: 0.85; }
 
         .cp-noise {
           position: absolute;
@@ -1398,7 +1124,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         .cp-ticker-text {
           display: inline-block;
           padding-right: clamp(10px, 1.2vw, 16px);
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(9px, 0.76vw, 11px);
           font-weight: 800;
           letter-spacing: 0.14em;
@@ -1423,7 +1149,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         .cp-anno {
           position: absolute;
           z-index: 4;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(7px, 0.58vw, 8.5px);
           letter-spacing: 0.16em;
           color: var(--cp-paper);
@@ -1450,7 +1176,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           display: block;
           position: relative;
           z-index: 2;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(7.5px, 0.64vw, 9px);
           letter-spacing: 0.24em;
           font-weight: 700;
@@ -1462,11 +1188,12 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           position: relative;
           z-index: 2;
           display: flex;
-          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
+          font-family: var(--font-display), sans-serif;
           font-size: clamp(3.4rem, 7.4vw, 5.8rem);
-          font-weight: 900;
+          font-weight: 800;
+          font-stretch: 92%;
           line-height: 0.82;
-          letter-spacing: -0.035em;
+          letter-spacing: -0.04em;
           font-variant-numeric: tabular-nums;
           color: var(--cp-paper);
         }
@@ -1495,7 +1222,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         }
 
         .cp-hero-delta {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(8px, 0.64vw, 9.5px);
           letter-spacing: 0.14em;
           font-weight: 800;
@@ -1504,7 +1231,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         }
 
         .cp-hero-sub {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(7px, 0.56vw, 8.5px);
           letter-spacing: 0.14em;
           text-transform: uppercase;
@@ -1532,7 +1259,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           justify-content: space-between;
           gap: 8px;
           margin-bottom: 6px;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(7px, 0.58vw, 8.5px);
           letter-spacing: 0.13em;
           text-transform: uppercase;
@@ -1546,13 +1273,13 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         .cp-chart { display: block; overflow: visible; }
 
         .cp-chart-axis-lbl {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 7px;
           letter-spacing: 0.04em;
         }
 
         .cp-chart-max {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 7.5px;
           letter-spacing: 0.1em;
           font-weight: 800;
@@ -1589,7 +1316,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         }
 
         .cp-chart-tip-name {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 7.5px;
           letter-spacing: 0.05em;
           line-height: 1.3;
@@ -1605,7 +1332,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           display: flex;
           align-items: baseline;
           gap: 7px;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 8.5px;
         }
         .cp-chart-tip-meta b { font-size: 11px; color: var(--cp-paper); }
@@ -1626,11 +1353,11 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         }
         .cp-chart-empty-mark { font-size: 24px; line-height: 1; color: var(--cp-blue); opacity: 0.6; }
         .cp-chart-empty-title {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 9px; font-weight: 800; letter-spacing: 0.18em; color: var(--cp-paper);
         }
         .cp-chart-empty-sub {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 7px; letter-spacing: 0.12em; color: var(--cp-paper); opacity: 0.72;
         }
 
@@ -1655,7 +1382,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           padding: clamp(3px, 0.45vw, 5px) clamp(6px, 0.75vw, 9px);
           background: rgba(243, 238, 232, 0.04);
           border: 1px solid rgba(243, 238, 232, 0.16);
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(7px, 0.6vw, 8.5px);
           letter-spacing: 0.08em;
         }
@@ -1689,7 +1416,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
           position: absolute;
           top: 5px;
           right: 6px;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(6px, 0.5vw, 7.5px);
           font-weight: 700;
           letter-spacing: 0.06em;
@@ -1698,8 +1425,10 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         }
 
         .cp-cell-value {
-          font-family: 'Impact', 'Arial Black', sans-serif;
+          font-family: var(--font-display), sans-serif;
           font-size: clamp(1.15rem, 1.9vw, 1.7rem);
+          font-weight: 700;
+          font-stretch: 92%;
           line-height: 1;
           letter-spacing: -0.01em;
           color: var(--cp-paper);
@@ -1708,7 +1437,7 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         }
 
         .cp-cell-label {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(6.5px, 0.54vw, 8px);
           font-weight: 700;
           letter-spacing: 0.1em;
@@ -1758,15 +1487,18 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         .cp-footer:hover, .cp-footer:focus-visible { color: #08080a; border-color: var(--accent); }
 
         .cp-footer-label {
-          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', sans-serif;
+          font-family: var(--font-display), sans-serif;
           font-size: clamp(1.05rem, 1.8vw, 1.5rem);
-          font-weight: 900;
+          font-weight: 800;
+          font-stretch: 92%;
           letter-spacing: 0.05em;
           text-transform: uppercase;
           line-height: 1;
         }
 
         .cp-footer-arrow {
+          display: inline-flex;
+          align-items: center;
           font-size: clamp(1rem, 1.5vw, 1.25rem);
           font-weight: 900;
           transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -1792,6 +1524,363 @@ export default function CP({ initialData }: { initialData?: CPData }) {
         @media (max-width: 400px) {
           .cp-sticker { letter-spacing: 0.06em; }
           .cp-hero-number { font-size: clamp(3rem, 14vw, 3.6rem); }
+        }
+
+        /* ── GITHUB-STYLE PLATFORM ROWS ── */
+        .cp-platform {
+          --row-accent: var(--cp-paper);
+          margin-top: clamp(2.5rem, 5vw, 4rem);
+        }
+
+        .cp-platform + .cp-platform {
+          margin-top: clamp(3.25rem, 6vw, 5rem);
+        }
+
+        .cp-platform-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1.25rem;
+          padding-bottom: 0.9rem;
+          margin-bottom: 1.25rem;
+          border-bottom: 1px solid rgba(243, 238, 232, 0.14);
+        }
+
+        .cp-platform-ident {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          min-width: 0;
+          flex-wrap: wrap;
+        }
+
+        .cp-platform-line {
+          width: 22px;
+          height: 2px;
+          background: var(--row-accent);
+          flex-shrink: 0;
+        }
+
+        .cp-platform-fig {
+          font-family: var(--font-mono), monospace;
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          color: var(--cp-paper);
+          opacity: 0.45;
+          white-space: nowrap;
+        }
+
+        .cp-platform-name {
+          font-family: var(--font-mono), monospace;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 0.14em;
+          color: var(--cp-paper);
+          white-space: nowrap;
+        }
+
+        .cp-platform-status {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-family: var(--font-mono), monospace;
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          color: var(--cp-paper);
+          opacity: 0.62;
+          white-space: nowrap;
+        }
+
+        .cp-platform-status-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: var(--row-accent);
+          flex-shrink: 0;
+        }
+
+        .cp-platform-status.is-offline .cp-platform-status-dot {
+          background: #71717a;
+        }
+
+        .cp-platform-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 18px;
+          border-radius: 9999px;
+          background: var(--row-accent);
+          color: #0a0a0a;
+          font-family: var(--font-mono), monospace;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          text-decoration: none;
+          white-space: nowrap;
+          box-shadow: 3px 3px 0 #000;
+          transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+        }
+
+        .cp-platform-link:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: 5px 5px 0 #000;
+          filter: brightness(1.08);
+        }
+
+        .cp-platform-grid {
+          display: grid;
+          grid-template-columns: minmax(300px, 0.85fr) minmax(0, 1.65fr);
+          gap: clamp(1.5rem, 4vw, 4rem);
+          align-items: stretch;
+        }
+
+        .cp-platform-grid > .fade-in {
+          min-width: 0;
+          height: 100%;
+        }
+
+        .cp-platform-stats {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-auto-rows: 1fr;
+          gap: 12px;
+          height: 100%;
+        }
+
+        .cp-stat-plate {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 8px;
+          padding: 1.15rem;
+          min-width: 0;
+          border: 1px solid rgba(243, 238, 232, 0.16);
+          background: rgba(255, 255, 255, 0.015);
+          box-shadow: 3px 3px 0 #000;
+          box-sizing: border-box;
+        }
+
+        .cp-stat-plate-value {
+          font-family: var(--font-display), sans-serif;
+          font-size: clamp(2rem, 3.2vw, 3rem);
+          font-weight: 800;
+          font-stretch: 90%;
+          line-height: 1;
+          letter-spacing: -0.02em;
+          color: var(--cp-paper);
+          font-variant-numeric: tabular-nums;
+          overflow-wrap: anywhere;
+        }
+
+        .cp-stat-plate-label {
+          font-family: var(--font-mono), monospace;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          line-height: 1.4;
+          color: var(--cp-paper);
+          opacity: 0.62;
+          min-height: 2.4em;
+        }
+
+        .cp-difficulty-plate {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 0.65rem;
+          width: 100%;
+        }
+
+        .cp-difficulty-plate .cp-stat-plate-label {
+          min-height: 0;
+        }
+
+        .cp-difficulty-rows {
+          display: flex;
+          flex-direction: column;
+          gap: 7px;
+        }
+
+        .cp-difficulty-row {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          min-width: 0;
+        }
+
+        .cp-difficulty-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+
+        .cp-difficulty-name {
+          font-family: var(--font-mono), monospace;
+          font-size: 8.5px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          color: var(--cp-paper);
+          opacity: 0.62;
+        }
+
+        .cp-difficulty-value {
+          margin-left: auto;
+          font-family: var(--font-display), sans-serif;
+          font-size: 1.15rem;
+          font-weight: 800;
+          font-stretch: 92%;
+          line-height: 1;
+          letter-spacing: -0.01em;
+          color: var(--cp-paper);
+          font-variant-numeric: tabular-nums;
+        }
+
+        .cp-platform-chart {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          padding: 1.15rem;
+          border: 1px solid rgba(243, 238, 232, 0.16);
+          background: rgba(255, 255, 255, 0.015);
+          box-shadow: 4px 4px 0 #000;
+          box-sizing: border-box;
+        }
+
+        .cp-platform-chart .cp-chart-head {
+          flex-shrink: 0;
+          margin-bottom: 0.9rem;
+          font-size: 10px;
+          letter-spacing: 0.1em;
+          opacity: 0.75;
+        }
+
+        .cp-platform-chart-body {
+          flex: 1;
+          min-height: 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        .cp-platform-chart .cp-chart-wrap,
+        .cp-platform-chart .cp-chart {
+          width: 100%;
+        }
+
+        .cp-platform-chart .cp-chart {
+          height: auto;
+        }
+
+        .cp-platform-chart-foot {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          flex-wrap: wrap;
+          flex-shrink: 0;
+          margin-top: 0.9rem;
+          padding-top: 0.9rem;
+          border-top: 1px solid rgba(243, 238, 232, 0.1);
+        }
+
+        .cp-platform-chart-foot .cp-legend-inline {
+          margin-top: 0;
+        }
+
+        .cp-platform-tier,
+        .cp-platform-foot-note {
+          font-family: var(--font-mono), monospace;
+          font-size: 9px;
+          font-weight: 800;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+        }
+
+        .cp-platform-foot-note {
+          color: var(--cp-paper);
+          opacity: 0.55;
+        }
+
+        @media (max-width: 1024px) {
+          .cp-platform-grid {
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+          }
+
+          .cp-platform-stats {
+            height: auto;
+          }
+
+          .cp-platform-chart {
+            height: auto;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .cp-platform {
+            margin-top: 2.5rem;
+          }
+
+          .cp-platform + .cp-platform {
+            margin-top: 3rem;
+          }
+
+          .cp-platform-head {
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 0.85rem;
+          }
+
+          .cp-platform-link {
+            font-size: 10px;
+            padding: 7px 14px;
+          }
+
+          .cp-stat-plate {
+            padding: 0.9rem;
+          }
+
+          .cp-stat-plate-value {
+            font-size: clamp(1.5rem, 8vw, 2rem);
+          }
+
+          .cp-stat-plate-label {
+            font-size: 9px;
+            min-height: 2.8em;
+          }
+
+          .cp-platform-chart {
+            padding: 0.9rem;
+          }
+
+          .cp-platform-chart .cp-chart-head {
+            font-size: 9px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .cp-platform-grid {
+            gap: 10px;
+          }
+
+          .cp-platform-stats {
+            gap: 10px;
+          }
+
+          .cp-platform-fig {
+            display: none;
+          }
+
+          .cp-platform-chart .cp-chart-head {
+            font-size: 8px;
+            letter-spacing: 0.08em;
+          }
         }
 
         @media (prefers-reduced-motion: reduce) {

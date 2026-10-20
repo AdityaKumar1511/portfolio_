@@ -1,12 +1,35 @@
 import type { Metadata } from 'next'
-import { GeistSans } from 'geist/font/sans'
-import { GeistMono } from 'geist/font/mono'
+import { Bricolage_Grotesque, Martian_Mono } from 'next/font/google'
+import localFont from 'next/font/local'
 import CustomCursor from '@/components/CustomCursor'
 import Magnetic from '@/components/Magnetic'
 import SmoothScroll from '@/components/SmoothScroll'
+import DraftingBackground from '@/components/DraftingBackground'
 import meta from '@/data/meta.json'
 import 'lenis/dist/lenis.css'
 import './globals.css'
+
+const display = Bricolage_Grotesque({
+  subsets: ['latin'],
+  axes: ['opsz', 'wdth'],
+  variable: '--font-display',
+  display: 'swap',
+})
+
+const sans = localFont({
+  src: [
+    { path: './fonts/Switzer-Variable.woff2', weight: '100 900', style: 'normal' },
+    { path: './fonts/Switzer-VariableItalic.woff2', weight: '100 900', style: 'italic' },
+  ],
+  variable: '--font-sans',
+  display: 'swap',
+})
+
+const mono = Martian_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL(meta.seo.url),
@@ -29,8 +52,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
-      <body style={{ fontFamily: 'var(--font-geist-sans), system-ui, sans-serif' }}>
+    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+      <body style={{ fontFamily: 'var(--font-sans), system-ui, sans-serif' }}>
+        <DraftingBackground />
         <a href="#main-content" className="skip-link">
           Skip to content
         </a>

@@ -50,7 +50,7 @@ export default function Ticker() {
         }
 
         .ticker-text {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(14px, 2.5vw, 18px);
           font-weight: 500;
           color: var(--text);
@@ -59,7 +59,7 @@ export default function Ticker() {
         }
 
         .ticker-slash {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(14px, 2.5vw, 18px);
           font-weight: 600;
           color: #fa5f34; /* Rust/terracotta orange */

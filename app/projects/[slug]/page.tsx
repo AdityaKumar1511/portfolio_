@@ -5,6 +5,7 @@ import type { Metadata } from 'next'
 import { caseStudies } from '@/data/caseStudiesData'
 import projectsData from '@/data/projects.json'
 import { MacBookMockup, IPhoneMockup, NonLiveProjectShowcase } from '@/components/DeviceMockups'
+import { ArrowUpRight, ArrowRight, ArrowLeft } from '@/components/ArrowIcon'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -75,7 +76,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
       <nav className="case-study-nav">
         <div className="nav-container">
           <Link href="/#projects" className="back-link">
-            <span className="back-arrow">←</span>
+            <ArrowLeft size={14} />
             <span>BACK TO PROJECTS</span>
           </Link>
 
@@ -92,7 +93,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
                 rel="noreferrer"
                 className="nav-btn-live"
               >
-                LIVE SITE ↗
+                LIVE SITE <ArrowUpRight size={11} />
               </a>
             )}
             {study.repoUrl && (
@@ -102,7 +103,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
                 rel="noreferrer"
                 className="nav-btn-code"
               >
-                GITHUB ↗
+                GITHUB <ArrowUpRight size={11} />
               </a>
             )}
           </div>
@@ -139,7 +140,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
                 rel="noreferrer"
                 className="hero-live-button"
               >
-                VISIT PRODUCTION APP ↗
+                VISIT PRODUCTION APP <ArrowUpRight size={12} />
               </a>
             )}
             {study.repoUrl && (
@@ -149,7 +150,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
                 rel="noreferrer"
                 className="hero-repo-button"
               >
-                SOURCE CODE REPOSITORY ↗
+                SOURCE CODE REPOSITORY <ArrowUpRight size={12} />
               </a>
             )}
           </div>
@@ -338,13 +339,13 @@ export default async function CaseStudyPage({ params }: PageProps) {
         <div className="case-footer-container">
           <div className="footer-nav-grid">
             <Link href={`/projects/${prevProject.slug}`} className="footer-nav-card">
-              <span className="footer-nav-dir">← PREVIOUS CASE STUDY</span>
+              <span className="footer-nav-dir"><ArrowLeft size={12} /> PREVIOUS CASE STUDY</span>
               <span className="footer-nav-title">{prevProject.title}</span>
               <span className="footer-nav-cat">{prevProject.category}</span>
             </Link>
 
             <Link href={`/projects/${nextProject.slug}`} className="footer-nav-card footer-nav-card--right">
-              <span className="footer-nav-dir">NEXT CASE STUDY →</span>
+              <span className="footer-nav-dir">NEXT CASE STUDY <ArrowRight size={12} /></span>
               <span className="footer-nav-title">{nextProject.title}</span>
               <span className="footer-nav-cat">{nextProject.category}</span>
             </Link>
@@ -352,7 +353,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
 
           <div className="footer-bottom-bar">
             <Link href="/#projects" className="return-home-link">
-              ← RETURN TO MAIN PORTFOLIO
+              <ArrowLeft size={12} /> RETURN TO MAIN PORTFOLIO
             </Link>
           </div>
         </div>
@@ -364,7 +365,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
           min-height: 100vh;
           background: #09090b;
           color: #d4cec7;
-          font-family: var(--font-geist-sans), system-ui, sans-serif;
+          font-family: var(--font-sans), system-ui, sans-serif;
           padding-top: 70px;
         }
 
@@ -396,7 +397,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           font-weight: 700;
           color: #d4cec7;
@@ -414,7 +415,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           font-weight: 600;
           letter-spacing: 0.12em;
@@ -436,9 +437,12 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .nav-btn-live {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           font-weight: 800;
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
           background: #fa5f34;
           color: #0a0a0a;
           padding: 6px 14px;
@@ -454,9 +458,12 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .nav-btn-code {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           font-weight: 700;
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
           color: #d4cec7;
           border: 1px solid rgba(255, 255, 255, 0.12);
           padding: 5px 12px;
@@ -486,7 +493,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           font-weight: 600;
           text-transform: uppercase;
@@ -512,18 +519,19 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .case-main-title {
-          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
+          font-family: var(--font-display), sans-serif;
           font-size: clamp(3.5rem, 9vw, 8rem);
-          font-weight: 900;
+          font-weight: 800;
+          font-stretch: 88%;
           text-transform: uppercase;
           line-height: 0.9;
-          letter-spacing: -0.02em;
+          letter-spacing: -0.03em;
           color: #f3eee8;
           margin: 0 0 1rem 0;
         }
 
         .case-tagline-text {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: clamp(12px, 1.2vw, 15px);
           font-weight: 700;
           text-transform: uppercase;
@@ -533,7 +541,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .case-subtitle-text {
-          font-family: var(--font-geist-sans), system-ui, sans-serif;
+          font-family: var(--font-sans), system-ui, sans-serif;
           font-size: clamp(16px, 1.6vw, 21px);
           line-height: 1.65;
           color: rgba(212, 206, 199, 0.85);
@@ -549,11 +557,14 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .hero-live-button {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 0.1em;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
           background: #fa5f34;
           color: #0a0a0a;
           padding: 12px 24px;
@@ -569,11 +580,14 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .hero-repo-button {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.1em;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
           color: #d4cec7;
           border: 1px solid rgba(255, 255, 255, 0.15);
           padding: 11px 22px;
@@ -609,7 +623,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .stat-number {
-          font-family: 'Impact', 'Arial Black', sans-serif;
+          font-family: var(--font-display), sans-serif;
           font-size: clamp(2rem, 3.5vw, 3.25rem);
           font-weight: 900;
           color: #f3eee8;
@@ -617,7 +631,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .stat-title {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           text-transform: uppercase;
           letter-spacing: 0.12em;
@@ -638,7 +652,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
 
         .section-label-chip {
           display: inline-block;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           font-weight: 700;
           color: #fa5f34;
@@ -648,16 +662,18 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .section-title {
-          font-family: 'Impact', 'Arial Black', sans-serif;
+          font-family: var(--font-display), sans-serif;
           font-size: clamp(2rem, 4vw, 3.5rem);
+          font-weight: 700;
+          font-stretch: 92%;
           text-transform: uppercase;
           color: #f3eee8;
           margin: 0 0 10px 0;
-          letter-spacing: -0.01em;
+          letter-spacing: -0.02em;
         }
 
         .section-intro {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 12px;
           color: rgba(212, 206, 199, 0.6);
           max-width: 600px;
@@ -710,14 +726,14 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .block-num {
-          font-family: 'Impact', 'Arial Black', sans-serif;
+          font-family: var(--font-display), sans-serif;
           font-size: 1.5rem;
           color: #fa5f34;
           line-height: 1;
         }
 
         .block-chip {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           font-weight: 700;
           letter-spacing: 0.15em;
@@ -726,12 +742,14 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .block-heading {
-          font-family: 'Impact', 'Arial Black', sans-serif;
+          font-family: var(--font-display), sans-serif;
           font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+          font-weight: 700;
+          font-stretch: 92%;
           text-transform: uppercase;
           color: #f3eee8;
           margin: 0;
-          letter-spacing: -0.01em;
+          letter-spacing: -0.02em;
         }
 
         .block-paragraph {
@@ -771,7 +789,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           font-weight: 800;
           letter-spacing: 0.12em;
@@ -810,14 +828,14 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .arch-step-num {
-          font-family: 'Impact', 'Arial Black', sans-serif;
+          font-family: var(--font-display), sans-serif;
           font-size: 2rem;
           color: #fa5f34;
           line-height: 1;
         }
 
         .arch-step-title {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 12px;
           font-weight: 800;
           text-transform: uppercase;
@@ -864,14 +882,14 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .tech-name-badge {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 12px;
           font-weight: 800;
           color: #f3eee8;
         }
 
         .tech-role-text {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           color: #fa5f34;
           text-transform: uppercase;
@@ -904,7 +922,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .challenge-tag {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           font-weight: 700;
           color: #fa5f34;
@@ -928,7 +946,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .solution-tag {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 9px;
           font-weight: 800;
           color: #34d399;
@@ -978,7 +996,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .results-label {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           font-weight: 800;
           letter-spacing: 0.15em;
@@ -1036,23 +1054,28 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .footer-nav-dir {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           font-weight: 700;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
           color: #fa5f34;
           letter-spacing: 0.12em;
         }
 
         .footer-nav-title {
-          font-family: 'Impact', 'Arial Black', sans-serif;
+          font-family: var(--font-display), sans-serif;
           font-size: 1.75rem;
+          font-weight: 700;
+          font-stretch: 92%;
           color: #f3eee8;
           text-transform: uppercase;
           line-height: 1.1;
         }
 
         .footer-nav-cat {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           color: rgba(212, 206, 199, 0.45);
           text-transform: uppercase;
@@ -1065,9 +1088,12 @@ export default async function CaseStudyPage({ params }: PageProps) {
         }
 
         .return-home-link {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           font-weight: 700;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
           letter-spacing: 0.12em;
           color: #d4cec7;
           text-decoration: none;

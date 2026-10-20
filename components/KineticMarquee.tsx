@@ -169,7 +169,7 @@ export default function KineticMarquee() {
         }
 
         .kinetic-label {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 9.5px;
           font-weight: 800;
           letter-spacing: 0.14em;
@@ -208,8 +208,9 @@ export default function KineticMarquee() {
         }
 
         .kinetic-word {
-          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
-          font-weight: 900;
+          font-family: var(--font-display), sans-serif;
+          font-weight: 800;
+          font-stretch: 90%;
           text-transform: uppercase;
           letter-spacing: -0.02em;
           line-height: 0.95;

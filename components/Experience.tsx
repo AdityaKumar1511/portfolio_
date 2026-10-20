@@ -88,7 +88,7 @@ export default function Experience() {
         }
 
         .experience-label-text {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.15em;
@@ -97,8 +97,10 @@ export default function Experience() {
         }
 
         .experience-heading {
+          font-family: var(--font-display), sans-serif;
           font-size: clamp(2rem, 4vw, 3.5rem);
-          font-weight: 500;
+          font-weight: 700;
+          font-stretch: 92%;
           letter-spacing: -0.03em;
           color: var(--text);
           line-height: 1.1;
@@ -117,6 +119,7 @@ export default function Experience() {
         .experience-list {
           display: flex;
           flex-direction: column;
+          gap: 12px;
         }
 
         .experience-row {
@@ -124,16 +127,20 @@ export default function Experience() {
           grid-template-columns: 50px 1fr 180px 130px;
           gap: 24px;
           align-items: baseline;
-          padding: 48px 0;
-          border-bottom: 1px solid var(--border);
+          padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.25rem, 2.4vw, 2rem);
+          border: 1px solid var(--rule);
+          background: rgba(255, 255, 255, 0.012);
+          box-shadow: 3px 3px 0 #000;
+          transition: background-color 180ms ease, border-color 180ms ease;
         }
 
-        .experience-row:first-of-type {
-          border-top: 1px solid var(--border);
+        .experience-row:hover {
+          background: rgba(255, 255, 255, 0.022);
+          border-color: rgba(212, 206, 199, 0.24);
         }
 
         .experience-num {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 13px;
           font-weight: 600;
           color: #fa5f34; /* Accent red/orange color from screenshot */
@@ -149,7 +156,7 @@ export default function Experience() {
         }
 
         .experience-org {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 12px;
           text-transform: uppercase;
           color: var(--text-muted);
@@ -157,7 +164,7 @@ export default function Experience() {
         }
 
         .experience-period {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 12px;
           color: var(--text-muted);
           text-align: right;
@@ -181,7 +188,7 @@ export default function Experience() {
 
           .experience-row {
             grid-template-columns: 40px 1fr auto;
-            padding: 32px 0;
+            padding: 32px 20px;
             gap: 16px;
           }
 
@@ -202,7 +209,7 @@ export default function Experience() {
             display: flex;
             flex-direction: column;
             gap: 4px;
-            padding: 24px 0;
+            padding: 24px 18px;
           }
 
           .experience-period {

@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Hero from '@/components/Hero'
 import About from '@/components/About'
 import Ticker from '@/components/Ticker'
-import HowIWork from '@/components/HowIWork'
 import Projects from '@/components/Projects'
 import GitHub from '@/components/GitHub'
 import CP from '@/components/CP'
@@ -35,7 +34,6 @@ export default async function Page() {
       <Experience />
       <GitHub initialData={githubData} />
       <CP initialData={cpData} />
-      <HowIWork />
       <ConnectTicker />
       <Contact />
     </main>

@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { ArrowUpRight, ArrowRight } from './ArrowIcon'
 
 interface ProjectProps {
   slug: string
@@ -89,7 +90,7 @@ export function MacBookMockup({ project }: { project: ProjectProps }) {
         }
 
         .device-label-text {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           font-weight: 700;
           letter-spacing: 0.12em;
@@ -102,7 +103,6 @@ export function MacBookMockup({ project }: { project: ProjectProps }) {
           height: 6px;
           border-radius: 50%;
           background: #fa5f34;
-          box-shadow: 0 0 8px rgba(250, 95, 52, 0.7);
         }
 
         .macbook-chassis {
@@ -113,7 +113,7 @@ export function MacBookMockup({ project }: { project: ProjectProps }) {
           border-radius: 14px;
           border: 1px solid rgba(255, 255, 255, 0.12);
           background: #0d0e12;
-          box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.95);
+          box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.55);
           overflow: hidden;
           display: flex;
           flex-direction: column;
@@ -166,11 +166,10 @@ export function MacBookMockup({ project }: { project: ProjectProps }) {
           border-radius: 50%;
           background: #10b981;
           flex-shrink: 0;
-          box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
         }
 
         .macbook-url-text {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 9.5px;
           letter-spacing: 0.1em;
           color: #d4cec7;
@@ -180,7 +179,7 @@ export function MacBookMockup({ project }: { project: ProjectProps }) {
         }
 
         .macbook-spec-text {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 8.5px;
           color: #666;
           letter-spacing: 0.08em;
@@ -304,7 +303,7 @@ export function IPhoneMockup({ project }: { project: ProjectProps }) {
         }
 
         .iphone-label-text {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           font-weight: 700;
           letter-spacing: 0.12em;
@@ -322,7 +321,7 @@ export function IPhoneMockup({ project }: { project: ProjectProps }) {
           padding: 3px;
           background: linear-gradient(180deg, #2a2c33 0%, #1a1b20 50%, #121316 100%);
           border: 1px solid rgba(255, 255, 255, 0.15);
-          box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.95);
+          box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.55);
           display: flex;
           flex-direction: column;
           box-sizing: border-box;
@@ -375,7 +374,7 @@ export function IPhoneMockup({ project }: { project: ProjectProps }) {
         }
 
         .iphone-status-time {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 7.5px;
           font-weight: 700;
           color: rgba(255, 255, 255, 0.95);
@@ -408,14 +407,13 @@ export function IPhoneMockup({ project }: { project: ProjectProps }) {
           height: 4px;
           border-radius: 50%;
           background: #10b981;
-          box-shadow: 0 0 4px #10b981;
         }
 
         .iphone-status-icons {
           display: flex;
           align-items: center;
           gap: 4px;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 7px;
           color: rgba(255, 255, 255, 0.85);
         }
@@ -551,7 +549,7 @@ function ArbitrageDesktopView() {
           <span className="terminal-prompt">&gt;_</span>
           <span className="terminal-cmd">npx arbitrage monitor --pairs=BTC,SOL,ETH --threshold=1.5%</span>
         </div>
-        <span className="terminal-action">EXECUTE ↗</span>
+        <span className="terminal-action">EXECUTE <ArrowUpRight size={9} /></span>
       </div>
 
       <style>{`
@@ -560,7 +558,7 @@ function ArbitrageDesktopView() {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           gap: 10px;
         }
 
@@ -636,7 +634,6 @@ function ArbitrageDesktopView() {
           height: 5px;
           border-radius: 50%;
           background: #10b981;
-          box-shadow: 0 0 6px #10b981;
         }
 
         .preview-hero {
@@ -762,6 +759,9 @@ function ArbitrageDesktopView() {
         .terminal-cmd { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .terminal-action {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
           color: #fa5f34;
           font-weight: 800;
           cursor: pointer;
@@ -826,7 +826,7 @@ function NexusForceDesktopView() {
 
       <div className="terminal-bar">
         <span style={{ color: '#888' }}>IPFS PROOF: ipfs://bafybeigdyrzt5x9f4...</span>
-        <span className="terminal-action" style={{ color: '#818cf8' }}>VIEW TRIBUNAL →</span>
+        <span className="terminal-action" style={{ color: '#818cf8' }}>VIEW TRIBUNAL <ArrowRight size={9} /></span>
       </div>
     </div>
   )
@@ -893,7 +893,7 @@ function ArbitrageMobileView() {
 
       {/* Primary Mobile CTA Button */}
       <div className="mobile-cta-btn">
-        Track Live Rates →
+        Track Live Rates <ArrowRight size={9} />
       </div>
 
       {/* Mobile Stream Ticker List */}
@@ -933,7 +933,7 @@ function ArbitrageMobileView() {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           gap: 4px;
         }
 
@@ -1020,8 +1020,11 @@ function ArbitrageMobileView() {
           font-size: 7.5px;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          text-align: center;
-          box-shadow: 0 4px 10px rgba(250, 95, 52, 0.3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+          box-shadow: 2px 2px 0 #000;
         }
 
         .mobile-ticker-list {
@@ -1100,7 +1103,7 @@ function NexusForceMobileView() {
       </div>
 
       <div className="mobile-cta-btn" style={{ background: 'linear-gradient(90deg, #6366f1 0%, #818cf8 100%)', color: '#fff' }}>
-        View Active Escrows →
+        View Active Escrows <ArrowRight size={9} />
       </div>
 
       <div style={{ padding: '5px 8px', borderRadius: '4px', background: 'rgba(99, 102, 241, 0.08)', border: '1px solid rgba(99, 102, 241, 0.2)' }}>
@@ -1136,7 +1139,7 @@ function GenericMobileView({ project }: { project: ProjectProps }) {
       </div>
 
       <div className="mobile-cta-btn">
-        Open Interface →
+        Open Interface <ArrowRight size={9} />
       </div>
 
       <div className="mobile-ticker-list">
@@ -1163,11 +1166,11 @@ const SHOWCASE_STYLES = `
     border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     background: #080d13;
-    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.95);
+    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.55);
     overflow: hidden;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    font-family: var(--font-geist-mono), monospace;
+    font-family: var(--font-mono), monospace;
   }
 
   @media (max-width: 768px) {

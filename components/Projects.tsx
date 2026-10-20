@@ -5,7 +5,8 @@ import Link from 'next/link'
 import projectsData from '@/data/projects.json'
 import theme from '@/data/theme.json'
 import FadeIn from './FadeIn'
-import { MacBookMockup, IPhoneMockup, NonLiveProjectShowcase } from './DeviceMockups'
+import { ArrowUpRight, ArrowRight } from './ArrowIcon'
+import { MacBookMockup, NonLiveProjectShowcase } from './DeviceMockups'
 
 const projects = projectsData.map(p => ({
   ...p,
@@ -70,8 +71,10 @@ export default function Projects() {
                 className="project-card-body"
                 style={{ background: cardBg[i % cardBg.length] }}
               >
+                <div className="project-card-texture" aria-hidden="true" />
+
                 {/* ── TOP HEADER ROW: Title & Metadata ── */}
-                <FadeIn delay={i * 0.1}>
+                <FadeIn delay={i * 0.1} className="card-header-fade">
                   <div className="card-top-header">
                     {/* Big Bold Condensed Title */}
                     <h3 className="card-big-title">
@@ -92,7 +95,7 @@ export default function Projects() {
 
                       {/* Tech & Highlight Badges */}
                       <div className="card-meta-pills">
-                        {project.tech.map((t) => (
+                        {project.tech.slice(0, 3).map((t) => (
                           <span key={t} className="card-tech-pill">
                             {t}
                           </span>
@@ -111,8 +114,8 @@ export default function Projects() {
                 <div className="card-dashed-divider" />
 
                 {/* ── 3-COLUMN SHOWCASE BODY ── */}
-                <FadeIn delay={i * 0.1 + 0.08}>
-                  <div className="card-content-grid">
+                <FadeIn delay={i * 0.1 + 0.08} className="card-content-fade">
+                  <div className={`card-content-grid ${project.liveUrl ? 'card-content-grid--mockups' : 'card-content-grid--no-mockup'}`}>
                     {/* 1. Left Column: Description, Metric Rows, Action Buttons */}
                     <div className="col-left-info">
                       {/* Description */}
@@ -150,7 +153,7 @@ export default function Projects() {
                             rel="noreferrer"
                             className="btn-live-pill"
                           >
-                            LIVE SITE ↗
+                            LIVE SITE <ArrowUpRight size={12} />
                           </a>
                         ) : project.repoUrl ? (
                           <a
@@ -159,7 +162,7 @@ export default function Projects() {
                             rel="noreferrer"
                             className="btn-live-pill"
                           >
-                            GITHUB ↗
+                            GITHUB <ArrowUpRight size={12} />
                           </a>
                         ) : null}
 
@@ -168,33 +171,16 @@ export default function Projects() {
                           href={`/projects/${project.slug}`}
                           className="btn-case-study"
                         >
-                          CASE STUDY →
+                          CASE STUDY <ArrowRight size={12} />
                         </Link>
-
-                        {/* Code Repo Link */}
-                        {project.repoUrl && project.liveUrl && (
-                          <a
-                            href={project.repoUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="btn-code-link"
-                          >
-                            CODE ↗
-                          </a>
-                        )}
                       </div>
                     </div>
 
-                    {/* 2 & 3. Device Mockups (only if liveUrl exists) OR Non-Live Architecture Showcase */}
+                    {/* 2. Single Device Mockup (only if liveUrl exists) OR Non-Live Architecture Showcase */}
                     {project.liveUrl ? (
-                      <>
-                        <div className="col-center-macbook">
-                          <MacBookMockup project={project} />
-                        </div>
-                        <div className="col-right-iphone">
-                          <IPhoneMockup project={project} />
-                        </div>
-                      </>
+                      <div className="col-center-macbook">
+                        <MacBookMockup project={project} />
+                      </div>
                     ) : (
                       <div className="col-non-live-showcase">
                         <NonLiveProjectShowcase project={project} />
@@ -210,12 +196,11 @@ export default function Projects() {
 
       <style>{`
         .projects-section {
-          padding: clamp(4rem, 8vw, 7rem) var(--pad-x);
+          padding: clamp(3rem, 6vh, 5rem) 0 0;
           border-top: 1px solid var(--border);
-          max-width: 1800px;
-          margin: 0 auto;
           width: 100%;
           box-sizing: border-box;
+          position: relative;
         }
 
         .projects-label-container {
@@ -223,7 +208,7 @@ export default function Projects() {
           align-items: center;
           gap: 12px;
           margin-bottom: clamp(2rem, 3.5vh, 2.75rem);
-          padding: 0;
+          padding: 0 var(--pad-x);
         }
 
         .projects-label-line {
@@ -233,7 +218,7 @@ export default function Projects() {
         }
 
         .projects-label-text {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.15em;
@@ -245,7 +230,7 @@ export default function Projects() {
           display: flex;
           flex-direction: column;
           position: relative;
-          padding-bottom: clamp(60px, 10vh, 100px);
+          padding-inline: var(--pad-x);
         }
 
         .project-card-wrapper {
@@ -254,7 +239,11 @@ export default function Projects() {
           flex-direction: column;
           align-items: flex-start;
           width: 100%;
-          margin-bottom: clamp(60px, 8vh, 90px);
+          height: 100vh;
+          height: 100svh;
+          padding-block: 16px;
+          box-sizing: border-box;
+          margin-bottom: 0;
         }
 
         /* ── FOLDER TAB EAR ── */
@@ -268,11 +257,12 @@ export default function Projects() {
           position: relative;
           z-index: 2;
           flex-shrink: 0;
+          filter: drop-shadow(3px 3px 0 rgba(0, 0, 0, 0.85));
           transition: background 200ms ease;
         }
 
         .ear-number {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           font-weight: 700;
           color: #fa5f34;
@@ -288,7 +278,7 @@ export default function Projects() {
         }
 
         .ear-name {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           color: #d4cec7;
           letter-spacing: 0.05em;
@@ -300,18 +290,49 @@ export default function Projects() {
         /* ── CARD BODY CONTAINER ── */
         .project-card-body {
           width: 100%;
-          min-height: clamp(520px, 75vh, 680px);
-          height: auto;
-          padding: clamp(1.5rem, 2.2vw, 2.25rem);
+          flex: 1;
+          min-height: 0;
+          padding: clamp(1.75rem, 3vw, 3rem);
           display: flex;
           flex-direction: column;
           justify-content: space-between;
           box-sizing: border-box;
           position: relative;
           z-index: 1;
-          box-shadow: 0 -16px 48px rgba(0, 0, 0, 0.7);
-          border: 1px solid rgba(255, 255, 255, 0.06);
+          box-shadow:
+            0 -1px 0 rgba(255, 255, 255, 0.08),
+            inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+          border: 1px solid rgba(212, 206, 199, 0.12);
           border-radius: 4px;
+        }
+
+        .project-card-texture {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 0;
+          opacity: 0.5;
+          background-image:
+            var(--grain-url),
+            linear-gradient(to right, rgba(212, 206, 199, 0.035) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(212, 206, 199, 0.035) 1px, transparent 1px);
+          background-size: 180px 180px, 48px 48px, 48px 48px;
+          mix-blend-mode: soft-light;
+        }
+
+        .project-card-body > *:not(.project-card-texture) {
+          position: relative;
+          z-index: 1;
+        }
+
+        .card-header-fade {
+          flex-shrink: 0;
+        }
+
+        .card-content-fade {
+          flex: 1;
+          min-height: 0;
+          display: flex;
         }
 
         /* ── TOP HEADER ROW ── */
@@ -320,19 +341,23 @@ export default function Projects() {
           align-items: flex-end;
           justify-content: space-between;
           gap: 2rem;
-          margin-bottom: clamp(1rem, 1.8vw, 1.5rem);
+          margin-bottom: clamp(1.5rem, 2.4vw, 2rem);
           flex-wrap: wrap;
+          width: 100%;
+          max-width: 1800px;
+          margin-inline: auto;
         }
 
         .card-big-title {
-          font-family: 'Impact', 'Arial Black', 'Haettenschweiler', 'Franklin Gothic Bold', sans-serif;
+          font-family: var(--font-display), sans-serif;
           font-size: clamp(3.5rem, 8vw, 8rem);
-          font-weight: 900;
+          font-weight: 800;
+          font-stretch: 88%;
           text-transform: uppercase;
           color: #f3eee8;
           margin: 0;
           line-height: 0.88;
-          letter-spacing: -0.02em;
+          letter-spacing: -0.03em;
           flex: 1;
           min-width: 260px;
         }
@@ -347,7 +372,7 @@ export default function Projects() {
         }
 
         .card-meta-year {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 14px;
           font-weight: 800;
           color: #f3eee8;
@@ -356,7 +381,7 @@ export default function Projects() {
         }
 
         .card-meta-category {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.18em;
@@ -373,7 +398,7 @@ export default function Projects() {
         }
 
         .card-tech-pill {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           text-transform: uppercase;
           letter-spacing: 0.1em;
@@ -396,17 +421,20 @@ export default function Projects() {
           width: 100%;
           height: 1px;
           border-top: 1px dashed rgba(212, 206, 199, 0.16);
-          margin-bottom: clamp(1.25rem, 2vw, 2rem);
+          margin-bottom: clamp(1.75rem, 2.8vw, 2.5rem);
         }
 
-        /* ── 3-COLUMN CONTENT GRID ── */
+        /* ── TWO-COLUMN CONTENT GRID ── */
         .card-content-grid {
           display: grid;
-          grid-template-columns: 28fr 48fr 24fr;
-          gap: clamp(1.25rem, 2vw, 2.5rem);
+          grid-template-columns: minmax(0, 38fr) minmax(0, 62fr);
+          gap: clamp(2rem, 3.5vw, 4rem);
           align-items: stretch;
           width: 100%;
+          max-width: 1800px;
+          margin-inline: auto;
           flex: 1;
+          min-height: 0;
         }
 
         /* ── Left Column ── */
@@ -415,21 +443,21 @@ export default function Projects() {
           flex-direction: column;
           justify-content: space-between;
           height: 100%;
-          gap: 1.25rem;
+          gap: clamp(1.5rem, 2.5vw, 2.25rem);
           padding-top: 4px;
         }
 
         .project-description-text {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: clamp(12px, 0.95vw, 13.5px);
+          font-family: var(--font-mono), monospace;
+          font-size: clamp(13px, 0.95vw, 14.5px);
           font-weight: 500;
-          line-height: 1.85;
+          line-height: 1.8;
           letter-spacing: 0.03em;
           color: rgba(212, 206, 199, 0.72);
           margin: 0;
           display: -webkit-box;
           -webkit-box-orient: vertical;
-          -webkit-line-clamp: 6;
+          -webkit-line-clamp: 5;
           overflow: hidden;
         }
 
@@ -437,7 +465,7 @@ export default function Projects() {
         .metric-rows-container {
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 10px;
         }
 
         .metric-row-item {
@@ -445,7 +473,7 @@ export default function Projects() {
           align-items: center;
           justify-content: space-between;
           gap: 12px;
-          padding: 6px 10px;
+          padding: 9px 12px;
           background: rgba(15, 16, 20, 0.5);
           border: 1px solid rgba(255, 255, 255, 0.05);
           border-radius: 4px;
@@ -466,7 +494,7 @@ export default function Projects() {
         }
 
         .metric-label {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           font-weight: 700;
           letter-spacing: 0.1em;
@@ -477,7 +505,7 @@ export default function Projects() {
         }
 
         .metric-value-tag {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 10px;
           font-weight: 800;
           letter-spacing: 0.08em;
@@ -499,32 +527,33 @@ export default function Projects() {
         }
 
         .btn-live-pill {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 0.1em;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
           text-decoration: none;
           background: #fa5f34;
           color: #0a0a0a;
           padding: 8px 18px;
           border-radius: 9999px;
-          box-shadow: 0 4px 14px rgba(250, 95, 52, 0.35);
+          box-shadow: 3px 3px 0 #000;
           transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
           white-space: nowrap;
         }
 
         .btn-live-pill:hover {
-          transform: translateY(-2px);
+          transform: translate(-2px, -2px);
           background: #ff7049;
-          box-shadow: 0 6px 20px rgba(250, 95, 52, 0.55);
+          box-shadow: 5px 5px 0 #000;
         }
 
         .btn-case-study {
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-mono), monospace;
           font-size: 11px;
           font-weight: 700;
           text-transform: uppercase;
@@ -543,22 +572,6 @@ export default function Projects() {
           transform: translateX(3px);
         }
 
-        .btn-code-link {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 11px;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.1em;
-          text-decoration: none;
-          color: rgba(212, 206, 199, 0.6);
-          transition: color 180ms ease;
-          white-space: nowrap;
-        }
-
-        .btn-code-link:hover {
-          color: #ffffff;
-        }
-
         /* ── Mockup Columns & Architecture Showcase ── */
         .col-center-macbook {
           width: 100%;
@@ -566,16 +579,6 @@ export default function Projects() {
           min-width: 0;
           display: flex;
           flex-direction: column;
-        }
-
-        .col-right-iphone {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          min-width: 0;
         }
 
         .col-non-live-showcase {
@@ -590,24 +593,20 @@ export default function Projects() {
         /* ── RESPONSIVE BREAKPOINTS ── */
         @media (max-width: 1200px) {
           .card-content-grid {
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            grid-template-columns: minmax(0, 40fr) minmax(0, 60fr);
+            gap: clamp(1.75rem, 3vw, 2.5rem);
           }
 
           .col-left-info {
-            grid-column: 1 / -1;
+            grid-column: auto;
           }
 
           .col-center-macbook {
-            grid-column: 1 / 2;
-          }
-
-          .col-right-iphone {
-            grid-column: 2 / 3;
+            grid-column: auto;
           }
 
           .col-non-live-showcase {
-            grid-column: 1 / -1;
+            grid-column: auto;
           }
         }
 
@@ -616,6 +615,7 @@ export default function Projects() {
             flex-direction: column;
             align-items: flex-start;
             gap: 1rem;
+            margin-bottom: 0.85rem;
           }
 
           .card-header-meta {
@@ -626,43 +626,196 @@ export default function Projects() {
             justify-content: flex-start;
           }
 
+          .card-tech-pill:not(.card-tech-pill--accent) {
+            display: none;
+          }
+
           .card-content-grid {
             grid-template-columns: 1fr;
-            gap: 1.75rem;
+            grid-template-rows: auto minmax(0, 1fr);
+            gap: 1rem;
           }
 
           .col-left-info {
             grid-column: auto;
+            height: auto;
+            gap: 0.85rem;
           }
 
           .col-center-macbook {
             grid-column: auto;
+            min-height: 0;
           }
 
-          .col-right-iphone {
-            grid-column: auto;
-            max-width: 260px;
-            margin: 0 auto;
+          .col-center-macbook .macbook-chassis {
+            min-height: 0;
+          }
+
+          .project-description-text {
+            -webkit-line-clamp: 3;
+          }
+
+          .metric-rows-container {
+            gap: 5px;
+          }
+
+          .metric-row-item {
+            padding: 4px 8px;
           }
         }
 
         @media (max-width: 600px) {
+          .project-card-wrapper {
+            padding-block: 10px;
+          }
+
           .project-card-body {
-            padding: 1.25rem 1rem;
+            padding: 1.25rem 1.1rem;
           }
 
           .card-big-title {
-            font-size: 2.75rem;
+            font-size: 2.5rem;
+          }
+
+          .card-meta-category {
+            font-size: 10px;
+          }
+
+          .project-description-text {
+            -webkit-line-clamp: 2;
           }
 
           .card-actions-row {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 10px;
+            flex-direction: row;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
           }
 
-          .btn-live-pill {
-            text-align: center;
+          .btn-live-pill,
+          .btn-case-study {
+            padding: 7px 14px;
+            font-size: 10px;
+          }
+
+          .project-tab-ear {
+            padding: 0 12px;
+          }
+
+          .ear-name {
+            display: none;
+          }
+        }
+
+        /* ── SHORT VIEWPORTS ── */
+        @media (max-height: 700px) {
+          .card-big-title {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+          }
+
+          .card-top-header {
+            margin-bottom: 0.75rem;
+          }
+
+          .card-dashed-divider {
+            margin-bottom: 0.75rem;
+          }
+
+          .project-card-body {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+          }
+
+          .col-left-info {
+            gap: 0.85rem;
+          }
+
+          .project-description-text {
+            -webkit-line-clamp: 3;
+          }
+
+          .metric-rows-container {
+            gap: 5px;
+          }
+
+          .metric-row-item {
+            padding: 4px 8px;
+          }
+
+          .col-center-macbook .macbook-chassis {
+            min-height: 0;
+          }
+        }
+
+        @media (max-height: 560px) {
+          .col-non-live-showcase,
+          .project-description-text {
+            display: none;
+          }
+
+          .card-content-grid--no-mockup {
+            grid-template-columns: 1fr;
+          }
+
+          .card-content-grid--no-mockup .col-left-info {
+            grid-column: 1 / -1;
+          }
+
+          .col-left-info {
+            justify-content: center;
+            gap: 0.75rem;
+          }
+
+          .card-meta-pills {
+            display: none;
+          }
+        }
+
+        @media (min-width: 861px) and (max-height: 560px) {
+          .card-content-grid--mockups {
+            grid-template-columns: 34fr 66fr;
+          }
+
+          .card-content-grid--mockups .col-left-info {
+            grid-column: 1 / 2;
+          }
+
+          .card-content-grid--mockups .col-center-macbook {
+            grid-column: 2 / 3;
+          }
+        }
+
+        @media (max-height: 480px) {
+          .col-center-macbook {
+            display: none;
+          }
+
+          .card-content-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .col-left-info {
+            grid-column: 1 / -1;
+          }
+
+          .card-big-title {
+            font-size: clamp(2rem, 5vw, 3.25rem);
+          }
+        }
+
+        @media (max-height: 400px) {
+          .metric-rows-container {
+            display: none;
+          }
+
+          .col-left-info {
+            justify-content: flex-end;
+          }
+        }
+
+        @media (max-width: 600px) and (max-height: 720px) {
+          .project-description-text {
+            display: none;
           }
         }
       `}</style>

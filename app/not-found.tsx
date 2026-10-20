@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import meta from '@/data/meta.json'
+import { ArrowRight } from '@/components/ArrowIcon'
 
 export default function NotFound() {
   return (
@@ -18,7 +19,7 @@ export default function NotFound() {
     >
       <span
         style={{
-          fontFamily: 'var(--font-geist-mono), monospace',
+          fontFamily: 'var(--font-mono), monospace',
           fontSize: '12px',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
@@ -48,7 +49,10 @@ export default function NotFound() {
         href="/"
         style={{
           alignSelf: 'flex-start',
-          fontFamily: 'var(--font-geist-mono), monospace',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '8px',
+          fontFamily: 'var(--font-mono), monospace',
           fontSize: '12px',
           letterSpacing: '0.12em',
           textTransform: 'uppercase',
@@ -58,7 +62,7 @@ export default function NotFound() {
           textDecoration: 'none',
         }}
       >
-        Back to {meta.name.split(' ')[0]} →
+        Back to {meta.name.split(' ')[0]} <ArrowRight size={14} />
       </Link>
     </main>
   )

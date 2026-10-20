@@ -14,6 +14,18 @@
   --bp-sm: 640px;
   --bp-md: 768px;
   --bp-lg: 1024px;
+  --rule: rgba(212, 206, 199, 0.14);
+  --hard-shadow: 4px 4px 0 #000;
+  --hard-shadow-lg: 6px 6px 0 #000;
+  --grain-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+
+  /* Type scale — one hierarchy used across every section */
+  --text-display-xl: clamp(2.75rem, 6vw, 5.5rem);
+  --text-display-l: clamp(2rem, 4.5vw, 3.5rem);
+  --text-title: clamp(1.0625rem, 1.4vw, 1.25rem);
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-label: 11px;
 }
 
 * { box-sizing: border-box; }
@@ -25,6 +37,9 @@ html {
 body {
   background: var(--bg);
   color: var(--text);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  /* Never fake weight/slant — every family ships real weights */
+  font-synthesis: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   isolation: isolate;
@@ -32,6 +47,134 @@ body {
 
 main {
   padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── DRAFTING-PAPER DEPTH LAYER ── */
+.drafting-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.drafting-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(212, 206, 199, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(212, 206, 199, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+}
+
+.drafting-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  mix-blend-mode: soft-light;
+  background-image: var(--grain-url);
+  background-size: 180px 180px;
+}
+
+/* Corner ticks turn section edges into drafting plates */
+.experience-section,
+.github-redesign-section,
+.cp-section,
+.hiw-section,
+.contact-section {
+  position: relative;
+}
+
+.experience-section::before,
+.github-redesign-section::before,
+.cp-section::before,
+.hiw-section::before,
+.contact-section::before {
+  content: "";
+  position: absolute;
+  top: clamp(12px, 2vw, 24px);
+  left: var(--pad-x);
+  width: 14px;
+  height: 14px;
+  border-top: 1px solid rgba(212, 206, 199, 0.32);
+  border-left: 1px solid rgba(212, 206, 199, 0.32);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.experience-section::after,
+.github-redesign-section::after,
+.cp-section::after,
+.hiw-section::after,
+.contact-section::after {
+  content: "";
+  position: absolute;
+  bottom: clamp(12px, 2vw, 24px);
+  right: var(--pad-x);
+  width: 14px;
+  height: 14px;
+  border-bottom: 1px solid rgba(212, 206, 199, 0.32);
+  border-right: 1px solid rgba(212, 206, 199, 0.32);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.projects-section,
+.experience-section,
+.github-redesign-section,
+.cp-section,
+.hiw-section,
+.contact-section {
+  border-top-color: var(--rule);
+}
+
+@media (max-width: 768px) {
+  .drafting-grid {
+    background-size: 48px 48px;
+  }
+
+  .drafting-grain {
+    opacity: 0.035;
+  }
+
+  .experience-section::before,
+  .experience-section::after,
+  .github-redesign-section::before,
+  .github-redesign-section::after,
+  .cp-section::before,
+  .cp-section::after,
+  .hiw-section::before,
+  .hiw-section::after,
+  .contact-section::before,
+  .contact-section::after {
+    display: none;
+  }
+}
+
+/* Shared arrow icons — one weight, one motion language */
+.ui-arrow {
+  flex-shrink: 0;
+  vertical-align: -0.125em;
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+a:hover .ui-arrow[data-dir='up-right'],
+button:hover .ui-arrow[data-dir='up-right'] {
+  transform: translate(1px, -1px);
+}
+
+a:hover .ui-arrow[data-dir='right'],
+button:hover .ui-arrow[data-dir='right'] {
+  transform: translateX(2px);
+}
+
+a:hover .ui-arrow[data-dir='left'],
+button:hover .ui-arrow[data-dir='left'] {
+  transform: translateX(-2px);
 }
 
 .skip-link {
@@ -42,7 +185,7 @@ main {
   padding: 10px 16px;
   background: #d4cec7;
   color: #0a0a0a;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
