@@ -14,7 +14,7 @@ export default function About() {
           <div className="about-top">
             <span className="about-label">
               <span className="about-label-line" />
-              About / 02
+              About
             </span>
             <span className="about-serial">{serial}</span>
           </div>
@@ -38,7 +38,7 @@ export default function About() {
                   href={github}
                   target="_blank"
                   rel="noreferrer"
-                  className="about-action-primary"
+                  className="cta-primary"
                 >
                   {githubBtnLabel} <ArrowUpRight size={12} />
                 </a>
@@ -46,7 +46,7 @@ export default function About() {
                   href={resumeUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="about-action-link"
+                  className="cta-text"
                 >
                   {resumeBtnLabel} <ArrowUpRight size={12} />
                 </a>
@@ -67,30 +67,6 @@ export default function About() {
           padding: clamp(4.5rem, 10vh, 8rem) var(--pad-x);
           border-top: 1px solid var(--rule);
           background: transparent;
-        }
-
-        .about-section::before {
-          content: "";
-          position: absolute;
-          top: clamp(12px, 2vw, 24px);
-          left: var(--pad-x);
-          width: 14px;
-          height: 14px;
-          border-top: 1px solid rgba(212, 206, 199, 0.32);
-          border-left: 1px solid rgba(212, 206, 199, 0.32);
-          pointer-events: none;
-        }
-
-        .about-section::after {
-          content: "";
-          position: absolute;
-          bottom: clamp(12px, 2vw, 24px);
-          right: var(--pad-x);
-          width: 14px;
-          height: 14px;
-          border-bottom: 1px solid rgba(212, 206, 199, 0.32);
-          border-right: 1px solid rgba(212, 206, 199, 0.32);
-          pointer-events: none;
         }
 
         .about-shell {
@@ -182,67 +158,15 @@ export default function About() {
           display: flex;
           align-items: center;
           flex-wrap: wrap;
-          gap: 14px 22px;
+          gap: 8px 22px;
           margin-top: clamp(2rem, 4vh, 2.75rem);
         }
 
-        .about-action-primary {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 7px;
-          padding: 11px 18px;
-          background: #fa5f34;
-          color: #0a0a0a;
-          border: 1px solid #fa5f34;
-          border-radius: 2px;
-          box-shadow: 4px 4px 0 #000;
-          font-family: var(--font-mono), monospace;
-          font-size: 10px;
-          font-weight: 800;
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          text-decoration: none;
-          white-space: nowrap;
-          transition:
-            transform 180ms ease,
-            box-shadow 180ms ease,
-            background 180ms ease;
-        }
-
-        .about-action-primary:hover {
-          background: #ff7049;
-          transform: translate(-2px, -2px);
-          box-shadow: 6px 6px 0 #000;
-        }
-
-        .about-action-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding-bottom: 3px;
-          color: rgba(212, 206, 199, 0.78);
-          border-bottom: 1px solid rgba(212, 206, 199, 0.28);
-          font-family: var(--font-mono), monospace;
-          font-size: 10px;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          text-decoration: none;
-          white-space: nowrap;
-          transition: color 180ms ease, border-color 180ms ease;
-        }
-
-        .about-action-link:hover {
-          color: #fa5f34;
-          border-color: #fa5f34;
-        }
-
         .about-principle {
-          display: flex;
+          display: grid;
+          grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+          gap: clamp(3rem, 7vw, 8rem);
           align-items: baseline;
-          justify-content: space-between;
-          gap: clamp(1.5rem, 5vw, 5rem);
           padding-top: 18px;
           border-top: 1px solid var(--rule);
         }
@@ -259,12 +183,12 @@ export default function About() {
 
         .about-principle p {
           margin: 0;
-          max-width: 68ch;
+          max-width: 54ch;
           font-family: var(--font-sans), sans-serif;
           font-size: clamp(0.95rem, 1.2vw, 1.05rem);
           line-height: 1.6;
           color: rgba(212, 206, 199, 0.62);
-          text-align: right;
+          text-align: left;
         }
 
         @media (max-width: 900px) {
@@ -284,13 +208,9 @@ export default function About() {
           }
 
           .about-principle {
-            align-items: flex-start;
-            flex-direction: column;
+            grid-template-columns: 1fr;
+            align-items: start;
             gap: 10px;
-          }
-
-          .about-principle p {
-            text-align: left;
           }
         }
 
@@ -317,15 +237,13 @@ export default function About() {
             width: 100%;
           }
 
-          .about-action-primary,
-          .about-action-link {
-            justify-content: center;
+          .about-actions .cta-primary {
             width: 100%;
           }
 
-          .about-action-link {
-            padding-bottom: 0;
-            border-bottom: 0;
+          .about-actions .cta-text {
+            min-height: 30px;
+            align-self: flex-start;
           }
         }
       `}</style>

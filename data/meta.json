@@ -14,12 +14,7 @@
   "githubUsername": "AdityaKumar1511",
   "leetcodeUsername": "Adi_2007",
   "codeforcesUsername": "aditya.kumar00706",
-  "tickerSkills": [
-    "Next.js", "Node.js", "Go", "PostgreSQL", "Redis", "GraphQL", "AWS", "Docker",
-    "TypeScript", "React", "FastAPI", "Python", "MongoDB", "Solidity", "C++17"
-  ],
   "profileImage": "/profile.png?v=5",
-  "tickerText": "LET'S CONNECT",
   "seo": {
     "title": "Aditya Kumar — Portfolio",
     "description": "Full-stack developer and ML builder. CSE undergrad at NIT Patna.",

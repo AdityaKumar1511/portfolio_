@@ -1,5 +1,5 @@
 {
-  "serial": "About — 02",
+  "serial": "NIT Patna / CSE '29",
   "heading": "Reliable systems,\nnot clever ones.",
   "bio": "I am a second-year CSE student at <span class=\"highlight\">NIT Patna</span>, working across the stack. I build with <span class=\"highlight\">TypeScript, React, Go, and Postgres</span>, and I care about the parts that are easy to skip: error paths, latency, and code that stays readable after launch.",
   "fallbackInitials": "AK",

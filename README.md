@@ -8,7 +8,7 @@ Personal developer portfolio built with Next.js 16 and a dark, cinematic editori
 
 ## Description
 
-This is the source for my personal portfolio site — a single-page, section-based site that presents my projects, competitive programming stats, GitHub activity, and experience to recruiters and fellow developers. It's built to double as a live demonstration of front-end craft: custom cursor, scroll-driven interactions (GSAP), and an interactive discipline/node-graph "how I work" section, all on top of a dark, minimal visual system.
+This is the source for my personal portfolio site — a single-page, section-based site that presents my projects, competitive programming stats, GitHub activity, and experience to recruiters and fellow developers. It's built to double as a live demonstration of front-end craft: a typographic poster hero, drafting-paper texture, a custom cursor, and restrained scroll-driven interactions, all on top of a dark, editorial visual system.
 
 **Live demo:** [adityakumar15.vercel.app](https://adityakumar15.vercel.app)
 
@@ -34,8 +34,8 @@ This is the source for my personal portfolio site — a single-page, section-bas
 - **Live GitHub stats** — contribution calendar, streaks, and commit counts fetched server-side for `AdityaKumar1511`, with a saved snapshot fallback
 - **Live competitive programming stats** — LeetCode (`Adi_2007`) and Codeforces (`aditya.kumar00706`) solve counts, ranks, and contest ratings, with offline/cached labels
 - **Custom cursor** and GSAP-powered scroll interactions throughout
-- **Section-based single-page layout** — Hero, About, Experience, Projects, GitHub, LeetCode, How I Work, Contact
-- **Content-as-data** — projects, bio, workflow, and fallback stats are driven by JSON files in `data/`
+- **Section-based single-page layout** — Hero, About, Projects, Experience, GitHub, LeetCode, Contact
+- **Content-as-data** — projects, bio, experience, and fallback stats are driven by JSON files in `data/`
 - **Resume download** served at `/resume.pdf` (from `public/resume.pdf`)
 - Fully responsive, dark editorial theme with a consistent CSS custom-property color system
 
@@ -49,7 +49,7 @@ This is the source for my personal portfolio site — a single-page, section-bas
 | Styling | Tailwind CSS 4, custom CSS variables |
 | Animation | [GSAP](https://gsap.com/) + `@gsap/react`, Framer Motion |
 | Icons | lucide-react |
-| Fonts | Geist Sans / Geist Mono |
+| Fonts | Bricolage Grotesque / Switzer / Martian Mono |
 | Hosting | Vercel |
 
 ## Architecture
@@ -64,18 +64,16 @@ flowchart LR
     A --> E[Projects]
     A --> F[GitHub]
     A --> G[CP]
-    A --> H[HowIWork]
-    A --> I[Contact]
+    A --> H[Contact]
 
     E -.reads.-> J[(data/projects.json)]
     D -.reads.-> K[(data/experience.json)]
-    H -.reads.-> L[(data/howIWork.json)]
 
     F -->|server fetch| M[(GitHub GraphQL API)]
     G -->|server fetch| N[(LeetCode / Codeforces APIs)]
 ```
 
-Key decisions: content that changes often (projects, experience, workflow, fallback stats) lives in `data/*.json` rather than JSX. Third-party stats are fetched server-side and cached with `unstable_cache`, keeping API tokens private and avoiding a loading flash. The browser only reads a localStorage snapshot when the server has no live data.
+Key decisions: content that changes often (projects, experience, fallback stats) lives in `data/*.json` rather than JSX. Third-party stats are fetched server-side and cached with `unstable_cache`, keeping API tokens private and avoiding a loading flash. The browser only reads a localStorage snapshot when the server has no live data.
 
 ## Prerequisites
 
@@ -138,16 +136,14 @@ portfolio_/
 │   ├── Projects.tsx        # Project cards, reads data/projects.json
 │   ├── GitHub.tsx          # GitHub contribution stats + snapshot fallback
 │   ├── CP.tsx              # LeetCode + Codeforces stats
-│   ├── HowIWork.tsx        # Discipline/node workflow section
 │   ├── Contact.tsx          # Contact section
-│   ├── Ticker.tsx / CustomCursor.tsx
+│   ├── CustomCursor.tsx / FadeIn.tsx / ArrowIcon.tsx
 ├── data/
 │   ├── meta.json            # Name, tagline, socials, resume path, usernames
 │   ├── projects.json        # Project list (name, tech, links, impact)
 │   ├── cpDefaults.json      # Saved CP snapshot used when APIs fail
 │   ├── githubDefaults.json  # Saved GitHub snapshot and section copy
-│   ├── experience.json      # Achievements/experience rows
-│   └── howIWork.json        # Discipline/node workflow content
+│   └── experience.json      # Achievements/experience rows
 ├── lib/
 │   ├── github.ts            # Server-only GitHub GraphQL fetch + validation
 │   └── cp.ts                # Server-only LeetCode/Codeforces fetch
@@ -159,7 +155,6 @@ portfolio_/
 To update the site's content without touching component code, edit:
 - **Projects** → `data/projects.json` (order controls display order)
 - **Experience / achievements rows** → `data/experience.json`
-- **How I Work disciplines** → `data/howIWork.json`
 - **Fallback CP stats** → `data/cpDefaults.json`
 - **Fallback GitHub stats** → `data/githubDefaults.json`
 - **Bio / socials / resume link / usernames** → `data/meta.json`
@@ -190,7 +185,7 @@ MIT — see [LICENSE](./LICENSE).
 
 - [Next.js](https://nextjs.org) — application framework
 - [GSAP](https://gsap.com/) — scroll and motion animation
-- [Geist](https://vercel.com/font) — typography
+- [Bricolage Grotesque](https://fonts.google.com/specimen/Bricolage+Grotesque), [Switzer](https://www.fontshare.com/fonts/switzer), and [Martian Mono](https://fonts.google.com/specimen/Martian+Mono) — typography
 - [Tailwind CSS](https://tailwindcss.com/) — styling
 
 ## Contact

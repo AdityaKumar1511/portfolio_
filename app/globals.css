@@ -9,8 +9,6 @@
   --text-secondary: #d4cec7;
   --text-muted: #d4cec7;
   --pad-x: clamp(20px, 5vw, 56px);
-  --corner-x: clamp(12px, 2vw, 24px);
-  --corner-y: clamp(12px, 2vw, 20px);
   --bp-sm: 640px;
   --bp-md: 768px;
   --bp-lg: 1024px;
@@ -80,54 +78,10 @@ main {
   background-size: 180px 180px;
 }
 
-/* Corner ticks turn section edges into drafting plates */
-.experience-section,
-.github-redesign-section,
-.cp-section,
-.hiw-section,
-.contact-section {
-  position: relative;
-}
-
-.experience-section::before,
-.github-redesign-section::before,
-.cp-section::before,
-.hiw-section::before,
-.contact-section::before {
-  content: "";
-  position: absolute;
-  top: clamp(12px, 2vw, 24px);
-  left: var(--pad-x);
-  width: 14px;
-  height: 14px;
-  border-top: 1px solid rgba(212, 206, 199, 0.32);
-  border-left: 1px solid rgba(212, 206, 199, 0.32);
-  pointer-events: none;
-  z-index: 2;
-}
-
-.experience-section::after,
-.github-redesign-section::after,
-.cp-section::after,
-.hiw-section::after,
-.contact-section::after {
-  content: "";
-  position: absolute;
-  bottom: clamp(12px, 2vw, 24px);
-  right: var(--pad-x);
-  width: 14px;
-  height: 14px;
-  border-bottom: 1px solid rgba(212, 206, 199, 0.32);
-  border-right: 1px solid rgba(212, 206, 199, 0.32);
-  pointer-events: none;
-  z-index: 2;
-}
-
 .projects-section,
 .experience-section,
 .github-redesign-section,
 .cp-section,
-.hiw-section,
 .contact-section {
   border-top-color: var(--rule);
 }
@@ -140,19 +94,57 @@ main {
   .drafting-grain {
     opacity: 0.035;
   }
+}
 
-  .experience-section::before,
-  .experience-section::after,
-  .github-redesign-section::before,
-  .github-redesign-section::after,
-  .cp-section::before,
-  .cp-section::after,
-  .hiw-section::before,
-  .hiw-section::after,
-  .contact-section::before,
-  .contact-section::after {
-    display: none;
-  }
+/* Shared CTA language — one primary, one text link, used across sections */
+.cta-primary,
+.cta-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.cta-primary {
+  justify-content: center;
+  height: 42px;
+  padding: 0 18px;
+  background: #fa5f34;
+  color: #0a0a0a;
+  border: 1px solid #fa5f34;
+  border-radius: 2px;
+  box-shadow: 4px 4px 0 #000;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.cta-primary:hover {
+  background: #ff7049;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #000;
+}
+
+.cta-text {
+  min-height: 42px;
+  color: rgba(212, 206, 199, 0.78);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+  text-decoration-color: rgba(212, 206, 199, 0.28);
+  transition: color 180ms ease, text-decoration-color 180ms ease;
+}
+
+.cta-text:hover {
+  color: #fa5f34;
+  text-decoration-color: #fa5f34;
 }
 
 /* Shared arrow icons — one weight, one motion language */
@@ -254,8 +246,7 @@ body.has-custom-cursor * {
   mix-blend-mode: difference;
 }
 
-/* Section height — every section fills at least 100vh except How I Work */
-.about-section-outer,
+/* Section height — every section fills at least 100vh */
 .experience-section,
 .projects-section,
 .github-redesign-section,

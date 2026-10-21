@@ -5,7 +5,7 @@ import Link from 'next/link'
 import projectsData from '@/data/projects.json'
 import theme from '@/data/theme.json'
 import FadeIn from './FadeIn'
-import { ArrowUpRight, ArrowRight } from './ArrowIcon'
+import { ArrowUpRight } from './ArrowIcon'
 import { MacBookMockup, NonLiveProjectShowcase } from './DeviceMockups'
 
 const projects = projectsData.map(p => ({
@@ -39,7 +39,6 @@ export default function Projects() {
           const sc = statusColors[project.status] ?? fallbackStatus
           const metricStats = project.impactStats || [
             { value: 'LIVE', label: 'STATUS' },
-            { value: project.year, label: 'YEAR' },
             { value: '100%', label: 'QUALITY' }
           ]
 
@@ -83,11 +82,6 @@ export default function Projects() {
 
                     {/* Right-Side Meta Block */}
                     <div className="card-header-meta">
-                      {/* Year */}
-                      <div className="card-meta-year">
-                        {project.year}
-                      </div>
-
                       {/* Sub-Category Breadcrumb */}
                       <div className="card-meta-category">
                         {project.category.toUpperCase()} / {metricStats[0]?.label.toUpperCase() || 'ENGINEERING'}
@@ -171,7 +165,7 @@ export default function Projects() {
                           href={`/projects/${project.slug}`}
                           className="btn-case-study"
                         >
-                          CASE STUDY <ArrowRight size={12} />
+                          CASE STUDY <ArrowUpRight size={12} />
                         </Link>
                       </div>
                     </div>
@@ -371,15 +365,6 @@ export default function Projects() {
           padding-bottom: 4px;
         }
 
-        .card-meta-year {
-          font-family: var(--font-mono), monospace;
-          font-size: 14px;
-          font-weight: 800;
-          color: #f3eee8;
-          letter-spacing: 0.08em;
-          line-height: 1;
-        }
-
         .card-meta-category {
           font-family: var(--font-mono), monospace;
           font-size: 11px;
@@ -405,7 +390,7 @@ export default function Projects() {
           color: rgba(212, 206, 199, 0.8);
           background: rgba(20, 21, 25, 0.85);
           border: 1px solid rgba(255, 255, 255, 0.09);
-          border-radius: 9999px;
+          border-radius: 2px;
           padding: 3px 10px;
           font-weight: 600;
         }
@@ -540,7 +525,7 @@ export default function Projects() {
           background: #fa5f34;
           color: #0a0a0a;
           padding: 8px 18px;
-          border-radius: 9999px;
+          border-radius: 2px;
           box-shadow: 3px 3px 0 #000;
           transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
           white-space: nowrap;

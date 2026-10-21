@@ -4,14 +4,20 @@ import React, { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import meta from '@/data/meta.json'
-import { ArrowUpRight, ArrowRight } from './ArrowIcon'
+import githubDefaults from '@/data/githubDefaults.json'
+import { ArrowUpRight } from './ArrowIcon'
 import { useSolvedCounts } from '@/lib/cpStats'
 
 gsap.registerPlugin(useGSAP)
 
-export default function Hero() {
+type HeroProps = {
+  githubContributions?: number | null
+}
+
+export default function Hero({ githubContributions }: HeroProps) {
   const containerRef = useRef<HTMLElement>(null)
   const solvedCounts = useSolvedCounts()
+  const githubTotal = githubContributions ?? githubDefaults.stats.contributions
 
   useGSAP(
     () => {
@@ -24,20 +30,20 @@ export default function Hero() {
       )
         .fromTo(
           '.hero-name-part',
-          { opacity: 0, y: 42 },
-          { opacity: 1, y: 0, duration: 0.9, stagger: 0.08 },
+          { y: 42 },
+          { y: 0, duration: 0.9, stagger: 0.08 },
           '-=0.25'
         )
         .fromTo(
           '.hero-intro > *',
-          { opacity: 0, y: 16 },
-          { opacity: 1, y: 0, duration: 0.55, stagger: 0.08 },
+          { y: 16 },
+          { y: 0, duration: 0.55, stagger: 0.08 },
           '-=0.55'
         )
         .fromTo(
           '.hero-foot > *',
-          { opacity: 0, y: 10 },
-          { opacity: 1, y: 0, duration: 0.45, stagger: 0.06 },
+          { y: 10 },
+          { y: 0, duration: 0.45, stagger: 0.06 },
           '-=0.2'
         )
     },
@@ -49,8 +55,7 @@ export default function Hero() {
       <div className="hero-frame">
         <div className="hero-rail">
           <span>Aditya Kumar / Portfolio</span>
-          <span>Full-stack &amp; ML</span>
-          <span>2026</span>
+          <span>Full-stack / Applied ML</span>
         </div>
 
         <div className="hero-main">
@@ -74,44 +79,60 @@ export default function Hero() {
             </p>
 
             <div className="hero-actions">
-              <a href="#projects" className="hero-cta">
-                VIEW PROJECTS <ArrowUpRight size={13} />
+              <a href="#projects" className="cta-primary">
+                VIEW PROJECTS <ArrowUpRight size={12} />
               </a>
               <a
                 href={meta.resumeUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="hero-cta-secondary"
+                className="cta-text"
               >
                 RESUME <ArrowUpRight size={12} />
               </a>
-              <a href="#contact" className="hero-text-link">
-                CONTACT <ArrowRight size={12} />
+              <a href="#contact" className="cta-text">
+                CONTACT <ArrowUpRight size={12} />
               </a>
             </div>
           </div>
         </div>
 
         <div className="hero-foot">
-          <div className="hero-fact">
-            <span className="hero-fact-label">Focus</span>
-            <span className="hero-fact-value">Full-stack / Applied ML</span>
-          </div>
-          <div className="hero-fact">
-            <span className="hero-fact-label">Education</span>
-            <span className="hero-fact-value">NIT Patna · CSE ’29</span>
-          </div>
-          <div className="hero-fact">
-            <span className="hero-fact-label">LeetCode</span>
-            <span className="hero-fact-value">{solvedCounts.leetcode}+ solved</span>
-          </div>
+          <a
+            href={`https://leetcode.com/u/${meta.leetcodeUsername}/`}
+            target="_blank"
+            rel="noreferrer"
+            className="hero-stat-link"
+          >
+            <span className="hero-stat-label">LeetCode</span>
+            <span className="hero-stat-value">
+              {solvedCounts.leetcode.toLocaleString('en-US')}+ solved
+              <ArrowUpRight size={11} />
+            </span>
+          </a>
+          <a
+            href={`https://codeforces.com/profile/${meta.codeforcesUsername}`}
+            target="_blank"
+            rel="noreferrer"
+            className="hero-stat-link"
+          >
+            <span className="hero-stat-label">Codeforces</span>
+            <span className="hero-stat-value">
+              {solvedCounts.codeforcesRating.toLocaleString('en-US')} rating
+              <ArrowUpRight size={11} />
+            </span>
+          </a>
           <a
             href={meta.github}
             target="_blank"
             rel="noreferrer"
-            className="hero-foot-link"
+            className="hero-stat-link"
           >
-            GitHub <ArrowUpRight size={11} />
+            <span className="hero-stat-label">GitHub</span>
+            <span className="hero-stat-value">
+              {githubTotal.toLocaleString('en-US')} contributions
+              <ArrowUpRight size={11} />
+            </span>
           </a>
         </div>
       </div>
@@ -231,131 +252,53 @@ export default function Hero() {
           display: flex;
           align-items: center;
           flex-wrap: wrap;
-          gap: 14px 18px;
+          gap: 8px 18px;
           padding-top: 0.25rem;
         }
 
-        .hero-cta,
-        .hero-cta-secondary {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 7px;
-          font-family: var(--font-mono), monospace;
-          font-size: 10px;
-          font-weight: 800;
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          text-decoration: none;
-          white-space: nowrap;
-          transition:
-            transform 180ms ease,
-            box-shadow 180ms ease,
-            background 180ms ease,
-            border-color 180ms ease,
-            color 180ms ease;
-        }
-
-        .hero-cta {
-          padding: 11px 18px;
-          background: #fa5f34;
-          color: #0a0a0a;
-          border: 1px solid #fa5f34;
-          border-radius: 2px;
-          box-shadow: 4px 4px 0 #000;
-        }
-
-        .hero-cta:hover {
-          background: #ff7049;
-          transform: translate(-2px, -2px);
-          box-shadow: 6px 6px 0 #000;
-        }
-
-        .hero-cta-secondary {
-          padding: 10px 16px;
-          background: transparent;
-          color: #d4cec7;
-          border: 1px solid rgba(212, 206, 199, 0.32);
-          border-radius: 2px;
-        }
-
-        .hero-cta-secondary:hover {
-          color: #fa5f34;
-          border-color: #fa5f34;
-          transform: translate(-1px, -1px);
-        }
-
-        .hero-text-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-family: var(--font-mono), monospace;
-          font-size: 10px;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          color: rgba(212, 206, 199, 0.68);
-          text-decoration: none;
-          border-bottom: 1px solid rgba(212, 206, 199, 0.24);
-          padding-bottom: 3px;
-          transition: color 180ms ease, border-color 180ms ease;
-        }
-
-        .hero-text-link:hover {
-          color: #fa5f34;
-          border-color: #fa5f34;
-        }
-
-        /* ── BOTTOM FACT RAIL ── */
+        /* ── BOTTOM PLATFORM LINKS ── */
         .hero-foot {
           display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
           align-items: end;
           gap: clamp(1.25rem, 3vw, 3rem);
           padding-top: 18px;
           border-top: 1px solid var(--rule);
         }
 
-        .hero-fact {
+        .hero-stat-link {
           display: flex;
           flex-direction: column;
           gap: 5px;
           min-width: 0;
+          color: inherit;
+          text-decoration: none;
         }
 
-        .hero-fact-label {
+        .hero-stat-label {
           font-family: var(--font-mono), monospace;
           font-size: 9px;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.16em;
           color: rgba(212, 206, 199, 0.4);
+          transition: color 180ms ease;
         }
 
-        .hero-fact-value {
+        .hero-stat-value {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
           font-family: var(--font-sans), sans-serif;
           font-size: 13px;
           font-weight: 500;
           line-height: 1.3;
           color: rgba(212, 206, 199, 0.86);
-        }
-
-        .hero-foot-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-family: var(--font-mono), monospace;
-          font-size: 10px;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          color: #d4cec7;
-          text-decoration: none;
-          white-space: nowrap;
           transition: color 180ms ease;
         }
 
-        .hero-foot-link:hover {
+        .hero-stat-link:hover .hero-stat-label,
+        .hero-stat-link:hover .hero-stat-value {
           color: #fa5f34;
         }
 
@@ -383,22 +326,26 @@ export default function Hero() {
         }
 
         @media (max-width: 760px) {
-          .hero-rail span:nth-child(2) {
-            display: none;
+          .hero-rail {
+            gap: 1rem;
+            font-size: 9px;
           }
 
           .hero-foot {
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-            gap: 16px 20px;
+            grid-template-columns: 1fr;
+            gap: 0;
           }
 
-          .hero-foot .hero-fact:first-child {
-            grid-column: 1 / -1;
+          .hero-stat-link {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding-block: 11px;
           }
 
-          .hero-foot-link {
-            grid-column: 1 / -1;
-            padding-top: 2px;
+          .hero-stat-link + .hero-stat-link {
+            border-top: 1px solid rgba(212, 206, 199, 0.1);
           }
         }
 
@@ -418,16 +365,15 @@ export default function Hero() {
           .hero-actions {
             align-items: flex-start;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px;
           }
 
-          .hero-cta,
-          .hero-cta-secondary {
+          .hero-actions .cta-primary {
             width: 100%;
           }
 
-          .hero-text-link {
-            align-self: flex-start;
+          .hero-actions .cta-text {
+            min-height: 30px;
           }
         }
       `}</style>
